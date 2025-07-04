@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheely - Regístrate</title>
+    <link rel="stylesheet" href="css/wheely_register.css">
+</head>
+<body>
+    <div class="black-stripe"></div>
+    
+    <div class="logo">
+        <!-- Logo SVG de Wheely -->
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Círculo de ubicación -->
+            <circle cx="150" cy="50" r="25" fill="white" stroke="none"/>
+            <circle cx="150" cy="50" r="12" fill="#ff6b35"/>
+            
+            <!-- Letra W estilizada -->
+            <path d="M30 120 L50 180 L70 140 L90 180 L110 120 L85 120 L70 160 L55 120 Z" 
+                  fill="white" stroke="none" stroke-width="2"/>
+            
+            <!-- Líneas de conexión -->
+            <path d="M110 140 Q130 120 150 50" 
+                  fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+    </div>
+
+    <div class="container">
+        <!-- Sección de Bienvenida -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Bienvenido a <span class="brand-name">Wheely</span></h1>
+            <p class="welcome-subtitle">"Planea tu viaje, reporta y colabora"</p>
+            <p class="welcome-description">
+                Wheely es una plataforma web diseñada para mejorar la experiencia del 
+                transporte colectivo en Tuxtla Gutiérrez.<br><br>
+                Permite a los ciudadanos acceder de forma gratuita a información 
+                completa sobre rutas, paradas, horarios y tiempos de espera promedio del 
+                transporte público local.
+            </p>
+        </div>
+
+        <!-- Sección de Registro -->
+        <div class="register-section">
+            <div class="register-card">
+                <button class="close-btn" onclick="goBack()" aria-label="Cerrar">&times;</button>
+                
+                <div class="register-header">
+                    <h2 class="register-title">Regístrate</h2>
+                    <p class="register-login-link">¿Tienes cuenta? <a href="inicio_sesion.html">Inicia Sesión</a></p>
+                </div>
+                
+                <form class="register-form" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Ingresa tu correo electrónico
+                            <span class="required-mark">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            class="form-input" 
+                            placeholder="rodi@gmail.com" 
+                            id="emailInput"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nombre de usuario
+                            <span class="required-mark">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            placeholder="rodrigo231" 
+                            id="usernameInput"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Ingresa tu contraseña
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                class="form-input" 
+                                placeholder="wEelf23" 
+                                id="passwordInput"
+                                required
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('passwordInput', this)">
+                                👁️
+                            </button>
+                        </div>
+                        <div class="password-requirements" id="passwordRequirements">
+                            <p id="req-length">• Mínimo 8 caracteres</p>
+                            <p id="req-uppercase">• Al menos 1 letra mayúscula</p>
+                            <p id="req-lowercase">• Al menos 1 letra minúscula</p>
+                            <p id="req-number">• Al menos 1 número</p>
+                            <p id="req-symbol">• Al menos 1 símbolo</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Confirma tu contraseña
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                class="form-input" 
+                                placeholder="Escribe nuevamente tu contraseña" 
+                                id="confirmPasswordInput"
+                                required
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPasswordInput', this)">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="register-btn">Registrarse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(inputId, button) {
+            const passwordInput = document.getElementById(inputId);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                symbol: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+            };
+
+            // Actualizar indicadores visuales
+            document.getElementById('req-length').className = requirements.length ? 'valid' : 'invalid';
+            document.getElementById('req-uppercase').className = requirements.uppercase ? 'valid' : 'invalid';
+            document.getElementById('req-lowercase').className = requirements.lowercase ? 'valid' : 'invalid';
+            document.getElementById('req-number').className = requirements.number ? 'valid' : 'invalid';
+            document.getElementById('req-symbol').className = requirements.symbol ? 'valid' : 'invalid';
+
+            return Object.values(requirements).every(req => req);
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('emailInput').value;
+            const username = document.getElementById('usernameInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+            // Validar contraseñas
+            if (!validatePassword(password)) {
+                alert('La contraseña no cumple con todos los requisitos');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            // Aquí iría la lógica de registro
+            alert('Registrando usuario...');
+            // Redirigir a login o aplicación principal
+            window.location.href = 'inicio_sesion.html';
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('passwordInput');
+            const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+
+            passwordInput.addEventListener('input', function() {
+                validatePassword(this.value);
+            });
+
+            confirmPasswordInput.addEventListener('input', function() {
+                const password = passwordInput.value;
+                if (this.value && this.value !== password) {
+                    this.classList.add('invalid');
+                    this.classList.remove('valid');
+                } else if (this.value === password && password) {
+                    this.classList.add('valid');
+                    this.classList.remove('invalid');
+                } else {
+                    this.classList.remove('valid', 'invalid');
+                }
+            });
+
+            // Animación de entrada de los elementos del formulario
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.opacity = '0';
+                group.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    group.style.transition = 'all 0.6s ease';
+                    group.style.opacity = '1';
+                    group.style.transform = 'translateY(0)';
+                }, 300 + (index * 100));
+            });
+        });
+    </script>
+</body>
+</html>

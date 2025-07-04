@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheely - Transporte Colectivo</title>
+    <link rel="stylesheet" href="css/wheely_welcome.css">
+</head>
+<body>
+    <div class="black-stripe"></div>
+    
+    <div class="logo">
+        <!-- Logo SVG de Wheely -->
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Círculo de ubicación -->
+            <circle cx="150" cy="50" r="25" fill="white" stroke="none"/>
+            <circle cx="150" cy="50" r="12" fill="#ff6b35"/>
+            
+            <!-- Letra W estilizada -->
+            <path d="M30 120 L50 180 L70 140 L90 180 L110 120 L85 120 L70 160 L55 120 Z" 
+                  fill="white" stroke="none" stroke-width="2"/>
+            
+            <!-- Líneas de conexión -->
+            <path d="M110 140 Q130 120 150 50" 
+                  fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+    </div>
+    
+    <div class="container">
+        <div class="left-content">
+            <h1 class="welcome-title">Bienvenido a <span class="brand-name">Wheely</span></h1>
+            <p class="subtitle">"Planea tu viaje, reporta y colabora"</p>
+            <p class="description">
+                Wheely es una plataforma web diseñada para mejorar la experiencia del 
+                transporte colectivo en Tuxtla Gutiérrez.<br><br>
+                Permite a los ciudadanos acceder de forma gratuita a información 
+                completa sobre rutas, paradas, horarios y tiempos de espera promedio del 
+                transporte público local.
+            </p>
+            <button class="learn-more-btn" onclick="showMore()">Saber más</button>
+        </div>
+
+        <div class="right-content">
+            <div class="action-card" onclick="showLogin()">
+                <div class="card-label">¿Ya tienes cuenta?</div>
+                <div class="card-title">
+                    Iniciar Sesión
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+
+            <div class="action-card" onclick="showRegister()">
+                <div class="card-label">¿No tienes cuenta?</div>
+                <div class="card-title">
+                    Regístrate
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+
+            <div class="action-card visitor-card" onclick="visitAsGuest()">
+                <div class="card-label">¿Quieres ingresar directamente?</div>
+                <div class="card-title">
+                    Visitante
+                    <span class="arrow">→</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overlay para login/registro -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div id="modalContent"></div>
+    </div>
+
+    <script>
+        function showLogin() {
+            // Redirigir a la página de login
+            window.location.href = 'inicio_sesion.html';
+        }
+
+        function showRegister() {
+            // Redirigir a la página de registro
+            window.location.href = 'registro.html';
+        }
+
+        function visitAsGuest() {
+            // Redirigir a la aplicación principal
+            window.location.href = 'mapa.html';
+        }
+
+        function showMore() {
+            alert('Aquí se mostraría más información sobre Wheely y sus características principales.');
+        }
+    </script>
+</body>
+</html>

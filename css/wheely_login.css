@@ -1,0 +1,288 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            min-height: 100vh;
+            display: flex;
+            position: relative;
+        }
+
+        .black-stripe {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40vh;
+            background: #2d3748;
+            z-index: 1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 60px;
+            padding: 0 20px;
+            min-height: 100vh;
+        }
+
+        .logo {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            z-index: 10;
+        }
+
+        .logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sección izquierda - Bienvenida */
+        .welcome-section {
+            color: white;
+            z-index: 2;
+            position: relative;
+        }
+
+        .welcome-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .brand-name {
+            font-weight: 700;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .welcome-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.95;
+            max-width: 500px;
+        }
+
+        /* Sección derecha - Login */
+        .login-section {
+            z-index: 2;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            background: rgba(45, 55, 72, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            color: white;
+            position: relative;
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: white;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .required-mark {
+            color: #ff6b35;
+            margin-left: 4px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .forgot-password {
+            color: #ff6b35;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: opacity 0.3s ease;
+            display: block;
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password:hover {
+            opacity: 0.8;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #e55a2b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 30px;
+            }
+
+            .welcome-section {
+                text-align: center;
+                padding: 60px 0 20px;
+            }
+
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .welcome-description {
+                font-size: 1rem;
+                max-width: 100%;
+            }
+
+            .login-card {
+                margin-bottom: 40px;
+            }
+
+            .logo {
+                top: 20px;
+                left: 20px;
+                width: 50px;
+                height: 50px;
+            }
+
+            .black-stripe {
+                height: 50vh;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .welcome-section {
+            animation: fadeInLeft 0.8s ease-out;
+        }

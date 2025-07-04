@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheely - Iniciar Sesión</title>
+    <link rel="stylesheet" href="css/wheely_login.css">
+</head>
+<body>
+    <div class="black-stripe"></div>
+    
+    <div class="logo">
+        <!-- Logo SVG de Wheely -->
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Círculo de ubicación -->
+            <circle cx="150" cy="50" r="25" fill="white" stroke="none"/>
+            <circle cx="150" cy="50" r="12" fill="#ff6b35"/>
+            
+            <!-- Letra W estilizada -->
+            <path d="M30 120 L50 180 L70 140 L90 180 L110 120 L85 120 L70 160 L55 120 Z" 
+                  fill="white" stroke="none" stroke-width="2"/>
+            
+            <!-- Líneas de conexión -->
+            <path d="M110 140 Q130 120 150 50" 
+                  fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+    </div>
+
+    <div class="container">
+        <!-- Sección de Bienvenida -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Bienvenido a <span class="brand-name">Wheely</span></h1>
+            <p class="welcome-subtitle">"Planea tu viaje, reporta y colabora"</p>
+            <p class="welcome-description">
+                Wheely es una plataforma web diseñada para mejorar la experiencia del 
+                transporte colectivo en Tuxtla Gutiérrez.<br><br>
+                Permite a los ciudadanos acceder de forma gratuita a información 
+                completa sobre rutas, paradas, horarios y tiempos de espera promedio del 
+                transporte público local.
+            </p>
+        </div>
+
+        <!-- Sección de Login -->
+        <div class="login-section">
+            <div class="login-card">
+                <button class="close-btn" onclick="goBack()" aria-label="Cerrar">&times;</button>
+                
+                <h2 class="login-title">Inicia sesión</h2>
+                
+                <form class="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Ingresa tu nombre de usuario o tu gmail
+                            <span class="required-mark">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            placeholder="Nombre de usuario o gmail" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Ingresa tu contraseña
+                            <span class="required-mark">*</span>
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                class="form-input" 
+                                placeholder="Contraseña" 
+                                id="passwordInput"
+                                required
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+
+                    <a href="#" class="forgot-password">Olvidé mi contraseña</a>
+
+                    <button type="submit" class="login-btn">Ingresa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const toggleBtn = document.querySelector('.password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.textContent = '👁️';
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            // Aquí iría la lógica de autenticación
+            alert('Iniciando sesión...');
+            // Redirigir a la aplicación principal
+            window.location.href = 'mapa.html';
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Animación de entrada de los elementos del formulario
+        document.addEventListener('DOMContentLoaded', function() {
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.opacity = '0';
+                group.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    group.style.transition = 'all 0.6s ease';
+                    group.style.opacity = '1';
+                    group.style.transform = 'translateY(0)';
+                }, 300 + (index * 100));
+            });
+        });
+    </script>
+</body>
+</html>
