@@ -6,6 +6,11 @@
   <title>Mapa Transporte</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="css/wheely_principal.css">
+  <!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
   <div class="container">
@@ -31,7 +36,25 @@
         </div>
       </div>
       <div class="map-area">
-        <!-- Aquí se insertará el mapa (ej. Leaflet o Google Maps) -->
+      <div id= "map"></div>
+          <div id="favoritos-panel" class="favoritos" style="display: none;">
+  <h2>Rutas favoritas</h2>
+  <div class="card-container">
+    <div class="card">
+      <h4>Ruta 1</h4>
+      <p>Centro ➝ Universidad</p>
+      <span>⏱️ Espera: 5 min</span>
+    </div>
+    <div class="card">
+      <h4>Ruta 2</h4>
+      <p>Terminal ➝ Hospital</p>
+      <span>⏱️ Espera: 8 min</span>
+    </div>
+    
+  </div>
+</div>
+
+        <!-- Aquí se insertará el mapa-->
       </div>
       <div class="right-buttons">
         <div class="btn"><i class="bi bi-truck-front-fill"></i></div>
@@ -41,5 +64,28 @@
       </div>
     </div>
   </div>
+  <script>
+  const favoritosBtn = document.querySelectorAll('.sidebar .item')[1];
+  const favoritosPanel = document.getElementById('favoritos-panel');
+
+  favoritosBtn.addEventListener('click', () => {
+    favoritosPanel.style.display = favoritosPanel.style.display === 'none' ? 'block' : 'none';
+  });
+
+  // Crear el mapa y centrarlo en Tuxtla Gutiérrez
+  const map = L.map('map').setView([16.7535, -93.1156], 13);
+
+  // Agregar capa base (OpenStreetMap)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Marcador de prueba
+  L.marker([16.7535, -93.1156]).addTo(map)
+    .bindPopup('Centro de Tuxtla')
+    .openPopup();
+</script>
+
+
 </body>
 </html>
