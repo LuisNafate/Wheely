@@ -6,7 +6,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            background: linear-gradient(135deg, #FB6D10 0%, #FB6D10 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -19,25 +19,33 @@
             left: 0;
             width: 100%;
             height: 40vh;
-            background: #2d3748;
+            background: #212227;
             z-index: 1;
         }
 
         .container {
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
-            height: 100vh;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            align-items: stretch;
+            align-items: start;
             gap: 60px;
+            padding: 0 20px;
+            min-height: 100vh;
+        }
+        .left-image {
+            position: absolute;
+            
+            z-index: 1;
+            top: 320px;
+            left: 0px;
         }
 
         .logo {
             position: absolute;
-            top: 30px;
-            left: 30px;
+            top: -15px;
+            left: 34px;
             width: 60px;
             height: 60px;
             z-index: 10;
@@ -64,6 +72,7 @@
             margin-bottom: 10px;
             line-height: 1.1;
             animation: fadeInUp 0.6s ease forwards;
+            margin-top: -0px;
         }
 
         .brand-name {
@@ -151,7 +160,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, #2C2D34(255, 255, 255, 0.1), transparent);
             transition: left 0.5s ease;
         }
 
@@ -182,7 +191,7 @@
         .arrow {
             font-size: 1.5rem;
             transition: transform 0.3s ease;
-            color: #ff6b35;
+            color: #FB6D10;
         }
 
         .action-card:hover .arrow {
@@ -190,7 +199,7 @@
         }
 
         .visitor-card {
-            background: rgba(30, 41, 59, 0.95);
+            background: #2C2D34;
         }
 
         .visitor-card:hover {
@@ -243,6 +252,9 @@
                 width: 50px;
                 height: 50px;
             }
+            .left-image {
+            display: none;
+        }
 
             .welcome-title {
                 font-size: 2.5rem;
