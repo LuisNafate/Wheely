@@ -1,90 +1,200 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>meromero</title>
-    
-    <!-- CSS Reset -->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-    </style>
-    
-    <link rel="stylesheet" href="./css/wheely_principal_visiter.css">
+    <title>Wheely - Sidebar Responsivo</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/wheely_principal_register.css">
 </head>
 <body>
     <aside class="sidebar">
         <header class="sidebar-header">
             <span class="Logo">Wheely</span>
-            <button class="sidebar-toggle">
-              <span class="material-symbols-rounded">dehaze</span>
+            <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                <span class="material-symbols-rounded">dehaze</span>
             </button>
         </header>
 
         <div class="sidebar-content">
             <!-- Menu list -->
-             <ul class="menu-list">
+            <ul class="menu-list">
                 <li class="menu-item">
-                    <a href="#" class="menu-link active">
+                    <a href="#" class="menu-link active" aria-label="Inicio">
                         <span class="material-symbols-rounded">home</span>
                         <span class="menu-label">Inicio</span>
                     </a>
                 </li>
 
-              <li class="menu-item">
-                    <a href="#" class="menu-link">
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Favoritos" id="favoritos-trigger">
+                        <span class="material-symbols-rounded">star</span>
+                        <span class="menu-label">Favoritos</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Feedback">
                         <span class="material-symbols-rounded">chat</span>
                         <span class="menu-label">Feedback</span>
                     </a>
                 </li>
-                 <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <span class="material-symbols-rounded"><span class="material-symbols-rounded">directions_bus</span></span>
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Rutas">
+                        <span class="material-symbols-rounded">directions_bus</span>
                         <span class="menu-label">Rutas</span>
                     </a>
                 </li>
-                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Difunde">
                         <span class="material-symbols-rounded">share</span>
                         <span class="menu-label">Difunde</span>
                     </a>
                 </li>
-                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Ayuda y Soporte">
                         <span class="material-symbols-rounded">help</span>
                         <span class="menu-label">Ayuda y Soporte</span>
                     </a>
                 </li>
-             </ul>
-        </div>
-        <!-- Footer section -->
-     <div class="sidebar-footer">
-        <ul class="menu-list">
-        <div class="profile">
-            <img src="https://i.pinimg.com/736x/a0/f6/d8/a0f6d8722e2ca13e433591c68bc5401f.jpg" alt="Avatar" class="avatar">
-            <div class="profile-info">
-                <h3 class="name">Alix Montes</h3>
-                <p class="role">Admin</p>
-            </div>
+            </ul>
         </div>
         
-         <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <span class="material-symbols-rounded">Logout</span>
+        <!-- Footer section -->
+        <div class="sidebar-footer">
+            <div class="profile">
+                <img src="https://i.pinimg.com/736x/a0/f6/d8/a0f6d8722e2ca13e433591c68bc5401f.jpg" alt="Avatar de Alix Montes" class="avatar">
+                <div class="profile-info">
+                    <h3 class="name">Alix Montes</h3>
+                    <p class="role">Admin</p>
+                </div>
+            </div>
+            
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Cerrar sesión">
+                        <span class="material-symbols-rounded">logout</span>
                         <span class="menu-label">Logout</span>
                     </a>
                 </li>
-        </ul>
-
-    </div>
-        
+            </ul>
+        </div>
     </aside>
 
-    <script src="./js/script.js"></script>
+    <!-- Panel de Favoritos -->
+    <div class="favoritos-overlay" id="favoritos-overlay"></div>
+    <div class="favoritos-panel" id="favoritos-panel">
+        <div class="favoritos-header">
+            <h2>Favoritos</h2>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="agregar-btn" id="agregar-favorito">Agregar</button>
+                <button class="close-favoritos" id="close-favoritos">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="favoritos-content">
+            <!-- Ruta favorita 1 -->
+            <div class="ruta-item">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 90</h4>
+                        <p>Dirección Cañón del Sumidero</p>
+                        <div class="ruta-tiempo">
+                            <i class="bi bi-clock"></i>
+                            <span>Espera: 5 min</span>
+                        </div>
+                    </div>
+                </div>
+                <i class="bi bi-star-fill star-icon"></i>
+            </div>
+
+            <!-- Ruta favorita 2 -->
+            <div class="ruta-item">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 45</h4>
+                        <p>Dirección Centro Histórico</p>
+                        <div class="ruta-tiempo">
+                            <i class="bi bi-clock"></i>
+                            <span>Espera: 8 min</span>
+                        </div>
+                    </div>
+                </div>
+                <i class="bi bi-star-fill star-icon"></i>
+            </div>
+
+            <!-- Ruta favorita 3 -->
+            <div class="ruta-item">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 23</h4>
+                        <p>Dirección Universidad</p>
+                        <div class="ruta-tiempo">
+                            <i class="bi bi-clock"></i>
+                            <span>Espera: 12 min</span>
+                        </div>
+                    </div>
+                </div>
+                <i class="bi bi-star-fill star-icon"></i>
+            </div>
+
+            <!-- Ruta favorita 4 -->
+            <div class="ruta-item">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 67</h4>
+                        <p>Dirección Aeropuerto</p>
+                        <div class="ruta-tiempo">
+                            <i class="bi bi-clock"></i>
+                            <span>Espera: 15 min</span>
+                        </div>
+                    </div>
+                </div>
+                <i class="bi bi-star-fill star-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal de demostración -->
+    <main class="main-content">
+        <div style="color: white; padding: 20px;">
+            <h1 style="color: var(--color-hover-primary); margin-bottom: 20px;">🚗 Wheely - Sidebar con Favoritos</h1>
+            <p style="margin-bottom: 15px; line-height: 1.6;">¡Tu sidebar ahora incluye un panel de favoritos completamente funcional!</p>
+            
+            <h2 style="color: var(--color-hover-primary); margin: 20px 0 10px 0;">⭐ Nuevas Características de Favoritos:</h2>
+            <p style="margin-bottom: 15px;">• <strong>Panel flotante:</strong> Se abre como overlay desde el menú lateral</p>
+            <p style="margin-bottom: 15px;">• <strong>Gestión de favoritos:</strong> Agrega y quita rutas de tus favoritos</p>
+            <p style="margin-bottom: 15px;">• <strong>Información en tiempo real:</strong> Muestra tiempos de espera estimados</p>
+            <p style="margin-bottom: 15px;">• <strong>Interfaz intuitiva:</strong> Diseño coherente con el sidebar</p>
+            
+            <h2 style="color: var(--color-hover-primary); margin: 20px 0 10px 0;">🎯 Cómo usar:</h2>
+            <p style="margin-bottom: 15px;">1. Haz clic en <strong>"Favoritos"</strong> en el menú lateral</p>
+            <p style="margin-bottom: 15px;">2. Explora tus rutas favoritas guardadas</p>
+            <p style="margin-bottom: 15px;">3. Haz clic en una ruta para ver más detalles</p>
+            <p style="margin-bottom: 15px;">4. Usa la estrella para agregar/quitar de favoritos</p>
+            <p style="margin-bottom: 15px;">5. Presiona "Agregar" para añadir nuevas rutas</p>
+            
+            <p style="margin-top: 30px; font-style: italic;">El panel mantiene toda la funcionalidad responsiva del sidebar principal.</p>
+        </div>
+    </main>
+    <script src="js/wheely_principal_register.js"></script>
 </body>
 </html>
