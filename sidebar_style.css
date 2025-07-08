@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+     font-family: 'Poppins', sans-serif;
+}
+
+:root{
+    --color-text-primary: #FFFFFF;
+
+    --color-bg-primary:#1D242B;
+    --color-bg-secondary:#ECECFD;
+    --color-bg-sidebar: #212227;
+    --color-border-hr: #404040;
+    --color-hover-primary: #FB6D10;
+    --color-hover-secondary: #E98544;
+    --color-shadow: rgba(0,0,0,0.05);
+}
+body{
+    background-color: var(--color-bg-primary);
+}
+
+.sidebar{
+    position:sticky;
+    top: 0;
+    height: 100vh;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    background: var(--color-bg-sidebar);
+    border-right: 1px solid var(--color-border-hr);
+    box-shadow: 0 3px 9px var(--color-shadow);
+    transition: width 0.4s ease;
+}
+
+.sidebar.collapsed{
+    width: 90px;
+}
+.sidebar .sidebar-header{
+    display: flex;
+    padding: 20px 18px;
+    align-self: flex-center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-border-hr);
+    color: var(--color-text-primary);
+    gap:    100px;
+
+}
+
+.sidebar-header .Logo{
+       font-size: 20px;
+            font-weight: 500;
+            transition: opacity 0.4s ease;
+            white-space: nowrap;
+}
+
+.sidebar.collapsed .sidebar-header .Logo{
+   opacity: 0;
+   pointer-events: none;
+}
+.sidebar-header .sidebar-toggle{
+  height: 40px;
+  width: 40px;
+  border: none;
+  position: absolute;
+  right: 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+    justify-content: center;
+  color: var(--color-text-primary);
+  background: var(--color-border-hr);
+    transition: 0.4s ease;
+}
+
+.sidebar.collapsed .sidebar-header .sidebar-toggle{
+    height: 40px;
+    width: 40 px;
+    transform: translateX(-2px);
+}
+.sidebar-header .sidebar-toggle:hover{
+    background: var(--color-hover-primary);
+}
+.sidebar-header .sidebar-toggle span{
+    font-size: 1.75rem;
+    transition: transform 0.4s ease;
+
+}
+
+.sidebar.collapsed .sidebar-toggle span{
+    transform: rotate(180deg);
+}
+.sidebar .sidebar-content{
+    flex: 1;
+    padding: 20px 18px;
+    overflow:  hidden auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-hover-primary) transparent;
+
+}
+.sidebar-content .menu-list{
+    display: flex;
+    gap: 4px;
+    flex-direction: column;
+    list-style: none;
+
+}
+.menu-list .menu-link{
+    text-decoration: none;
+    display: flex;
+    align-self:center;
+    gap: 12px;
+    white-space: nowrap;
+    padding: 12px 15px;
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    transition: 0.3s ease;
+
+}
+.menu-link .menu-label{
+    transition: 0.3s ease  ;
+}
+
+.sidebar.collapsed .menu-list .menu-label{
+   opacity: 0;
+    pointer-events: none;
+}
+.menu-list .menu-link:is(:hover, .active){
+    color: #fff;
+    background: var(--color-hover-primary);
+}
+.sidebar .sidebar-footer{
+    padding: 20px 18px;
+    white-space:nowrap;
+    border-top: 1px solid var(--color-border-hr);
+}
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  transition: background 0.3s;
+   margin-bottom: 10px;
+}
+
+.profile:hover {
+  background-color: #2a2a2a;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+}
+.sidebar.collapsed .avatar {
+            width: 40px;
+            height: 40px;
+        }
+
+.profile-info {
+            transition: opacity 0.3s ease;
+            overflow: hidden;
+        }
+.profile-info .name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.sidebar.collapsed .profile-info {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+.profile-info .role {
+  margin: 0;
+  font-size: 14px;
+  color: #cccccc;
+}
+.sidebar-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+.sidebar-footer ul li {
+  margin: 10px 0;
+}
+
