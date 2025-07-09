@@ -7,7 +7,7 @@ function togglePassword() {
                 toggleBtn.textContent = '🙈';
             } else {
                 passwordInput.type = 'password';
-                toggleBtn.textContent = '👁️';
+                toggleBtn.textContent = '🙉';
             }
         }
 
