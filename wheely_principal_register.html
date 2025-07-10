@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wheely - Sidebar Responsivo</title>
+    <title>Wheely - Principal - registrado</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/wheely_principal_register.css">
@@ -33,16 +33,9 @@
                         <span class="menu-label">Favoritos</span>
                     </a>
                 </li>
-
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Feedback">
-                        <span class="material-symbols-rounded">chat</span>
-                        <span class="menu-label">Feedback</span>
-                    </a>
-                </li>
                 
                 <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Rutas">
+                    <a href="#" class="menu-link" aria-label="Rutas" id="rutas-trigger">
                         <span class="material-symbols-rounded">directions_bus</span>
                         <span class="menu-label">Rutas</span>
                     </a>
@@ -70,7 +63,7 @@
                 <img src="https://i.pinimg.com/736x/a0/f6/d8/a0f6d8722e2ca13e433591c68bc5401f.jpg" alt="Avatar de Alix Montes" class="avatar">
                 <div class="profile-info">
                     <h3 class="name">Alix Montes</h3>
-                    <p class="role">Admin</p>
+                    <p class="role">Usuario</p>
                 </div>
             </div>
             
@@ -86,21 +79,21 @@
     </aside>
 
     <!-- Panel de Favoritos -->
-    <div class="favoritos-overlay" id="favoritos-overlay"></div>
-    <div class="favoritos-panel" id="favoritos-panel">
-        <div class="favoritos-header">
+    <div class="panel-overlay" id="favoritos-overlay"></div>
+    <div class="panel-flotante" id="favoritos-panel">
+        <div class="panel-header">
             <h2>Favoritos</h2>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <button class="agregar-btn" id="agregar-favorito">Agregar</button>
-                <button class="close-favoritos" id="close-favoritos">
+            <div class="panel-actions">
+                <button class="btn-panel" id="agregar-favorito">Agregar</button>
+                <button class="btn-close" id="close-favoritos">
                     <span class="material-symbols-rounded">close</span>
                 </button>
             </div>
         </div>
         
-        <div class="favoritos-content">
+        <div class="panel-content">
             <!-- Ruta favorita 1 -->
-            <div class="ruta-item">
+            <div class="ruta-item" data-ruta="90">
                 <div class="ruta-info">
                     <div class="ruta-icon">
                         <i class="bi bi-bus-front-fill"></i>
@@ -114,11 +107,14 @@
                         </div>
                     </div>
                 </div>
-                <i class="bi bi-star-fill star-icon"></i>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star-fill action-icon star-icon" title="Quitar de favoritos"></i>
+                </div>
             </div>
 
             <!-- Ruta favorita 2 -->
-            <div class="ruta-item">
+            <div class="ruta-item" data-ruta="45">
                 <div class="ruta-info">
                     <div class="ruta-icon">
                         <i class="bi bi-bus-front-fill"></i>
@@ -132,11 +128,14 @@
                         </div>
                     </div>
                 </div>
-                <i class="bi bi-star-fill star-icon"></i>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star-fill action-icon star-icon" title="Quitar de favoritos"></i>
+                </div>
             </div>
 
             <!-- Ruta favorita 3 -->
-            <div class="ruta-item">
+            <div class="ruta-item" data-ruta="23">
                 <div class="ruta-info">
                     <div class="ruta-icon">
                         <i class="bi bi-bus-front-fill"></i>
@@ -150,11 +149,14 @@
                         </div>
                     </div>
                 </div>
-                <i class="bi bi-star-fill star-icon"></i>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star-fill action-icon star-icon" title="Quitar de favoritos"></i>
+                </div>
             </div>
 
             <!-- Ruta favorita 4 -->
-            <div class="ruta-item">
+            <div class="ruta-item" data-ruta="67">
                 <div class="ruta-info">
                     <div class="ruta-icon">
                         <i class="bi bi-bus-front-fill"></i>
@@ -168,33 +170,221 @@
                         </div>
                     </div>
                 </div>
-                <i class="bi bi-star-fill star-icon"></i>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star-fill action-icon star-icon" title="Quitar de favoritos"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Rutas -->
+    <div class="panel-overlay" id="rutas-overlay"></div>
+    <div class="panel-flotante" id="rutas-panel">
+        <div class="panel-header">
+            <h2>Todas las Rutas</h2>
+            <div class="panel-actions">
+                <button class="btn-panel" id="ver-favoritos">Favoritos</button>
+                <button class="btn-close" id="close-rutas">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="panel-filters">
+            <input type="text" class="search-box" placeholder="Buscar ruta por número o destino..." id="search-rutas">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="todas">Todas</button>
+                <button class="filter-tab" data-filter="norte">Norte</button>
+                <button class="filter-tab" data-filter="sur">Sur</button>
+                <button class="filter-tab" data-filter="centro">Centro</button>
+            </div>
+        </div>
+        
+        <div class="panel-content" id="rutas-content">
+            <!-- Ruta 1 -->
+            <div class="ruta-item" data-ruta="12" data-zona="norte">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 12</h4>
+                        <p>Dirección Terminal Norte</p>
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
+                </div>
+            </div>
+
+            <!-- Ruta 2 -->
+            <div class="ruta-item" data-ruta="23" data-zona="sur">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 23</h4>
+                        <p>Dirección Universidad</p>
+                    
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
+                </div>
+            </div>
+
+            <!-- Ruta 3 -->
+            <div class="ruta-item" data-ruta="34" data-zona="centro">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 34</h4>
+                        <p>Dirección Mercado Central</p>
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
+                </div>
+            </div>
+
+            <!-- Ruta 4 -->
+            <div class="ruta-item" data-ruta="45" data-zona="centro">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 45</h4>
+                        <p>Dirección Centro Histórico</p>
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
+                </div>
+            </div>
+
+            <!-- Ruta 5 -->
+            <div class="ruta-item" data-ruta="56" data-zona="norte">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 56</h4>
+                        <p>Dirección Plaza Norte</p>
+                        
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
+                </div>
+            </div>
+
+            <!-- Ruta 6 -->
+            <div class="ruta-item" data-ruta="67" data-zona="sur">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 67</h4>
+                        <p>Dirección Aeropuerto</p>
+
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
+                </div>
+            </div>
+
+            <!-- Ruta 7 -->
+            <div class="ruta-item" data-ruta="78" data-zona="norte">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 78</h4>
+                        <p>Dirección Las Flores</p>
+
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
+                </div>
+            </div>
+
+            <!-- Ruta 8 -->
+            <div class="ruta-item" data-ruta="89" data-zona="sur">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 89</h4>
+                        <p>Dirección Terminal Sur</p>
+
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
+                </div>
+            </div>
+
+            <!-- Ruta 9 -->
+            <div class="ruta-item" data-ruta="90" data-zona="sur">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 90</h4>
+                        <p>Dirección Cañón del Sumidero</p>
+                        <div class="ruta-tiempo">
+                        </div>
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
+                </div>
+            </div>
+
+            <!-- Ruta 10 -->
+            <div class="ruta-item" data-ruta="101" data-zona="centro">
+                <div class="ruta-info">
+                    <div class="ruta-icon">
+                        <i class="bi bi-bus-front-fill"></i>
+                    </div>
+                    <div class="ruta-details">
+                        <h4>Ruta 101</h4>
+                        <p>Dirección Hospital Central</p>
+
+                    </div>
+                </div>
+                <div class="ruta-actions">
+                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Contenido principal de demostración -->
-    <main class="main-content">
-        <div style="color: white; padding: 20px;">
-            <h1 style="color: var(--color-hover-primary); margin-bottom: 20px;">🚗 Wheely - Sidebar con Favoritos</h1>
-            <p style="margin-bottom: 15px; line-height: 1.6;">¡Tu sidebar ahora incluye un panel de favoritos completamente funcional!</p>
-            
-            <h2 style="color: var(--color-hover-primary); margin: 20px 0 10px 0;">⭐ Nuevas Características de Favoritos:</h2>
-            <p style="margin-bottom: 15px;">• <strong>Panel flotante:</strong> Se abre como overlay desde el menú lateral</p>
-            <p style="margin-bottom: 15px;">• <strong>Gestión de favoritos:</strong> Agrega y quita rutas de tus favoritos</p>
-            <p style="margin-bottom: 15px;">• <strong>Información en tiempo real:</strong> Muestra tiempos de espera estimados</p>
-            <p style="margin-bottom: 15px;">• <strong>Interfaz intuitiva:</strong> Diseño coherente con el sidebar</p>
-            
-            <h2 style="color: var(--color-hover-primary); margin: 20px 0 10px 0;">🎯 Cómo usar:</h2>
-            <p style="margin-bottom: 15px;">1. Haz clic en <strong>"Favoritos"</strong> en el menú lateral</p>
-            <p style="margin-bottom: 15px;">2. Explora tus rutas favoritas guardadas</p>
-            <p style="margin-bottom: 15px;">3. Haz clic en una ruta para ver más detalles</p>
-            <p style="margin-bottom: 15px;">4. Usa la estrella para agregar/quitar de favoritos</p>
-            <p style="margin-bottom: 15px;">5. Presiona "Agregar" para añadir nuevas rutas</p>
-            
-            <p style="margin-top: 30px; font-style: italic;">El panel mantiene toda la funcionalidad responsiva del sidebar principal.</p>
-        </div>
-    </main>
-    <script src="js/wheely_principal_register.js"></script>
+ 
+    
+    <script src="js/Wheely_principal_registered_user.js"></script>
 </body>
 </html>
