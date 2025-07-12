@@ -93,29 +93,40 @@ function closeAllPanels() {
 sidebarToggleBtn.addEventListener('click', toggleSidebar);
 overlay.addEventListener('click', closeSidebar);
 
-// Event listeners para favoritos
+// Event listeners para favoritos, lo modificque para que se cierre tambien al hacer click en el side bar
 favoritosTrigger.addEventListener('click', (e) => {
     e.preventDefault();
-    openFavoritos();
-    if (isMobile()) {
-        closeSidebar();
+    
+    if (favoritosPanel.classList.contains('active')) {
+        closeFavoritosPanel();
+    } else {
+        openFavoritos();
+        if (isMobile()) {
+            closeSidebar();
+        }
     }
 });
 
+
 closeFavoritos.addEventListener('click', closeFavoritosPanel);
-favoritosOverlay.addEventListener('click', closeFavoritosPanel);
+//favoritosOverlay.addEventListener('click', closeFavoritosPanel);
 
 // Event listeners para rutas
 rutasTrigger.addEventListener('click', (e) => {
     e.preventDefault();
-    openRutas();
-    if (isMobile()) {
-        closeSidebar();
+    
+    if (rutasPanel.classList.contains('active')) {
+        closeRutasPanel();
+    } else {
+        openRutas();
+        if (isMobile()) {
+            closeSidebar();
+        }
     }
 });
 
 closeRutas.addEventListener('click', closeRutasPanel);
-rutasOverlay.addEventListener('click', closeRutasPanel);
+//rutasOverlay.addEventListener('click', closeRutasPanel);
 
 // Navegación entre paneles
 verFavoritos.addEventListener('click', (e) => {
