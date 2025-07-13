@@ -34,7 +34,7 @@ function toggleSidebar() {
     if (isMobile()) {
         sidebar.classList.toggle('active');
         overlay.classList.toggle('active');
-        
+
         if (sidebar.classList.contains('active')) {
             document.body.style.overflow = 'hidden';
         } else {
@@ -42,8 +42,21 @@ function toggleSidebar() {
         }
     } else {
         sidebar.classList.toggle('collapsed');
+
+        // Mover los paneles si están activos
+        const panels = [favoritosPanel, rutasPanel];
+        panels.forEach(panel => {
+            if ((favoritosPanel.classList.contains('active') || rutasPanel.classList.contains('active'))) {
+                if (!sidebar.classList.contains('collapsed')) {
+                    panel.classList.add('panel-shifted');
+                } else {
+                    panel.classList.remove('panel-shifted');
+                }
+            }
+        });
     }
 }
+
 
 // Función para cerrar el sidebar en móvil
 function closeSidebar() {
@@ -56,27 +69,38 @@ function closeSidebar() {
 function openFavoritos() {
     closeAllPanels();
     favoritosPanel.classList.add('active');
-    favoritosOverlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    if (!sidebar.classList.contains('collapsed') && !isMobile()) {
+        favoritosPanel.classList.add('panel-shifted');
+    }
 }
+
 
 function closeFavoritosPanel() {
     favoritosPanel.classList.remove('active');
     favoritosOverlay.classList.remove('active');
+    favoritosPanel.classList.remove('panel-shifted'); // ⬅️ ESTA LÍNEA NUEVA
     document.body.style.overflow = '';
 }
+
 
 // Funciones para el panel de rutas
 function openRutas() {
     closeAllPanels();
     rutasPanel.classList.add('active');
-    rutasOverlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    if (!sidebar.classList.contains('collapsed') && !isMobile()) {
+        rutasPanel.classList.add('panel-shifted');
+    }
 }
+
 
 function closeRutasPanel() {
     rutasPanel.classList.remove('active');
     rutasOverlay.classList.remove('active');
+    rutasPanel.classList.remove('panel-shifted'); // ⬅️ ESTA LÍNEA NUEVA
     document.body.style.overflow = '';
 }
 
@@ -318,3 +342,59 @@ function handleSwipe() {
         document.body.style.overflow = 'hidden';
     }
 }
+
+// Inicializar mapa de Leaflet
+const map = L.map('mapa-wheely').setView([16.75, -93.12], 13); // Coordenadas iniciales de Tuxtla
+
+L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=HlXj3HeA4zNFxaXLoaHzQ3bXUvYFKru9FpGCPa8PJGPVHw2Jsb3GX6HcJ8QFp1FD', {
+  attribution: '<a href="https://jawg.io" target="_blank">&copy; Jawg</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  minZoom: 0,
+  maxZoom: 22
+}).addTo(map);
+
+// Ejemplo de geo jason de como se vería una ruta
+
+// Simulamos una ruta (ejemplo de la Ruta 45)
+//const ruta45GeoJSON = {
+ // "type": "Feature",
+  //"geometry": {
+  /*  "type": "LineString",
+    "coordinates": [
+      [-93.118, 16.753],
+      [-93.120, 16.755],
+      [-93.123, 16.757],
+      [-93.125, 16.759],
+      [-93.127, 16.761]
+    ]
+  },
+  "properties": {
+    "nombre": "Ruta 45"
+  }
+};
+
+// Creamos la capa para pintarla en el mapa
+let ruta45Layer = null;
+
+function mostrarRuta45() {
+  // Elimina la capa anterior si ya existe
+  if (ruta45Layer) {
+    map.removeLayer(ruta45Layer);
+  }
+
+  // Añade la ruta con estilo personalizado
+  ruta45Layer = L.geoJSON(ruta45GeoJSON, {
+    style: {
+      color: '#FB6D10',
+      weight: 5
+    }
+ }).addTo(map);
+
+  // Centrar el mapa sobre la ruta
+  map.fitBounds(ruta45Layer.getBounds());
+}
+
+// Vinculamos la función a un evento (por ejemplo al hacer clic en una ruta)
+// Ejemplo directo (puedes reemplazar esto con un listener real)
+document.querySelector('[data-ruta="45"]')?.addEventListener('click', () => {
+  mostrarRuta45();
+});*/

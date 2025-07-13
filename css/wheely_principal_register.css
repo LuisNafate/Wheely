@@ -526,6 +526,75 @@ body {
 #favoritos-panel .report-icon {
     display: none;
 }
+.panel-shifted {
+    left: 270px !important; /* Asumiendo que tu sidebar tiene 250px + margen */
+    transition: left 0.3s ease;
+}
+
+.nav-principal {
+  position: fixed;
+  top: 0;
+  left: 250px; /* depende del ancho de tu sidebar */
+  right: 0;
+  height: 60px;
+  background-color: #212227;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: left 0.3s ease;
+}
+
+.sidebar.collapsed + .nav-principal {
+  left: 90px;
+}
+
+.nav-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 30px;
+}
+
+
+.nav-busqueda {
+  display: flex;
+  
+  align-items: center;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  gap: 8px;
+}
+
+.nav-busqueda input {
+  border: none;
+  outline: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  width: 220px;
+  font-size: 14px;
+
+}
+
+.nav-busqueda i {
+  color: #666;
+  font-size: 16px;
+}
+
+#mapa-wheely {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 250px; /* se alinea con tu sidebar */
+  right: 0;
+  z-index: 0;
+}
+
+.sidebar.collapsed ~ #mapa-wheely {
+  left: 90px;
+}
 
 
 /* MEDIA QUERIES PARA RESPONSIVIDAD */
