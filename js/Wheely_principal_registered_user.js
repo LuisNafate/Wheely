@@ -398,3 +398,82 @@ function mostrarRuta45() {
 document.querySelector('[data-ruta="45"]')?.addEventListener('click', () => {
   mostrarRuta45();
 });*/
+
+// === MANEJO DE PANELES //
+
+// Elementos generales
+const overlayReporte = document.getElementById('reporte-overlay');
+const panelReporte = document.getElementById('reporte-panel');
+const btnCerrarReporte = document.getElementById('close-reporte');
+
+const overlayFormulario = document.getElementById('formulario-overlay');
+const panelFormulario = document.getElementById('formulario-panel');
+const btnCerrarFormulario = document.getElementById('close-formulario');
+
+const overlayNoticias = document.getElementById('noticias-overlay');
+const panelNoticias = document.getElementById('noticias-panel');
+const btnCerrarNoticias = document.getElementById('close-noticias');
+
+// Botones de acciones dentro del panel inicial
+const btnVerNoticias = document.getElementById('btn-ver-noticias');
+const btnRealizarReporte = document.getElementById('btn-realizar-reporte');
+
+// Abrir el panel principal desde el ícono de reporte
+const botonesReportar = document.querySelectorAll('.report-icon');
+botonesReportar.forEach(btn => {
+  btn.addEventListener('click', () => {
+    abrirPanel(overlayReporte, panelReporte);
+  });
+});
+
+// Navegar a formulario
+btnRealizarReporte.addEventListener('click', () => {
+  cerrarPanel(overlayReporte, panelReporte);
+  abrirPanel(overlayFormulario, panelFormulario);
+});
+
+// Navegar a noticias
+btnVerNoticias.addEventListener('click', () => {
+  cerrarPanel(overlayReporte, panelReporte);
+  abrirPanel(overlayNoticias, panelNoticias);
+  mostrarNoticiasEjemplo();
+});
+
+// Cierre de cada panel
+btnCerrarReporte.addEventListener('click', () => cerrarPanel(overlayReporte, panelReporte));
+btnCerrarFormulario.addEventListener('click', () => cerrarPanel(overlayFormulario, panelFormulario));
+btnCerrarNoticias.addEventListener('click', () => cerrarPanel(overlayNoticias, panelNoticias));
+
+function abrirPanel(overlay, panel) {
+  overlay.classList.add('active');
+  panel.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarPanel(overlay, panel) {
+  overlay.classList.remove('active');
+  panel.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Simulación de noticias (esto se reemplazará por fetch al backend)
+function mostrarNoticiasEjemplo() {
+  const lista = document.getElementById('lista-noticias');
+  lista.innerHTML = '';
+  
+  const noticiasSimuladas = [
+    { tipo: 'Incidencia', mensaje: 'La combi 45 se desvió por obras el 12 de julio.' },
+    { tipo: 'Sugerencia', mensaje: 'Agregar una parada frente al mercado central.' },
+    { tipo: 'Incidencia', mensaje: 'El conductor iba con exceso de velocidad.' }
+  ];
+
+  noticiasSimuladas.forEach(noticia => {
+    const item = document.createElement('div');
+    item.classList.add('noticia-item');
+    item.innerHTML = `
+      <h4>${noticia.tipo}</h4>
+      <p>${noticia.mensaje}</p>
+    `;
+    lista.appendChild(item);
+  });
+}
