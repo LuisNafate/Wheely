@@ -8,50 +8,45 @@
 </head>
 <body>
     <div class="black-stripe"></div>
-    
+
     <div class="logo">
-        <!-- Logo png de Wheely -->
         <img src="img/logo.png" alt="Logo de Wheely" style="width: 100px; height: auto; display: block; margin: 0 auto;">
-           
-          
     </div>
 
     <div class="container">
-        <!-- Sección de Bienvenida -->
         <div class="welcome-section">
             <h1 class="welcome-title">Bienvenido a <span class="brand-name">Wheely</span></h1>
             <p class="welcome-subtitle">"Planea tu viaje, reporta y colabora"</p>
             <p class="welcome-description">
-                Wheely es una plataforma web diseñada para mejorar la experiencia del 
+                Wheely es una plataforma web diseñada para mejorar la experiencia del
                 transporte colectivo en Tuxtla Gutiérrez.<br>
-                Permite a los ciudadanos acceder de forma gratuita a información 
-                completa sobre rutas, paradas, horarios y tiempos de espera promedio del 
+                Permite a los ciudadanos acceder de forma gratuita a información
+                completa sobre rutas, paradas, horarios y tiempos de espera promedio del
                 transporte público local.
             </p>
         </div>
-         <div class="left-image">
+        <div class="left-image">
             <img src="img/image-removebg-preview (10).png" alt="Imagen de la Parada" height="90%" width="90%">
         </div>
 
-        <!-- Sección de Login -->
         <div class="login-section">
             <div class="login-card">
                 <button class="close-btn" onclick="goBack()" aria-label="Cerrar">&times;</button>
-                
+
                 <h2 class="login-title">Inicia sesión</h2>
-                
+
                 <form class="login-form" onsubmit="handleLogin(event)">
                     <div class="form-group">
                         <label class="form-label">
                             Ingresa tu nombre de usuario o tu gmail
                             <span class="required-mark">*</span>
                         </label>
-                        <input 
-                            type="text" 
-                            class="form-input" 
-                            placeholder="Nombre de usuario o gmail" 
+                        <input
+                            type="text"
+                            class="form-input"
+                            placeholder="Nombre de usuario o gmail"
                             required
-                        >
+                            id="usernameOrEmailInput" >
                     </div>
 
                     <div class="form-group">
@@ -60,15 +55,15 @@
                             <span class="required-mark">*</span>
                         </label>
                         <div class="password-wrapper">
-                            <input 
-                                type="password" 
-                                class="form-input" 
-                                placeholder="Contraseña" 
+                            <input
+                                type="password"
+                                class="form-input"
+                                placeholder="Contraseña"
                                 id="passwordInput"
                                 required
                             >
                             <button type="button" class="password-toggle" onclick="togglePassword()">
-                                👁️
+                                🙉
                             </button>
                         </div>
                     </div>
@@ -77,7 +72,7 @@
 
                     <button type="submit" class="login-btn">Ingresa</button>
                 </form>
-            </div>
+                <p id="errorMessage" style="color: red; text-align: center; margin-top: 10px;"></p> </div>
         </div>
     </div>
 
