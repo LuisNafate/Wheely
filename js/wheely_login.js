@@ -1,16 +1,3 @@
-function togglePassword() {
-            const passwordInput = document.getElementById('passwordInput');
-            const toggleBtn = document.querySelector('.password-toggle');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleBtn.textContent = '🙈';
-            } else {
-                passwordInput.type = 'password';
-                toggleBtn.textContent = '🙉';
-            }
-        }
-
         function handleLogin(event) {
             event.preventDefault();
             // Aquí iría la lógica de autenticación
