@@ -69,6 +69,8 @@
                             id="usernameInput"
                             required
                         >
+                    <p id="usernameError" style="color: red; font-size: 14px; margin-top: 4px;"></p>
+
                     </div>
 
                     <div class="form-group">
@@ -110,6 +112,7 @@
                                 id="confirmPasswordInput"
                                 required
                             >
+                            <p id="confirmPasswordError" style="color: red; font-size: 14px; margin-top: 4px;"></p>
                             <button type="button" class="password-toggle" onclick="togglePassword('confirmPasswordInput', this)">
                                 🙈
                             </button>
@@ -124,100 +127,122 @@
 
     <script>
         function togglePassword(inputId, button) {
-            const passwordInput = document.getElementById(inputId);
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                button.textContent = '🙉';
+        const passwordInput = document.getElementById(inputId);
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            button.textContent = '🙉';
+        } else {
+            passwordInput.type = 'password';
+            button.textContent = '🙈';
+        }
+    }
+
+    function validatePassword(password) {
+        const requirements = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password),
+            symbol: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+        };
+
+        // Actualizar estilos visuales de requisitos
+        document.getElementById('req-length').className = requirements.length ? 'valid' : 'invalid';
+        document.getElementById('req-uppercase').className = requirements.uppercase ? 'valid' : 'invalid';
+        document.getElementById('req-lowercase').className = requirements.lowercase ? 'valid' : 'invalid';
+        document.getElementById('req-number').className = requirements.number ? 'valid' : 'invalid';
+        document.getElementById('req-symbol').className = requirements.symbol ? 'valid' : 'invalid';
+
+        return Object.values(requirements).every(req => req);
+    }
+
+    function handleRegister(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('emailInput').value;
+        const username = document.getElementById('usernameInput').value;
+        const password = document.getElementById('passwordInput').value;
+        const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+        const usernameError = document.getElementById('usernameError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+        usernameError.textContent = '';
+        confirmPasswordError.textContent = '';
+
+        const usernameRegex = /^[a-zA-Z0-9@_-]+$/;
+        if (!usernameRegex.test(username)) {
+            usernameError.textContent = 'El nombre de usuario solo puede contener letras, números y _ - @';
+            return;
+        }
+
+        if (!validatePassword(password)) {
+            alert('La contraseña no cumple con todos los requisitos');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            confirmPasswordError.textContent = 'Las contraseñas no coinciden';
+            return;
+        }
+
+        alert('Registrando usuario...');
+        window.location.href = 'inicio_sesion.html';
+    }
+
+    function goBack() {
+        window.location.href = 'index.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+        const usernameError = document.getElementById('usernameError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+        usernameInput.addEventListener('input', function () {
+            const valid = /^[a-zA-Z0-9@_-]*$/.test(this.value);
+            if (!valid) {
+                usernameError.textContent = 'Solo se permiten letras, números y _ - @';
+                this.classList.add('invalid');
             } else {
-                passwordInput.type = 'password';
-                button.textContent = '🙈';
+                usernameError.textContent = '';
+                this.classList.remove('invalid');
             }
-        }
-
-        function validatePassword(password) {
-            const requirements = {
-                length: password.length >= 8,
-                uppercase: /[A-Z]/.test(password),
-                lowercase: /[a-z]/.test(password),
-                number: /\d/.test(password),
-                symbol: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
-            };
-
-            // Actualizar indicadores visuales
-            document.getElementById('req-length').className = requirements.length ? 'valid' : 'invalid';
-            document.getElementById('req-uppercase').className = requirements.uppercase ? 'valid' : 'invalid';
-            document.getElementById('req-lowercase').className = requirements.lowercase ? 'valid' : 'invalid';
-            document.getElementById('req-number').className = requirements.number ? 'valid' : 'invalid';
-            document.getElementById('req-symbol').className = requirements.symbol ? 'valid' : 'invalid';
-
-            return Object.values(requirements).every(req => req);
-        }
-
-        function handleRegister(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('emailInput').value;
-            const username = document.getElementById('usernameInput').value;
-            const password = document.getElementById('passwordInput').value;
-            const confirmPassword = document.getElementById('confirmPasswordInput').value;
-
-            // Validar contraseñas
-            if (!validatePassword(password)) {
-                alert('La contraseña no cumple con todos los requisitos');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                alert('Las contraseñas no coinciden');
-                return;
-            }
-
-            // Aquí iría la lógica de registro
-            alert('Registrando usuario...');
-            // Redirigir a login o aplicación principal
-            window.location.href = 'inicio_sesion.html';
-        }
-
-        function goBack() {
-            window.location.href = 'index.html';
-        }
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            const passwordInput = document.getElementById('passwordInput');
-            const confirmPasswordInput = document.getElementById('confirmPasswordInput');
-
-            passwordInput.addEventListener('input', function() {
-                validatePassword(this.value);
-            });
-
-            confirmPasswordInput.addEventListener('input', function() {
-                const password = passwordInput.value;
-                if (this.value && this.value !== password) {
-                    this.classList.add('invalid');
-                    this.classList.remove('valid');
-                } else if (this.value === password && password) {
-                    this.classList.add('valid');
-                    this.classList.remove('invalid');
-                } else {
-                    this.classList.remove('valid', 'invalid');
-                }
-            });
-
-            // Animación de entrada de los elementos del formulario
-            const formGroups = document.querySelectorAll('.form-group');
-            formGroups.forEach((group, index) => {
-                group.style.opacity = '0';
-                group.style.transform = 'translateY(20px)';
-                
-                setTimeout(() => {
-                    group.style.transition = 'all 0.6s ease';
-                    group.style.opacity = '1';
-                    group.style.transform = 'translateY(0)';
-                }, 300 + (index * 100));
-            });
         });
+
+        passwordInput.addEventListener('input', function () {
+            validatePassword(this.value);
+        });
+
+        confirmPasswordInput.addEventListener('input', function () {
+            const password = passwordInput.value;
+            if (this.value && this.value !== password) {
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+                confirmPasswordError.textContent = 'Las contraseñas no coinciden';
+            } else if (this.value === password && password) {
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+                confirmPasswordError.textContent = '';
+            } else {
+                this.classList.remove('valid', 'invalid');
+                confirmPasswordError.textContent = '';
+            }
+        });
+
+        const formGroups = document.querySelectorAll('.form-group');
+        formGroups.forEach((group, index) => {
+            group.style.opacity = '0';
+            group.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                group.style.transition = 'all 0.6s ease';
+                group.style.opacity = '1';
+                group.style.transform = 'translateY(0)';
+            }, 300 + (index * 100));
+        });
+    });
     </script>
 </body>
 </html>
