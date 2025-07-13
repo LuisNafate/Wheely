@@ -406,7 +406,69 @@
         </div>
     </div>
 
-    <!-- Contenido principal de demostración -->
+    <!-- paneles de reporte -->
+<!-- PANEL 1: Elección de acción -->
+<div class="panel-overlay" id="reporte-overlay"></div>
+<div class="panel-flotante" id="reporte-panel">
+  <div class="panel-header">
+    <h2>Ayuda a otros usuarios</h2>
+    <button class="btn-close" id="close-reporte">
+      <span class="material-symbols-rounded">close</span>
+    </button>
+  </div>
+  <div class="panel-content">
+    <div class="reporte-opcion" id="btn-ver-noticias">
+      <i class="material-symbols-rounded icono-opcion">campaign</i>
+      <div>
+        <h4>Ver noticias de ruta</h4>
+        <p>Consulta los reportes recientes de esta ruta</p>
+      </div>
+    </div>
+    <div class="reporte-opcion" id="btn-realizar-reporte">
+      <i class="material-symbols-rounded icono-opcion">edit_square</i>
+      <div>
+        <h4>Realizar un reporte</h4>
+        <p>Envía una sugerencia o reporta una incidencia</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL 2: Formulario de reporte -->
+<div class="panel-overlay" id="formulario-overlay"></div>
+<div class="panel-flotante" id="formulario-panel">
+  <div class="panel-header">
+    <h2>Realizar reporte</h2>
+    <button class="btn-close" id="close-formulario">
+      <span class="material-symbols-rounded">close</span>
+    </button>
+  </div>
+  <div class="panel-content">
+    <label for="tipo-reporte">Tipo de reporte</label>
+    <select id="tipo-reporte">
+      <option value="sugerencia">Sugerencia</option>
+      <option value="incidencia">Incidencia</option>
+    </select>
+
+    <textarea id="mensaje-reporte" placeholder="Escribe tu mensaje..."></textarea>
+    <button class="btn-panel" id="enviar-reporte">Enviar reporte</button>
+  </div>
+</div>
+
+<!-- PANEL 3: Noticias de la ruta -->
+<div class="panel-overlay" id="noticias-overlay"></div>
+<div class="panel-flotante" id="noticias-panel">
+  <div class="panel-header">
+    <h2>Noticias de esta ruta</h2>
+    <button class="btn-close" id="close-noticias">
+      <span class="material-symbols-rounded">close</span>
+    </button>
+  </div>
+  <div class="panel-content" id="lista-noticias">
+    <!-- Aquí se llenarán los reportes de los usuarios dinámicamente -->
+  </div>
+</div>
+    
  
     
     <script src="js/Wheely_principal_registered_user.js"></script>
