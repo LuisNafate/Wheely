@@ -85,7 +85,7 @@
                                 required
                             >
                             <button type="button" class="password-toggle" onclick="togglePassword('passwordInput', this)">
-                                🙉
+                                🙈
                             </button>
                         </div>
                         <div class="password-requirements" id="passwordRequirements">
@@ -111,7 +111,7 @@
                                 required
                             >
                             <button type="button" class="password-toggle" onclick="togglePassword('confirmPasswordInput', this)">
-                                🙉
+                                🙈
                             </button>
                         </div>
                     </div>
@@ -128,10 +128,10 @@
             
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                button.textContent = '🙈';
+                button.textContent = '🙉';
             } else {
                 passwordInput.type = 'password';
-                button.textContent = '🙉';
+                button.textContent = '🙈';
             }
         }
 
