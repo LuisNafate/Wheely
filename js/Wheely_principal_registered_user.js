@@ -271,7 +271,7 @@ function setupRutaItemActions() {
             const rutaDireccion = this.querySelector('p').textContent;
             const rutaTiempo = this.querySelector('.ruta-tiempo span').textContent;
             
-            alert(`🚌 Detalles de la ruta:\n\n${rutaNombre}\n${rutaDireccion}\n${rutaTiempo}\n\n(Aquí se mostraría información detallada de la ruta, paradas, horarios, etc.)`);
+           // alert(`🚌 Detalles de la ruta:\n\n${rutaNombre}\n${rutaDireccion}\n${rutaTiempo}\n\n(Aquí se mostraría información detallada de la ruta, paradas, horarios, etc.)`);
         });
     });
 }
@@ -366,13 +366,13 @@ L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=HlXj
   maxZoom: 22
 }).addTo(map);
 
-// Ejemplo de geo jason de como se vería una ruta
+// Ejemplo de geo jason de como se vería una ruta solo lo habilite en favoritos 
 
 // Simulamos una ruta (ejemplo de la Ruta 45)
-//const ruta45GeoJSON = {
- // "type": "Feature",
-  //"geometry": {
-  /*  "type": "LineString",
+/*const ruta45GeoJSON = {
+ "type": "Feature",
+"geometry": {
+   "type": "LineString",
     "coordinates": [
       [-93.118, 16.753],
       [-93.120, 16.755],
@@ -411,7 +411,38 @@ function mostrarRuta45() {
 // Ejemplo directo (puedes reemplazar esto con un listener real)
 document.querySelector('[data-ruta="45"]')?.addEventListener('click', () => {
   mostrarRuta45();
-});*/
+}); */
+
+// Ruta al archivo GeoJSON
+/*fetch('rutas/rutaA.geojson')
+  .then(response => response.json())
+  .then(data => {
+    // Estilo por tipo de color en las propiedades
+    const estilos = {
+      "DarkOrange": "#FB6D10",
+      "DodgerBlue": "#1E90FF"
+    };
+
+    // Mostrar cada feature
+    L.geoJSON(data, {
+      style: function(feature) {
+        const color = feature?.properties?._umap_options?.color || 'gray';
+        return {
+          color: estilos[color] || color,
+          weight: feature?.properties?._umap_options?.weight || 3
+        };
+      },
+      onEachFeature: function(feature, layer) {
+        if (feature.properties && feature.properties.name) {
+          layer.bindPopup(`<b>${feature.properties.name}</b>`);
+        }
+      }
+    }).addTo(map);
+  })
+  .catch(err => {
+    console.error('Error al cargar GeoJSON:', err);
+  });*/
+
 
 // === MANEJO DE PANELES (CON TÍTULOS DE REPORTE) === //
 
