@@ -31,30 +31,30 @@ function isMobile() {
 
 // Función para manejar el toggle del sidebar
 function toggleSidebar() {
-    if (isMobile()) {
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
+  if (isMobile()) {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+  } else {
+    sidebar.classList.toggle('collapsed');
 
-        if (sidebar.classList.contains('active')) {
-            document.body.style.overflow = 'hidden';
+    const allPanels = [
+      favoritosPanel, rutasPanel,
+      document.getElementById('reporte-panel'),
+      document.getElementById('formulario-panel'),
+      document.getElementById('noticias-panel')
+    ];
+
+    allPanels.forEach(panel => {
+      if (panel.classList.contains('active')) {
+        if (!sidebar.classList.contains('collapsed')) {
+          panel.classList.add('panel-shifted');
         } else {
-            document.body.style.overflow = '';
+          panel.classList.remove('panel-shifted');
         }
-    } else {
-        sidebar.classList.toggle('collapsed');
-
-        // Mover los paneles si están activos
-        const panels = [favoritosPanel, rutasPanel];
-        panels.forEach(panel => {
-            if ((favoritosPanel.classList.contains('active') || rutasPanel.classList.contains('active'))) {
-                if (!sidebar.classList.contains('collapsed')) {
-                    panel.classList.add('panel-shifted');
-                } else {
-                    panel.classList.remove('panel-shifted');
-                }
-            }
-        });
-    }
+      }
+    });
+  }
 }
 
 
@@ -74,6 +74,8 @@ function openFavoritos() {
     if (!sidebar.classList.contains('collapsed') && !isMobile()) {
         favoritosPanel.classList.add('panel-shifted');
     }
+    activarBotonMenu('favoritos-trigger');
+
 }
 
 
@@ -82,6 +84,8 @@ function closeFavoritosPanel() {
     favoritosOverlay.classList.remove('active');
     favoritosPanel.classList.remove('panel-shifted'); // ⬅️ ESTA LÍNEA NUEVA
     document.body.style.overflow = '';
+    activarBotonMenu('inicio-trigger');
+
 }
 
 
@@ -93,7 +97,10 @@ function openRutas() {
 
     if (!sidebar.classList.contains('collapsed') && !isMobile()) {
         rutasPanel.classList.add('panel-shifted');
+        
     }
+    activarBotonMenu('rutas-trigger');
+
 }
 
 
@@ -102,6 +109,8 @@ function closeRutasPanel() {
     rutasOverlay.classList.remove('active');
     rutasPanel.classList.remove('panel-shifted'); // ⬅️ ESTA LÍNEA NUEVA
     document.body.style.overflow = '';
+    activarBotonMenu('inicio-trigger');
+
 }
 
 // Función para cerrar todos los paneles
@@ -269,8 +278,13 @@ function setupRutaItemActions() {
 
 // Funcionalidad del botón agregar favorito
 document.getElementById('agregar-favorito').addEventListener('click', function() {
-    alert('Función para agregar nueva ruta favorita\n(Aquí se abriría un modal o formulario para buscar y agregar rutas)');
+    closeFavoritosPanel(); // Cerramos el panel actual
+    openRutas();           // Abrimos el panel de rutas
+
+    // este me enfocar automáticamente el buscador
+    document.getElementById('search-rutas').focus();
 });
+
 
 // Cerrar sidebar al hacer click en un enlace del menú (solo en móvil)
 const menuLinks = document.querySelectorAll('.menu-link:not(#favoritos-trigger):not(#rutas-trigger)');
@@ -448,7 +462,15 @@ function abrirPanel(overlay, panel) {
   overlay.classList.add('active');
   panel.classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  // Si el sidebar está expandido y no es móvil, aplicar desplazamiento al panel
+  if (!sidebar.classList.contains('collapsed') && !isMobile()) {
+    panel.classList.add('panel-shifted');
+  } else {
+    panel.classList.remove('panel-shifted');
+  }
 }
+
 
 function cerrarPanel(overlay, panel) {
   overlay.classList.remove('active');
@@ -478,3 +500,24 @@ function mostrarNoticiasEjemplo() {
     lista.appendChild(item);
   });
 }
+
+// pa que se ilumnine el panel de favoritos al abrirlo
+function activarBotonMenu(id) {
+  // 1. Quitar la clase active de todos los enlaces del sidebar
+  document.querySelectorAll('.menu-link').forEach(link => {
+    link.classList.remove('active');
+  });
+
+  // 2. Agregar la clase active al botón actual
+  const boton = document.getElementById(id);
+  if (boton) {
+    boton.classList.add('active');
+  }
+}
+const inicioTrigger = document.getElementById('inicio-trigger');
+
+inicioTrigger.addEventListener('click', (e) => {
+  e.preventDefault();
+  closeAllPanels();  // Cierra favoritos, rutas, etc.
+  activarBotonMenu('inicio-trigger');  // Asegura que se ilumine "Inicio"
+});
