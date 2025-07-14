@@ -62,8 +62,8 @@
                                 id="passwordInput"
                                 required
                             >
-                            <button type="button" class="password-toggle" onclick="togglePassword()">
-                                🙉
+                            <button type="button" class="password-toggle" onclick="togglePassword('passwordInput', this)">
+                                <span class="emoji-icon">🙈</span>
                             </button>
                         </div>
                     </div>
@@ -76,6 +76,19 @@
         </div>
     </div>
 
-    <script src="js/wheely_login.js"></script>
+    <script>
+          function togglePassword(inputId, button) {
+    const passwordInput = document.getElementById(inputId);
+    const emojiSpan = button.querySelector(".emoji-icon");
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        emojiSpan.textContent = '🙉'; // Monito con orejas tapadas
+    } else {
+        passwordInput.type = 'password';
+        emojiSpan.textContent = '🙈'; // Monito con ojos tapados
+    }
+}            
+    </script>
 </body>
 </html>
