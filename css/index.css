@@ -26,11 +26,19 @@
         }
 
         .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 10px;
             position: relative;
             animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .logo img {
+             width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
 
         .logo svg {
