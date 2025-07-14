@@ -246,7 +246,7 @@ function setupReportActions() {
                 this.style.transform = 'scale(1)';
             }, 200);
             
-            alert(`🚨 Reportar problema en:\n\n${rutaNumber}\n${rutaDestination}\n\n¿Qué tipo de problema deseas reportar?\n• Retraso en el servicio\n• Vehículo en mal estado\n• Conductor irresponsable\n• Ruta modificada\n• Otro problema\n\n(Aquí se abriría un formulario de reporte)`);
+            //alert(`🚨 Reportar problema en:\n\n${rutaNumber}\n${rutaDestination}\n\n¿Qué tipo de problema deseas reportar?\n• Retraso en el servicio\n• Vehículo en mal estado\n• Conductor irresponsable\n• Ruta modificada\n• Otro problema\n\n(Aquí se abriría un formulario de reporte)`);
         });
     });
 }
@@ -456,7 +456,7 @@ function cerrarPanel(overlay, panel) {
   document.body.style.overflow = '';
 }
 
-// Simulación de noticias (esto se reemplazará por fetch al backend)
+// Simulación de noticias, para ver el estilo que tendra la notica cuando ya loconectemos (esto se reemplazará por fetch al backend)
 function mostrarNoticiasEjemplo() {
   const lista = document.getElementById('lista-noticias');
   lista.innerHTML = '';
