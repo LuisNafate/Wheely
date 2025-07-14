@@ -536,7 +536,6 @@ function mostrarNoticiasEjemplo() {
   });
 }
 
-<<<<<<< HEAD
 // Función para manejar el logout
 function handleLogout() {
     // Mostrar confirmación antes de cerrar sesión
@@ -712,7 +711,6 @@ if (document.readyState === 'loading') {
 } else {
     initializeUserSession();
 }
-=======
 // pa que se ilumnine el panel de favoritos al abrirlo
 function activarBotonMenu(id) {
   // 1. Quitar la clase active de todos los enlaces del sidebar
@@ -733,4 +731,3 @@ inicioTrigger.addEventListener('click', (e) => {
   closeAllPanels();  // Cierra favoritos, rutas, etc.
   activarBotonMenu('inicio-trigger');  // Asegura que se ilumine "Inicio"
 });
->>>>>>> 49efad646f7badfc4134005d820a269b06bcd372
