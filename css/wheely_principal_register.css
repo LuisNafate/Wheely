@@ -944,3 +944,68 @@ body {
         font-size: 18px;
     }
 }
+
+.logout-link {
+    transition: all 0.3s ease;
+}
+
+.logout-link:hover {
+    background: #dc2626 !important;
+    color: #fff !important;
+}
+
+.logout-link:hover .material-symbols-rounded {
+    color: #fff !important;
+}
+
+/* Animación para cuando se cierra sesión */
+.logout-animation {
+    animation: fadeOutUp 0.5s ease-in-out;
+}
+
+@keyframes fadeOutUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Estilos para el mensaje de logout */
+.logout-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #22c55e;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10000;
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Estado de carga para logout */
+.logging-out .sidebar {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.logging-out .main-content {
+    opacity: 0.5;
+    pointer-events: none;
+}
