@@ -31,30 +31,30 @@ function isMobile() {
 
 // Función para manejar el toggle del sidebar
 function toggleSidebar() {
-    if (isMobile()) {
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
+  if (isMobile()) {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+  } else {
+    sidebar.classList.toggle('collapsed');
 
-        if (sidebar.classList.contains('active')) {
-            document.body.style.overflow = 'hidden';
+    const allPanels = [
+      favoritosPanel, rutasPanel,
+      document.getElementById('reporte-panel'),
+      document.getElementById('formulario-panel'),
+      document.getElementById('noticias-panel')
+    ];
+
+    allPanels.forEach(panel => {
+      if (panel.classList.contains('active')) {
+        if (!sidebar.classList.contains('collapsed')) {
+          panel.classList.add('panel-shifted');
         } else {
-            document.body.style.overflow = '';
+          panel.classList.remove('panel-shifted');
         }
-    } else {
-        sidebar.classList.toggle('collapsed');
-
-        // Mover los paneles si están activos
-        const panels = [favoritosPanel, rutasPanel];
-        panels.forEach(panel => {
-            if ((favoritosPanel.classList.contains('active') || rutasPanel.classList.contains('active'))) {
-                if (!sidebar.classList.contains('collapsed')) {
-                    panel.classList.add('panel-shifted');
-                } else {
-                    panel.classList.remove('panel-shifted');
-                }
-            }
-        });
-    }
+      }
+    });
+  }
 }
 
 
@@ -74,6 +74,8 @@ function openFavoritos() {
     if (!sidebar.classList.contains('collapsed') && !isMobile()) {
         favoritosPanel.classList.add('panel-shifted');
     }
+    activarBotonMenu('favoritos-trigger');
+
 }
 
 
@@ -82,6 +84,8 @@ function closeFavoritosPanel() {
     favoritosOverlay.classList.remove('active');
     favoritosPanel.classList.remove('panel-shifted'); // ⬅️ ESTA LÍNEA NUEVA
     document.body.style.overflow = '';
+    activarBotonMenu('inicio-trigger');
+
 }
 
 
@@ -93,7 +97,10 @@ function openRutas() {
 
     if (!sidebar.classList.contains('collapsed') && !isMobile()) {
         rutasPanel.classList.add('panel-shifted');
+        
     }
+    activarBotonMenu('rutas-trigger');
+
 }
 
 
@@ -102,6 +109,8 @@ function closeRutasPanel() {
     rutasOverlay.classList.remove('active');
     rutasPanel.classList.remove('panel-shifted'); // ⬅️ ESTA LÍNEA NUEVA
     document.body.style.overflow = '';
+    activarBotonMenu('inicio-trigger');
+
 }
 
 // Función para cerrar todos los paneles
@@ -262,15 +271,20 @@ function setupRutaItemActions() {
             const rutaDireccion = this.querySelector('p').textContent;
             const rutaTiempo = this.querySelector('.ruta-tiempo span').textContent;
             
-            alert(`🚌 Detalles de la ruta:\n\n${rutaNombre}\n${rutaDireccion}\n${rutaTiempo}\n\n(Aquí se mostraría información detallada de la ruta, paradas, horarios, etc.)`);
+           // alert(`🚌 Detalles de la ruta:\n\n${rutaNombre}\n${rutaDireccion}\n${rutaTiempo}\n\n(Aquí se mostraría información detallada de la ruta, paradas, horarios, etc.)`);
         });
     });
 }
 
 // Funcionalidad del botón agregar favorito
 document.getElementById('agregar-favorito').addEventListener('click', function() {
-    alert('Función para agregar nueva ruta favorita\n(Aquí se abriría un modal o formulario para buscar y agregar rutas)');
+    closeFavoritosPanel(); // Cerramos el panel actual
+    openRutas();           // Abrimos el panel de rutas
+
+    // este me enfocar automáticamente el buscador
+    document.getElementById('search-rutas').focus();
 });
+
 
 // Cerrar sidebar al hacer click en un enlace del menú (solo en móvil)
 const menuLinks = document.querySelectorAll('.menu-link:not(#favoritos-trigger):not(#rutas-trigger)');
@@ -356,13 +370,13 @@ L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=HlXj
   maxZoom: 22
 }).addTo(map);
 
-// Ejemplo de geo jason de como se vería una ruta
+// Ejemplo de geo jason de como se vería una ruta solo lo habilite en favoritos 
 
 // Simulamos una ruta (ejemplo de la Ruta 45)
-//const ruta45GeoJSON = {
- // "type": "Feature",
-  //"geometry": {
-  /*  "type": "LineString",
+/*const ruta45GeoJSON = {
+ "type": "Feature",
+"geometry": {
+   "type": "LineString",
     "coordinates": [
       [-93.118, 16.753],
       [-93.120, 16.755],
@@ -401,9 +415,40 @@ function mostrarRuta45() {
 // Ejemplo directo (puedes reemplazar esto con un listener real)
 document.querySelector('[data-ruta="45"]')?.addEventListener('click', () => {
   mostrarRuta45();
-});*/
+}); */
 
-// === MANEJO DE PANELES //
+// Ruta al archivo GeoJSON
+/*fetch('rutas/rutaA.geojson')
+  .then(response => response.json())
+  .then(data => {
+    // Estilo por tipo de color en las propiedades
+    const estilos = {
+      "DarkOrange": "#FB6D10",
+      "DodgerBlue": "#1E90FF"
+    };
+
+    // Mostrar cada feature
+    L.geoJSON(data, {
+      style: function(feature) {
+        const color = feature?.properties?._umap_options?.color || 'gray';
+        return {
+          color: estilos[color] || color,
+          weight: feature?.properties?._umap_options?.weight || 3
+        };
+      },
+      onEachFeature: function(feature, layer) {
+        if (feature.properties && feature.properties.name) {
+          layer.bindPopup(`<b>${feature.properties.name}</b>`);
+        }
+      }
+    }).addTo(map);
+  })
+  .catch(err => {
+    console.error('Error al cargar GeoJSON:', err);
+  });*/
+
+
+// === MANEJO DE PANELES (CON TÍTULOS DE REPORTE) === //
 
 // Elementos generales
 const overlayReporte = document.getElementById('reporte-overlay');
@@ -452,7 +497,15 @@ function abrirPanel(overlay, panel) {
   overlay.classList.add('active');
   panel.classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  // Si el sidebar está expandido y no es móvil, aplicar desplazamiento al panel
+  if (!sidebar.classList.contains('collapsed') && !isMobile()) {
+    panel.classList.add('panel-shifted');
+  } else {
+    panel.classList.remove('panel-shifted');
+  }
 }
+
 
 function cerrarPanel(overlay, panel) {
   overlay.classList.remove('active');
@@ -460,15 +513,15 @@ function cerrarPanel(overlay, panel) {
   document.body.style.overflow = '';
 }
 
-// Simulación de noticias, para ver el estilo que tendra la notica cuando ya loconectemos (esto se reemplazará por fetch al backend)
+// Simulación de noticias con título
 function mostrarNoticiasEjemplo() {
   const lista = document.getElementById('lista-noticias');
   lista.innerHTML = '';
-  
+
   const noticiasSimuladas = [
-    { tipo: 'Incidencia', mensaje: 'La combi 45 se desvió por obras el 12 de julio.' },
-    { tipo: 'Sugerencia', mensaje: 'Agregar una parada frente al mercado central.' },
-    { tipo: 'Incidencia', mensaje: 'El conductor iba con exceso de velocidad.' }
+    { tipo: 'Incidencia', titulo: 'Ruta desviada por obras', mensaje: 'La combi 45 se desvió el 12 de julio.' },
+    { tipo: 'Sugerencia', titulo: 'Parada en el mercado', mensaje: 'Agregar una parada frente al mercado central.' },
+    { tipo: 'Incidencia', titulo: 'Conducción peligrosa', mensaje: 'El conductor iba con exceso de velocidad.' }
   ];
 
   noticiasSimuladas.forEach(noticia => {
@@ -476,12 +529,14 @@ function mostrarNoticiasEjemplo() {
     item.classList.add('noticia-item');
     item.innerHTML = `
       <h4>${noticia.tipo}</h4>
+      <h3>${noticia.titulo}</h3>
       <p>${noticia.mensaje}</p>
     `;
     lista.appendChild(item);
   });
 }
 
+<<<<<<< HEAD
 // Función para manejar el logout
 function handleLogout() {
     // Mostrar confirmación antes de cerrar sesión
@@ -657,3 +712,25 @@ if (document.readyState === 'loading') {
 } else {
     initializeUserSession();
 }
+=======
+// pa que se ilumnine el panel de favoritos al abrirlo
+function activarBotonMenu(id) {
+  // 1. Quitar la clase active de todos los enlaces del sidebar
+  document.querySelectorAll('.menu-link').forEach(link => {
+    link.classList.remove('active');
+  });
+
+  // 2. Agregar la clase active al botón actual
+  const boton = document.getElementById(id);
+  if (boton) {
+    boton.classList.add('active');
+  }
+}
+const inicioTrigger = document.getElementById('inicio-trigger');
+
+inicioTrigger.addEventListener('click', (e) => {
+  e.preventDefault();
+  closeAllPanels();  // Cierra favoritos, rutas, etc.
+  activarBotonMenu('inicio-trigger');  // Asegura que se ilumine "Inicio"
+});
+>>>>>>> 49efad646f7badfc4134005d820a269b06bcd372

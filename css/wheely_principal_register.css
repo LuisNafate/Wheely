@@ -596,7 +596,7 @@ body {
   left: 90px;
 }
 
-/* === PANEL DE REPORTES Y NOTICIAS === */
+/* === PANEL DE REPORTES Y NOTICIAS (ACTUALIZADO CON TÍTULOS) === */
 
 .hidden {
   display: none;
@@ -643,7 +643,8 @@ body {
 }
 
 #formulario-panel select,
-#formulario-panel textarea {
+#formulario-panel textarea,
+#formulario-panel input[type="text"] {
   width: 100%;
   padding: 10px 14px;
   margin-bottom: 15px;
@@ -660,7 +661,8 @@ body {
 }
 
 #formulario-panel select:focus,
-#formulario-panel textarea:focus {
+#formulario-panel textarea:focus,
+#formulario-panel input[type="text"]:focus {
   outline: none;
   border-color: var(--color-hover-primary);
 }
@@ -694,12 +696,167 @@ body {
   margin: 0 0 6px;
   font-size: 15px;
   font-weight: 600;
+  color: var(--color-hover-primary);
+}
+
+.noticia-item h3 {
+  margin: 4px 0;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 500;
 }
 
 .noticia-item p {
   margin: 0;
   font-size: 14px;
   color: #ccc;
+}
+
+/* === PANEL DE REPORTES Y NOTICIAS (ACTUALIZADO CON TÍTULOS) === */
+
+.hidden {
+  display: none;
+}
+
+.panel-flotante .panel-content {
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reporte-opcion {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.reporte-opcion:hover {
+  background: rgba(251, 109, 16, 0.1);
+}
+
+.icono-opcion {
+  font-size: 28px;
+  color: var(--color-hover-primary);
+  flex-shrink: 0;
+}
+
+.reporte-opcion h4 {
+  font-size: 18px;
+  color: var(--color-text-primary);
+  margin: 0 0 5px 0;
+}
+
+.reporte-opcion p {
+  margin: 0;
+  font-size: 14px;
+  color: #a0aec0;
+}
+
+#formulario-panel select,
+#formulario-panel textarea,
+#formulario-panel input[type="text"] {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-hr);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-size: 14px;
+}
+
+#formulario-panel textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+#formulario-panel select:focus,
+#formulario-panel textarea:focus,
+#formulario-panel input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-hover-primary);
+}
+
+#enviar-reporte {
+  background-color: var(--color-hover-primary);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#enviar-reporte:hover {
+  background-color: var(--color-hover-secondary);
+}
+
+/* Noticias (panel 3) */
+.noticia-item {
+  background: #2a2a2a;
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: var(--color-text-primary);
+  border-left: 5px solid var(--color-hover-primary);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.noticia-item h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-hover-primary);
+}
+
+.noticia-item h3 {
+  margin: 4px 0;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.noticia-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* === BOTONES LATERALES MAPA === */
+.right-buttons {
+  position: absolute;
+  right: 20px;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 20;
+}
+
+.right-buttons .btn {
+  background-color: #1d1e22;
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.right-buttons .btn:hover {
+  background-color: var(--color-hover-primary);
 }
 
 
