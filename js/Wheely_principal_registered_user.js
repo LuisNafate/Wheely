@@ -275,8 +275,12 @@ document.getElementById('agregar-favorito').addEventListener('click', function()
 // Cerrar sidebar al hacer click en un enlace del menú (solo en móvil)
 const menuLinks = document.querySelectorAll('.menu-link:not(#favoritos-trigger):not(#rutas-trigger)');
 menuLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        if (isMobile()) {
+    link.addEventListener('click', (e) => {
+        // Verificar si es el link de logout
+        if (link.querySelector('.menu-label')?.textContent === 'Logout') {
+            e.preventDefault();
+            handleLogout();
+        } else if (isMobile()) {
             closeSidebar();
         }
     });
@@ -476,4 +480,180 @@ function mostrarNoticiasEjemplo() {
     `;
     lista.appendChild(item);
   });
+}
+
+// Función para manejar el logout
+function handleLogout() {
+    // Mostrar confirmación antes de cerrar sesión
+    const confirmLogout = confirm('¿Estás seguro de que quieres cerrar sesión?');
+    
+    if (confirmLogout) {
+        try {
+            // Limpiar datos del usuario del localStorage
+            localStorage.removeItem('wheelyUser');
+            
+            // Limpiar cualquier otro dato de sesión que puedas tener
+            localStorage.removeItem('wheelyPreferences');
+            localStorage.removeItem('wheelyFavorites');
+            
+            // Limpiar sessionStorage también
+            sessionStorage.clear();
+            
+            // Mostrar mensaje de confirmación (opcional)
+            console.log('Sesión cerrada exitosamente');
+            
+            // Redirigir a la página de bienvenida
+            window.location.href = 'wheely_welcome.html';
+            
+        } catch (error) {
+            console.error('Error al cerrar sesión:', error);
+            
+            // Aunque haya error, redirigir de todas formas
+            window.location.href = 'wheely_welcome.html';
+        }
+    }
+}
+
+// Función para verificar si hay una sesión activa
+function checkActiveSession() {
+    const userData = localStorage.getItem('wheelyUser');
+    
+    if (!userData) {
+        // No hay sesión activa, redirigir al login
+        console.log('No hay sesión activa, redirigiendo...');
+        window.location.href = 'wheely_welcome.html';
+        return false;
+    }
+    
+    try {
+        const user = JSON.parse(userData);
+        const loginTime = user.loginTime;
+        const currentTime = new Date().getTime();
+        const timeDiff = currentTime - loginTime;
+        
+        // Verificar si la sesión ha expirado (24 horas = 24 * 60 * 60 * 1000 ms)
+        const SESSION_DURATION = 24 * 60 * 60 * 1000;
+        
+        if (timeDiff > SESSION_DURATION) {
+            // Sesión expirada
+            console.log('Sesión expirada, cerrando automáticamente...');
+            localStorage.removeItem('wheelyUser');
+            alert('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
+            window.location.href = 'wheely_welcome.html';
+            return false;
+        }
+        
+        // Sesión válida, actualizar información del usuario en la interfaz
+        updateUserInterface(user);
+        return true;
+        
+    } catch (error) {
+        console.error('Error al verificar sesión:', error);
+        localStorage.removeItem('wheelyUser');
+        window.location.href = 'wheely_welcome.html';
+        return false;
+    }
+}
+
+// Función para actualizar la interfaz con información del usuario
+function updateUserInterface(user) {
+    try {
+        // Actualizar nombre del usuario en el perfil
+        const nameElement = document.querySelector('.profile-info .name');
+        if (nameElement && user.name) {
+            nameElement.textContent = user.name;
+        }
+        
+        // Actualizar avatar con inicial del nombre (opcional)
+        const avatarElement = document.querySelector('.profile .avatar');
+        if (avatarElement && user.name) {
+            // Opcional: Si quieres mostrar la inicial del nombre en lugar de imagen
+            // avatarElement.style.display = 'none';
+            // Crear elemento con inicial...
+        }
+        
+        console.log('Interfaz actualizada para usuario:', user.name);
+        
+    } catch (error) {
+        console.error('Error al actualizar interfaz de usuario:', error);
+    }
+}
+
+// Función para manejar la visibilidad de la página
+function handleVisibilityChange() {
+    if (document.visibilityState === 'visible') {
+        // Verificar sesión cuando el usuario regresa a la página
+        checkActiveSession();
+    }
+}
+
+// Función para configurar event listeners de logout
+function setupLogoutListeners() {
+    // Buscar todos los enlaces de logout
+    const logoutLinks = document.querySelectorAll('a[aria-label="Cerrar sesión"], .menu-link[aria-label="Cerrar sesión"]');
+    
+    logoutLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            handleLogout();
+        });
+    });
+    
+    console.log('Listeners de logout configurados para', logoutLinks.length, 'elementos');
+}
+
+// Función para manejar el cierre de sesión por inactividad (opcional)
+let inactivityTimer;
+const INACTIVITY_TIME = 30 * 60 * 1000; // 30 minutos
+
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    
+    inactivityTimer = setTimeout(() => {
+        const confirmStayLoggedIn = confirm('Has estado inactivo por un tiempo. ¿Quieres mantener tu sesión activa?');
+        
+        if (!confirmStayLoggedIn) {
+            handleLogout();
+        } else {
+            resetInactivityTimer(); // Reiniciar timer si el usuario quiere quedarse
+        }
+    }, INACTIVITY_TIME);
+}
+
+// Función para detectar actividad del usuario
+function detectUserActivity() {
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    
+    events.forEach(event => {
+        document.addEventListener(event, resetInactivityTimer, true);
+    });
+}
+
+// Función de inicialización
+function initializeUserSession() {
+    console.log('Inicializando gestión de sesión de usuario...');
+    
+    // Verificar sesión activa al cargar la página
+    if (!checkActiveSession()) {
+        return; // Si no hay sesión válida, la función ya redirige
+    }
+    
+    // Configurar listeners de logout
+    setupLogoutListeners();
+    
+    // Configurar verificación de visibilidad de página
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Opcional: Activar timer de inactividad
+    // resetInactivityTimer();
+    // detectUserActivity();
+    
+    console.log('Gestión de sesión inicializada correctamente');
+}
+
+// Ejecutar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeUserSession);
+} else {
+    initializeUserSession();
 }

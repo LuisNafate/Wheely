@@ -10,9 +10,7 @@
     <div class="black-stripe"></div>
     
     <div class="logo">
-        <!-- Logo png de Wheely -->
         <img src="img/logo.png" alt="Logo de Wheely" style="width: 100px; height: auto; display: block; margin: 0 auto;">
-        
     </div>
 
     <div class="container">
@@ -28,7 +26,8 @@
                 transporte público local.
             </p>
         </div>
-         <div class="left-image">
+        
+        <div class="left-image">
             <img src="img/image-removebg-preview (10).png" alt="Imagen de la Parada" height="90%" width="90%">
         </div>
 
@@ -41,208 +40,501 @@
                     <h2 class="register-title">Regístrate</h2>
                     <p class="register-login-link">¿Tienes cuenta? <a href="wheely_login.html">Inicia Sesión</a></p>
                 </div>
-                
-                <form class="register-form" onsubmit="handleRegister(event)">
-                    <div class="form-group">
-                        <label class="form-label">
-                            Ingresa tu correo electrónico
-                            <span class="required-mark">*</span>
-                        </label>
-                        <input 
-                            type="email" 
-                            class="form-input" 
-                            placeholder="rodi@gmail.com" 
-                            id="emailInput"
-                            required
-                        >
-                    </div>
 
+                <!-- Indicador de carga -->
+                <div id="loading-indicator" class="loading-hidden">
+                    <div class="loading-spinner"></div>
+                    <p>Creando tu cuenta...</p>
+                </div>
+                
+                <form class="register-form" onsubmit="handleRegister(event)" id="registerForm">
                     <div class="form-group">
                         <label class="form-label">
-                            Nombre de usuario
+                            Nombre completo
                             <span class="required-mark">*</span>
                         </label>
                         <input 
                             type="text" 
                             class="form-input" 
-                            placeholder="rodrigo231" 
-                            id="usernameInput"
+                            placeholder="Ej: Juan Pérez" 
+                            id="nameInput"
                             required
+                            autocomplete="name"
+                            maxlength="100"
                         >
-                    <p id="usernameError" style="color: red; font-size: 14px; margin-top: 4px;"></p>
-
+                        <p id="nameError" class="field-error"></p>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
-                            Ingresa tu contraseña
+                            Correo electrónico
+                            <span class="required-mark">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            class="form-input" 
+                            placeholder="usuario@gmail.com" 
+                            id="emailInput"
+                            required
+                            autocomplete="email"
+                            maxlength="150"
+                        >
+                        <p id="emailError" class="field-error"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Contraseña
                             <span class="required-mark">*</span>
                         </label>
                         <div class="password-wrapper">
                             <input 
                                 type="password" 
                                 class="form-input" 
-                                placeholder="wEelf23" 
+                                placeholder="Crea una contraseña segura" 
                                 id="passwordInput"
                                 required
+                                autocomplete="new-password"
+                                maxlength="100"
                             >
                             <button type="button" class="password-toggle" onclick="togglePassword('passwordInput', this)">
                                 🙈
                             </button>
                         </div>
                         <div class="password-requirements" id="passwordRequirements">
-                            <p id="req-length">• Mínimo 8 caracteres</p>
-                            <p id="req-uppercase">• Al menos 1 letra mayúscula</p>
-                            <p id="req-lowercase">• Al menos 1 letra minúscula</p>
-                            <p id="req-number">• Al menos 1 número</p>
-                            <p id="req-symbol">• Al menos 1 símbolo</p>
+                            <p id="req-length" class="requirement">• Mínimo 8 caracteres</p>
+                            <p id="req-uppercase" class="requirement">• Al menos 1 letra mayúscula</p>
+                            <p id="req-lowercase" class="requirement">• Al menos 1 letra minúscula</p>
+                            <p id="req-number" class="requirement">• Al menos 1 número</p>
+                            <p id="req-symbol" class="requirement">• Al menos 1 símbolo (#%$/\"!?¿¡\\)</p>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">
-                            Confirma tu contraseña
+                            Confirmar contraseña
                             <span class="required-mark">*</span>
                         </label>
                         <div class="password-wrapper">
                             <input 
                                 type="password" 
                                 class="form-input" 
-                                placeholder="Escribe nuevamente tu contraseña" 
+                                placeholder="Confirma tu contraseña" 
                                 id="confirmPasswordInput"
                                 required
+                                autocomplete="new-password"
+                                maxlength="100"
                             >
-                            <p id="confirmPasswordError" style="color: red; font-size: 14px; margin-top: 4px;"></p>
                             <button type="button" class="password-toggle" onclick="togglePassword('confirmPasswordInput', this)">
                                 🙈
                             </button>
                         </div>
+                        <p id="confirmPasswordError" class="field-error"></p>
                     </div>
 
-                    <button type="submit" class="register-btn">Registrarse</button>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="termsCheckbox" required>
+                            <span class="checkmark"></span>
+                            Acepto los <a href="#" onclick="showTerms(event)">términos y condiciones</a> de Wheely
+                        </label>
+                    </div>
+
+                    <button type="submit" class="register-btn" id="registerButton">Registrarse</button>
                 </form>
+
+                <!-- Mensajes de error y éxito -->
+                <div id="message-container">
+                    <p id="errorMessage" class="message error-message"></p>
+                    <p id="successMessage" class="message success-message"></p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        function togglePassword(inputId, button) {
-        const passwordInput = document.getElementById(inputId);
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            button.textContent = '🙉';
-        } else {
-            passwordInput.type = 'password';
-            button.textContent = '🙈';
-        }
-    }
-
-    function validatePassword(password) {
-        const requirements = {
-            length: password.length >= 8,
-            uppercase: /[A-Z]/.test(password),
-            lowercase: /[a-z]/.test(password),
-            number: /\d/.test(password),
-            symbol: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+        // Configuración de la API
+        const API_CONFIG = {
+            baseURL: 'http://localhost:7000',
+            endpoints: {
+                register: '/usuarios/register'
+            }
         };
 
-        // Actualizar estilos visuales de requisitos
-        document.getElementById('req-length').className = requirements.length ? 'valid' : 'invalid';
-        document.getElementById('req-uppercase').className = requirements.uppercase ? 'valid' : 'invalid';
-        document.getElementById('req-lowercase').className = requirements.lowercase ? 'valid' : 'invalid';
-        document.getElementById('req-number').className = requirements.number ? 'valid' : 'invalid';
-        document.getElementById('req-symbol').className = requirements.symbol ? 'valid' : 'invalid';
+        // Variables globales
+        let isLoading = false;
+        let passwordValidation = {
+            length: false,
+            uppercase: false,
+            lowercase: false,
+            number: false,
+            symbol: false
+        };
 
-        return Object.values(requirements).every(req => req);
-    }
-
-    function handleRegister(event) {
-        event.preventDefault();
-
-        const email = document.getElementById('emailInput').value;
-        const username = document.getElementById('usernameInput').value;
-        const password = document.getElementById('passwordInput').value;
-        const confirmPassword = document.getElementById('confirmPasswordInput').value;
-
-        const usernameError = document.getElementById('usernameError');
-        const confirmPasswordError = document.getElementById('confirmPasswordError');
-
-        usernameError.textContent = '';
-        confirmPasswordError.textContent = '';
-
-        const usernameRegex = /^[a-zA-Z0-9@_-]+$/;
-        if (!usernameRegex.test(username)) {
-            usernameError.textContent = 'El nombre de usuario solo puede contener letras, números y _ - @';
-            return;
-        }
-
-        if (!validatePassword(password)) {
-            alert('La contraseña no cumple con todos los requisitos');
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            confirmPasswordError.textContent = 'Las contraseñas no coinciden';
-            return;
-        }
-
-        alert('Registrando usuario...');
-        window.location.href = 'wheely_log_register.html';
-    }
-
-    function goBack() {
-        window.location.href = 'index.html';
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const usernameInput = document.getElementById('usernameInput');
-        const passwordInput = document.getElementById('passwordInput');
-        const confirmPasswordInput = document.getElementById('confirmPasswordInput');
-        const usernameError = document.getElementById('usernameError');
-        const confirmPasswordError = document.getElementById('confirmPasswordError');
-
-        usernameInput.addEventListener('input', function () {
-            const valid = /^[a-zA-Z0-9@_-]*$/.test(this.value);
-            if (!valid) {
-                usernameError.textContent = 'Solo se permiten letras, números y _ - @';
-                this.classList.add('invalid');
+        // Función para alternar visibilidad de contraseña
+        function togglePassword(inputId, button) {
+            const passwordInput = document.getElementById(inputId);
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                button.textContent = '🙉';
             } else {
-                usernameError.textContent = '';
-                this.classList.remove('invalid');
+                passwordInput.type = 'password';
+                button.textContent = '🙈';
             }
-        });
+        }
 
-        passwordInput.addEventListener('input', function () {
-            validatePassword(this.value);
-        });
+        // Función para mostrar/ocultar loading
+        function toggleLoading(show) {
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const registerForm = document.getElementById('registerForm');
+            const registerButton = document.getElementById('registerButton');
 
-        confirmPasswordInput.addEventListener('input', function () {
-            const password = passwordInput.value;
-            if (this.value && this.value !== password) {
-                this.classList.add('invalid');
-                this.classList.remove('valid');
-                confirmPasswordError.textContent = 'Las contraseñas no coinciden';
-            } else if (this.value === password && password) {
-                this.classList.add('valid');
-                this.classList.remove('invalid');
-                confirmPasswordError.textContent = '';
+            isLoading = show;
+
+            if (show) {
+                loadingIndicator.classList.remove('loading-hidden');
+                loadingIndicator.classList.add('loading-visible');
+                registerForm.style.opacity = '0.6';
+                registerButton.disabled = true;
+                registerButton.textContent = 'Creando cuenta...';
             } else {
-                this.classList.remove('valid', 'invalid');
-                confirmPasswordError.textContent = '';
+                loadingIndicator.classList.remove('loading-visible');
+                loadingIndicator.classList.add('loading-hidden');
+                registerForm.style.opacity = '1';
+                registerButton.disabled = false;
+                registerButton.textContent = 'Registrarse';
             }
-        });
+        }
 
-        const formGroups = document.querySelectorAll('.form-group');
-        formGroups.forEach((group, index) => {
-            group.style.opacity = '0';
-            group.style.transform = 'translateY(20px)';
+        // Función para mostrar mensajes
+        function showMessage(message, type = 'error') {
+            clearMessages();
+            
+            const messageElement = document.getElementById(type === 'error' ? 'errorMessage' : 'successMessage');
+            messageElement.textContent = message;
+            messageElement.style.display = 'block';
+
+            // Auto-ocultar mensaje después de 7 segundos
             setTimeout(() => {
-                group.style.transition = 'all 0.6s ease';
-                group.style.opacity = '1';
-                group.style.transform = 'translateY(0)';
-            }, 300 + (index * 100));
+                messageElement.style.display = 'none';
+            }, 7000);
+        }
+
+        // Función para limpiar mensajes
+        function clearMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            // Limpiar errores de campos individuales
+            document.querySelectorAll('.field-error').forEach(error => {
+                error.textContent = '';
+            });
+        }
+
+        // Función para mostrar error en campo específico
+        function showFieldError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            if (errorElement) {
+                errorElement.textContent = message;
+            }
+        }
+
+        // Función para validar email
+        function isValidEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailRegex.test(email);
+        }
+
+        // Función para validar nombre
+        function isValidName(name) {
+            const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,100}$/;
+            return nameRegex.test(name.trim());
+        }
+
+        // Función para validar contraseña
+        function validatePassword(password) {
+            passwordValidation = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                symbol: /[#%$/"!?¿¡\\]/.test(password)
+            };
+
+            // Actualizar estilos visuales de requisitos
+            document.getElementById('req-length').className = passwordValidation.length ? 'requirement valid' : 'requirement invalid';
+            document.getElementById('req-uppercase').className = passwordValidation.uppercase ? 'requirement valid' : 'requirement invalid';
+            document.getElementById('req-lowercase').className = passwordValidation.lowercase ? 'requirement valid' : 'requirement invalid';
+            document.getElementById('req-number').className = passwordValidation.number ? 'requirement valid' : 'requirement invalid';
+            document.getElementById('req-symbol').className = passwordValidation.symbol ? 'requirement valid' : 'requirement invalid';
+
+            return Object.values(passwordValidation).every(req => req);
+        }
+
+        // Función principal de registro
+        async function handleRegister(event) {
+            event.preventDefault();
+
+            if (isLoading) return;
+
+            // Obtener valores del formulario
+            const name = document.getElementById('nameInput').value.trim();
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+            const confirmPassword = document.getElementById('confirmPasswordInput').value;
+            const termsAccepted = document.getElementById('termsCheckbox').checked;
+
+            // Limpiar mensajes previos
+            clearMessages();
+
+            // Validaciones del lado del cliente
+            let hasErrors = false;
+
+            // Validar nombre
+            if (!name) {
+                showFieldError('name', 'El nombre es requerido');
+                hasErrors = true;
+            } else if (!isValidName(name)) {
+                showFieldError('name', 'El nombre solo puede contener letras y espacios (2-100 caracteres)');
+                hasErrors = true;
+            }
+
+            // Validar email
+            if (!email) {
+                showFieldError('email', 'El email es requerido');
+                hasErrors = true;
+            } else if (!isValidEmail(email)) {
+                showFieldError('email', 'Por favor ingresa un email válido');
+                hasErrors = true;
+            }
+
+            // Validar contraseña
+            if (!password) {
+                showMessage('La contraseña es requerida', 'error');
+                hasErrors = true;
+            } else if (!validatePassword(password)) {
+                showMessage('La contraseña no cumple con todos los requisitos', 'error');
+                hasErrors = true;
+            }
+
+            // Validar confirmación de contraseña
+            if (!confirmPassword) {
+                showFieldError('confirmPassword', 'Debes confirmar tu contraseña');
+                hasErrors = true;
+            } else if (password !== confirmPassword) {
+                showFieldError('confirmPassword', 'Las contraseñas no coinciden');
+                hasErrors = true;
+            }
+
+            // Validar términos y condiciones
+            if (!termsAccepted) {
+                showMessage('Debes aceptar los términos y condiciones', 'error');
+                hasErrors = true;
+            }
+
+            if (hasErrors) return;
+
+            // Mostrar loading
+            toggleLoading(true);
+
+            try {
+                // Realizar petición de registro
+                const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.register}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nombre: name,
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Registro exitoso
+                    const userData = data.data;
+                    
+                    // Mostrar mensaje de éxito
+                    showMessage('¡Registro exitoso! Redirigiendo al login...', 'success');
+
+                    // Limpiar formulario
+                    document.getElementById('registerForm').reset();
+                    
+                    // Redirigir después de un breve delay
+                    setTimeout(() => {
+                        window.location.href = 'wheely_login.html';
+                    }, 2000);
+
+                } else {
+                    // Registro fallido
+                    let errorMessage = 'Error al crear la cuenta. Inténtalo de nuevo.';
+                    
+                    if (data.message) {
+                        if (data.message.includes('email') && data.message.includes('existe')) {
+                            errorMessage = 'Este email ya está registrado. Intenta con otro email o inicia sesión.';
+                            showFieldError('email', 'Este email ya está en uso');
+                        } else if (data.message.includes('Contraseña no válida')) {
+                            errorMessage = 'La contraseña no cumple con los requisitos de seguridad.';
+                        } else {
+                            errorMessage = data.message;
+                        }
+                    }
+                    
+                    showMessage(errorMessage, 'error');
+                }
+
+            } catch (error) {
+                console.error('Error durante el registro:', error);
+                
+                // Verificar si es un error de conexión
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    showMessage('No se pudo conectar con el servidor. Verifica tu conexión a internet.', 'error');
+                } else {
+                    showMessage('Ocurrió un error inesperado. Inténtalo de nuevo.', 'error');
+                }
+            } finally {
+                // Ocultar loading
+                toggleLoading(false);
+            }
+        }
+
+        // Función para mostrar términos y condiciones
+        function showTerms(event) {
+            event.preventDefault();
+            alert(`Términos y Condiciones de Wheely
+
+1. Uso del Servicio
+- Wheely es una plataforma gratuita para consultar información de transporte público
+- Los usuarios pueden reportar incidencias y sugerencias
+- El servicio se proporciona "tal como está"
+
+2. Privacidad
+- Respetamos tu privacidad y protegemos tus datos personales
+- Solo recopilamos información necesaria para el funcionamiento del servicio
+- No compartimos tu información con terceros sin tu consentimiento
+
+3. Responsabilidades del Usuario
+- Proporcionar información veraz en los reportes
+- No usar el servicio para fines ilegales o maliciosos
+- Mantener la confidencialidad de tu cuenta
+
+4. Limitaciones
+- Wheely no se hace responsable por retrasos o problemas del transporte público
+- La información mostrada puede no estar actualizada en tiempo real
+
+Al registrarte, aceptas estos términos y condiciones.`);
+        }
+
+        // Función para volver atrás
+        function goBack() {
+            window.location.href = 'wheely_welcome.html';
+        }
+
+        // Función para manejar Enter en los campos
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !isLoading) {
+                const form = document.getElementById('registerForm');
+                form.dispatchEvent(new Event('submit', { cancelable: true }));
+            }
+        }
+
+        // Inicialización cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar validación en tiempo real
+            const nameInput = document.getElementById('nameInput');
+            const emailInput = document.getElementById('emailInput');
+            const passwordInput = document.getElementById('passwordInput');
+            const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+
+            // Validación de nombre en tiempo real
+            nameInput.addEventListener('input', function() {
+                const name = this.value.trim();
+                if (name && !isValidName(name)) {
+                    showFieldError('name', 'Solo letras y espacios permitidos');
+                    this.classList.add('invalid');
+                } else {
+                    showFieldError('name', '');
+                    this.classList.remove('invalid');
+                    if (name) this.classList.add('valid');
+                }
+            });
+
+            // Validación de email en tiempo real
+            emailInput.addEventListener('blur', function() {
+                const email = this.value.trim();
+                if (email && !isValidEmail(email)) {
+                    showFieldError('email', 'Formato de email inválido');
+                    this.classList.add('invalid');
+                } else {
+                    showFieldError('email', '');
+                    this.classList.remove('invalid');
+                    if (email) this.classList.add('valid');
+                }
+            });
+
+            // Validación de contraseña en tiempo real
+            passwordInput.addEventListener('input', function() {
+                validatePassword(this.value);
+                
+                // Validar confirmación si ya hay algo escrito
+                const confirmPassword = confirmPasswordInput.value;
+                if (confirmPassword) {
+                    validatePasswordConfirmation();
+                }
+            });
+
+            // Validación de confirmación de contraseña
+            function validatePasswordConfirmation() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                
+                if (confirmPassword && confirmPassword !== password) {
+                    confirmPasswordInput.classList.add('invalid');
+                    confirmPasswordInput.classList.remove('valid');
+                    showFieldError('confirmPassword', 'Las contraseñas no coinciden');
+                } else if (confirmPassword === password && password) {
+                    confirmPasswordInput.classList.add('valid');
+                    confirmPasswordInput.classList.remove('invalid');
+                    showFieldError('confirmPassword', '');
+                } else {
+                    confirmPasswordInput.classList.remove('valid', 'invalid');
+                    showFieldError('confirmPassword', '');
+                }
+            }
+
+            confirmPasswordInput.addEventListener('input', validatePasswordConfirmation);
+
+            // Event listeners para Enter
+            [nameInput, emailInput, passwordInput, confirmPasswordInput].forEach(input => {
+                input.addEventListener('keypress', handleKeyPress);
+            });
+
+            // Animación de entrada de los elementos del formulario
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.opacity = '0';
+                group.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    group.style.transition = 'all 0.6s ease';
+                    group.style.opacity = '1';
+                    group.style.transform = 'translateY(0)';
+                }, 300 + (index * 100));
+            });
+
+            // Focus automático en el campo de nombre
+            setTimeout(() => {
+                nameInput.focus();
+            }, 500);
         });
-    });
+
+        // Manejar visibilidad de la página
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+                clearMessages();
+            }
+        });
     </script>
-</body>
-</html>

@@ -25,7 +25,7 @@
             <!-- Menu list -->
             <ul class="menu-list">
                 <li class="menu-item">
-                    <a href="#" class="menu-link active" aria-label="Inicio">
+                    <a href="#" class="menu-link active" aria-label="Inicio" id="inicio-trigger">
                         <span class="material-symbols-rounded">home</span>
                         <span class="menu-label">Inicio</span>
                     </a>
@@ -46,9 +46,9 @@
                 </li>
                 
                 <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Difunde">
-                        <span class="material-symbols-rounded">share</span>
-                        <span class="menu-label">Estádistica</span>
+                    <a href="#" class="menu-link" aria-label="Estadísticas">
+                        <span class="material-symbols-rounded">analytics</span>
+                        <span class="menu-label">Estadísticas</span>
                     </a>
                 </li>
                 
@@ -63,23 +63,24 @@
         
         <!-- Footer section -->
         <div class="sidebar-footer">
-            <div class="profile">
-                <img src="https://i.pinimg.com/736x/a0/f6/d8/a0f6d8722e2ca13e433591c68bc5401f.jpg" alt="Avatar de Alix Montes" class="avatar">
-                <div class="profile-info">
-                    <h3 class="name">Alix Montes</h3>
-                    <p class="role">Usuario</p>
-                </div>
-            </div>
-            
-            <ul class="menu-list">
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Cerrar sesión">
-                        <span class="material-symbols-rounded">logout</span>
-                        <span class="menu-label">Logout</span>
-                    </a>
-                </li>
-            </ul>
+    <div class="profile">
+        <img src="https://i.pinimg.com/736x/a0/f6/d8/a0f6d8722e2ca13e433591c68bc5401f.jpg" alt="Avatar de usuario" class="avatar">
+        <div class="profile-info">
+            <h3 class="name">Usuario</h3>
+            <p class="role">Registrado</p>
         </div>
+    </div>
+    
+    <ul class="menu-list">
+        <li class="menu-item">
+            <a href="#" class="menu-link logout-link" aria-label="Cerrar sesión" id="logout-trigger">
+                <span class="material-symbols-rounded">logout</span>
+                <span class="menu-label">Cerrar Sesión</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
     </aside>
   
      <!-- Integracion de la barar de busqueda y el mapita -->
@@ -87,20 +88,21 @@
   <div class="nav-container">
     
     <div class="nav-busqueda">
-      <input type="text" id="input-busqueda" placeholder="¿A donde deceas ir?">
+      <input type="text" id="input-busqueda" placeholder="¿A donde deseas ir?">
       <i class="bi bi-search"></i>
     </div>
   </div>
 </header>
 
+<div class="right-buttons">
+  <button class="btn" title="Marcar inicio y fin"><i class="bi bi-geo-alt-fill"></i></button>
+  <button class="btn" title="Marcar punto único"><i class="bi bi-geo-alt"></i></button>
+  <button class="btn" title="Centrar mapa"><i class="bi bi-crosshair"></i></button>
+</div>
+
   <!-- Integracion del mapa Jawn.Dark ando provando -->
 
     <div id="mapa-wheely"></div>
-
-
-
-
-
 
     <!-- Panel de Favoritos -->
     <div class="panel-overlay" id="favoritos-overlay"></div>
@@ -433,21 +435,27 @@
 <div class="panel-overlay" id="formulario-overlay"></div>
 <div class="panel-flotante" id="formulario-panel">
   <div class="panel-header">
-    <h2>Realizar reporte</h2>
-    <button class="btn-close" id="close-formulario">
-      <span class="material-symbols-rounded">close</span>
-    </button>
-  </div>
-  <div class="panel-content">
-    <label for="tipo-reporte">Tipo de reporte</label>
-    <select id="tipo-reporte">
-      <option value="sugerencia">Sugerencia</option>
-      <option value="incidencia">Incidencia</option>
-    </select>
+  <h2>Realizar reporte</h2>
+  <button class="btn-close" id="close-formulario">
+    <span class="material-symbols-rounded">close</span>
+  </button>
+</div>
 
-    <textarea id="mensaje-reporte" placeholder="Escribe tu mensaje..."></textarea>
-    <button class="btn-panel" id="enviar-reporte">Enviar reporte</button>
-  </div>
+<div class="panel-content">
+  <label for="tipo-reporte">Tipo de reporte</label>
+  <select id="tipo-reporte">
+    <option value="sugerencia">Sugerencia</option>
+    <option value="incidencia">Incidencia</option>
+  </select>
+
+  <label for="titulo-reporte">Título</label>
+  <input type="text" id="titulo-reporte" placeholder="Ej. Desvió en la ruta, falta de paradas...">
+
+  <label for="mensaje-reporte">Descripción</label>
+  <textarea id="mensaje-reporte" placeholder="Escribe los detalles del reporte..."></textarea>
+
+  <button class="btn-panel" id="enviar-reporte">Enviar reporte</button>
+</div>
 </div>
 
 <!-- PANEL 3: Noticias de la ruta -->
@@ -464,8 +472,7 @@
   </div>
 </div>
     
- 
-    
     <script src="js/Wheely_principal_registered_user.js"></script>
+
 </body>
 </html>

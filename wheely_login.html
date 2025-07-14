@@ -35,18 +35,25 @@
 
                 <h2 class="login-title">Inicia sesión</h2>
 
-                <form class="login-form" onsubmit="handleLogin(event)">
+                <!-- Indicador de carga -->
+                <div id="loading-indicator" class="loading-hidden">
+                    <div class="loading-spinner"></div>
+                    <p>Verificando credenciales...</p>
+                </div>
+
+                <form class="login-form" onsubmit="handleLogin(event)" id="loginForm">
                     <div class="form-group">
                         <label class="form-label">
-                            Ingresa tu nombre de usuario o tu gmail
+                            Ingresa tu email
                             <span class="required-mark">*</span>
                         </label>
                         <input
-                            type="text"
+                            type="email"
                             class="form-input"
-                            placeholder="Nombre de usuario o gmail"
+                            placeholder="usuario@gmail.com"
                             required
-                            id="usernameOrEmailInput" >
+                            id="emailInput"
+                            autocomplete="email">
                     </div>
 
                     <div class="form-group">
@@ -61,34 +68,332 @@
                                 placeholder="Contraseña"
                                 id="passwordInput"
                                 required
-                            >
+                                autocomplete="current-password">
                             <button type="button" class="password-toggle" onclick="togglePassword('passwordInput', this)">
                                 <span class="emoji-icon">🙈</span>
                             </button>
                         </div>
                     </div>
 
-                    <a href="#" class="forgot-password">Olvidé mi contraseña</a>
+                    <a href="#" class="forgot-password" onclick="handleForgotPassword(event)">Olvidé mi contraseña</a>
 
-                    <button type="submit" class="login-btn">Ingresa</button>
+                    <button type="submit" class="login-btn" id="loginButton">Ingresa</button>
                 </form>
-                <p id="errorMessage" style="color: red; text-align: center; margin-top: 10px;"></p> </div>
+                
+                <!-- Mensajes de error y éxito -->
+                <div id="message-container">
+                    <p id="errorMessage" class="message error-message"></p>
+                    <p id="successMessage" class="message success-message"></p>
+                </div>
+
+                <!-- Enlace de registro -->
+                <div class="register-link">
+                    <p>¿No tienes cuenta? <a href="wheely_register.html">Regístrate aquí</a></p>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-          function togglePassword(inputId, button) {
-    const passwordInput = document.getElementById(inputId);
-    const emojiSpan = button.querySelector(".emoji-icon");
+                // Configuración de la API
+        const API_CONFIG = {
+            baseURL: 'http://localhost:7000',
+            endpoints: {
+                login: '/usuarios/login'
+            }
+        };
 
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        emojiSpan.textContent = '🙉'; // Monito con orejas tapadas
-    } else {
-        passwordInput.type = 'password';
-        emojiSpan.textContent = '🙈'; // Monito con ojos tapados
-    }
-}            
+        // Variables globales
+        let isLoading = false;
+
+        // Función para alternar visibilidad de contraseña
+        function togglePassword(inputId, button) {
+            const passwordInput = document.getElementById(inputId);
+            const emojiSpan = button.querySelector(".emoji-icon");
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                emojiSpan.textContent = '🙉';
+            } else {
+                passwordInput.type = 'password';
+                emojiSpan.textContent = '🙈';
+            }
+        }
+
+        // Función para mostrar/ocultar loading
+        function toggleLoading(show) {
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const loginForm = document.getElementById('loginForm');
+            const loginButton = document.getElementById('loginButton');
+
+            isLoading = show;
+
+            if (show) {
+                loadingIndicator.classList.remove('loading-hidden');
+                loadingIndicator.classList.add('loading-visible');
+                loginForm.style.opacity = '0.6';
+                loginButton.disabled = true;
+                loginButton.textContent = 'Verificando...';
+            } else {
+                loadingIndicator.classList.remove('loading-visible');
+                loadingIndicator.classList.add('loading-hidden');
+                loginForm.style.opacity = '1';
+                loginButton.disabled = false;
+                loginButton.textContent = 'Ingresa';
+            }
+        }
+
+        // Función para mostrar mensajes
+        function showMessage(message, type = 'error') {
+            clearMessages();
+            
+            const messageElement = document.getElementById(type === 'error' ? 'errorMessage' : 'successMessage');
+            messageElement.textContent = message;
+            messageElement.style.display = 'block';
+
+            // Auto-ocultar mensaje después de 5 segundos
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Función para limpiar mensajes
+        function clearMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        // Función para validar formato de email
+        function isValidEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailRegex.test(email);
+        }
+
+        // Función principal de login
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            if (isLoading) return;
+
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+
+            // Limpiar mensajes previos
+            clearMessages();
+
+            // Validaciones del lado del cliente
+            if (!email || !password) {
+                showMessage('Por favor, completa todos los campos.', 'error');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showMessage('Por favor, ingresa un email válido.', 'error');
+                return;
+            }
+
+            if (password.length < 1) {
+                showMessage('La contraseña es requerida.', 'error');
+                return;
+            }
+
+            // Mostrar loading
+            toggleLoading(true);
+
+            try {
+                console.log('Enviando datos de login a:', `${API_CONFIG.baseURL}${API_CONFIG.endpoints.login}`);
+                console.log('Datos enviados:', { email, password: '***' });
+                
+                // Realizar petición de login
+                const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.login}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                console.log('Status de respuesta:', response.status);
+                console.log('Headers de respuesta:', response.headers);
+                
+                // Verificar si la respuesta es JSON válida
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('La respuesta no es JSON válida. Content-Type: ' + contentType);
+                }
+                
+                const data = await response.json();
+                console.log('Datos recibidos completos:', data);
+
+                if (response.ok && data.success) {
+                    // Login exitoso
+                    const userData = data.data;
+                    console.log('Login exitoso, datos del usuario:', userData);
+                    
+                    // Guardar datos del usuario en localStorage
+                    const userDataToStore = {
+                        id: userData.idUsuario,
+                        name: userData.nombre,
+                        email: userData.email,
+                        loginTime: new Date().getTime()
+                    };
+                    
+                    localStorage.setItem('wheelyUser', JSON.stringify(userDataToStore));
+                    console.log('Usuario guardado en localStorage:', userDataToStore);
+
+                    // Mostrar mensaje de éxito
+                    showMessage('¡Login exitoso! Redirigiendo...', 'success');
+
+                    // Redirigir después de un breve delay
+                    setTimeout(() => {
+                        window.location.href = 'wheely_log_register.html';
+                    }, 1500);
+
+                } else {
+                    // Login fallido
+                    console.error('Login fallido. Respuesta completa:', {
+                        status: response.status,
+                        data: data
+                    });
+                    
+                    let errorMessage = 'Email o contraseña incorrectos';
+                    if (data.message) {
+                        errorMessage = data.message;
+                    }
+                    
+                    showMessage(errorMessage, 'error');
+                }
+
+            } catch (error) {
+                console.error('Error durante el login:', error);
+                
+                // Verificar diferentes tipos de errores
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    showMessage('No se pudo conectar con el servidor. Verifica que el servidor esté ejecutándose en http://localhost:7000', 'error');
+                } else if (error.name === 'SyntaxError' || error.message.includes('JSON')) {
+                    showMessage('Error en la respuesta del servidor. El servidor puede no estar devolviendo JSON válido.', 'error');
+                } else if (error.message.includes('Content-Type')) {
+                    showMessage('El servidor no está devolviendo una respuesta JSON válida. Verifica la configuración del backend.', 'error');
+                } else {
+                    showMessage('Error: ' + error.message, 'error');
+                }
+            } finally {
+                // Ocultar loading
+                toggleLoading(false);
+            }
+        }
+
+        // Función para manejar "olvidé mi contraseña"
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            showMessage('Funcionalidad de recuperación de contraseña próximamente disponible.', 'error');
+        }
+
+        // Función para volver atrás
+        function goBack() {
+            window.location.href = 'wheely_welcome.html';
+        }
+
+        // Función para verificar si el usuario ya está logueado
+        function checkExistingLogin() {
+            const userData = localStorage.getItem('wheelyUser');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    const loginTime = user.loginTime;
+                    const currentTime = new Date().getTime();
+                    const timeDiff = currentTime - loginTime;
+                    
+                    // Si el login fue hace menos de 24 horas, redirigir automáticamente
+                    if (timeDiff < 24 * 60 * 60 * 1000) {
+                        showMessage('Ya tienes una sesión activa. Redirigiendo...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'wheely_log_register.html';
+                        }, 2000);
+                        return true;
+                    } else {
+                        // Limpiar datos expirados
+                        localStorage.removeItem('wheelyUser');
+                    }
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                    localStorage.removeItem('wheelyUser');
+                }
+            }
+            return false;
+        }
+
+        // Función para manejar Enter en los campos
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !isLoading) {
+                const form = document.getElementById('loginForm');
+                form.dispatchEvent(new Event('submit', { cancelable: true }));
+            }
+        }
+
+        // Inicialización cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página de login cargada');
+            
+            // Verificar si ya está logueado
+            if (checkExistingLogin()) {
+                return;
+            }
+
+            // Configurar event listeners
+            document.getElementById('emailInput').addEventListener('keypress', handleKeyPress);
+            document.getElementById('passwordInput').addEventListener('keypress', handleKeyPress);
+
+            // Animación de entrada de los elementos del formulario
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.opacity = '0';
+                group.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    group.style.transition = 'all 0.6s ease';
+                    group.style.opacity = '1';
+                    group.style.transform = 'translateY(0)';
+                }, 300 + (index * 100));
+            });
+
+            // Focus automático en el campo de email después de las animaciones
+            setTimeout(() => {
+                document.getElementById('emailInput').focus();
+            }, 1000);
+            
+            // Verificar conexión con el servidor
+            checkServerConnection();
+        });
+
+        // Función para verificar conexión con el servidor
+        async function checkServerConnection() {
+            try {
+                console.log('Verificando conexión con el servidor...');
+                const response = await fetch(`${API_CONFIG.baseURL}/`, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+                
+                if (response.ok) {
+                    console.log('✅ Conexión con servidor exitosa');
+                } else {
+                    console.warn('⚠️ Servidor responde pero con estado:', response.status);
+                }
+            } catch (error) {
+                console.error('❌ No se pudo conectar con el servidor:', error);
+                showMessage('Advertencia: No se pudo verificar la conexión con el servidor. Asegúrate de que esté ejecutándose en http://localhost:7000', 'error');
+            }
+        }
+
+        // Manejar visibilidad de la página (para limpiar mensajes al volver)
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+                clearMessages();
+            }
+        });
     </script>
-</body>
-</html>
