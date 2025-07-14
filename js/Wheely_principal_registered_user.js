@@ -399,7 +399,7 @@ document.querySelector('[data-ruta="45"]')?.addEventListener('click', () => {
   mostrarRuta45();
 });*/
 
-// === MANEJO DE PANELES //
+// === MANEJO DE PANELES (CON TÍTULOS DE REPORTE) === //
 
 // Elementos generales
 const overlayReporte = document.getElementById('reporte-overlay');
@@ -456,15 +456,15 @@ function cerrarPanel(overlay, panel) {
   document.body.style.overflow = '';
 }
 
-// Simulación de noticias, para ver el estilo que tendra la notica cuando ya loconectemos (esto se reemplazará por fetch al backend)
+// Simulación de noticias con título
 function mostrarNoticiasEjemplo() {
   const lista = document.getElementById('lista-noticias');
   lista.innerHTML = '';
-  
+
   const noticiasSimuladas = [
-    { tipo: 'Incidencia', mensaje: 'La combi 45 se desvió por obras el 12 de julio.' },
-    { tipo: 'Sugerencia', mensaje: 'Agregar una parada frente al mercado central.' },
-    { tipo: 'Incidencia', mensaje: 'El conductor iba con exceso de velocidad.' }
+    { tipo: 'Incidencia', titulo: 'Ruta desviada por obras', mensaje: 'La combi 45 se desvió el 12 de julio.' },
+    { tipo: 'Sugerencia', titulo: 'Parada en el mercado', mensaje: 'Agregar una parada frente al mercado central.' },
+    { tipo: 'Incidencia', titulo: 'Conducción peligrosa', mensaje: 'El conductor iba con exceso de velocidad.' }
   ];
 
   noticiasSimuladas.forEach(noticia => {
@@ -472,6 +472,7 @@ function mostrarNoticiasEjemplo() {
     item.classList.add('noticia-item');
     item.innerHTML = `
       <h4>${noticia.tipo}</h4>
+      <h3>${noticia.titulo}</h3>
       <p>${noticia.mensaje}</p>
     `;
     lista.appendChild(item);

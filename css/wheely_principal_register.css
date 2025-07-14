@@ -596,7 +596,7 @@ body {
   left: 90px;
 }
 
-/* === PANEL DE REPORTES Y NOTICIAS === */
+/* === PANEL DE REPORTES Y NOTICIAS (ACTUALIZADO CON TÍTULOS) === */
 
 .hidden {
   display: none;
@@ -643,7 +643,8 @@ body {
 }
 
 #formulario-panel select,
-#formulario-panel textarea {
+#formulario-panel textarea,
+#formulario-panel input[type="text"] {
   width: 100%;
   padding: 10px 14px;
   margin-bottom: 15px;
@@ -660,7 +661,8 @@ body {
 }
 
 #formulario-panel select:focus,
-#formulario-panel textarea:focus {
+#formulario-panel textarea:focus,
+#formulario-panel input[type="text"]:focus {
   outline: none;
   border-color: var(--color-hover-primary);
 }
@@ -694,6 +696,14 @@ body {
   margin: 0 0 6px;
   font-size: 15px;
   font-weight: 600;
+  color: var(--color-hover-primary);
+}
+
+.noticia-item h3 {
+  margin: 4px 0;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 500;
 }
 
 .noticia-item p {

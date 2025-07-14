@@ -433,21 +433,27 @@
 <div class="panel-overlay" id="formulario-overlay"></div>
 <div class="panel-flotante" id="formulario-panel">
   <div class="panel-header">
-    <h2>Realizar reporte</h2>
-    <button class="btn-close" id="close-formulario">
-      <span class="material-symbols-rounded">close</span>
-    </button>
-  </div>
-  <div class="panel-content">
-    <label for="tipo-reporte">Tipo de reporte</label>
-    <select id="tipo-reporte">
-      <option value="sugerencia">Sugerencia</option>
-      <option value="incidencia">Incidencia</option>
-    </select>
+  <h2>Realizar reporte</h2>
+  <button class="btn-close" id="close-formulario">
+    <span class="material-symbols-rounded">close</span>
+  </button>
+</div>
 
-    <textarea id="mensaje-reporte" placeholder="Escribe tu mensaje..."></textarea>
-    <button class="btn-panel" id="enviar-reporte">Enviar reporte</button>
-  </div>
+<div class="panel-content">
+  <label for="tipo-reporte">Tipo de reporte</label>
+  <select id="tipo-reporte">
+    <option value="sugerencia">Sugerencia</option>
+    <option value="incidencia">Incidencia</option>
+  </select>
+
+  <label for="titulo-reporte">Título</label>
+  <input type="text" id="titulo-reporte" placeholder="Ej. Desvió en la ruta, falta de paradas...">
+
+  <label for="mensaje-reporte">Descripción</label>
+  <textarea id="mensaje-reporte" placeholder="Escribe los detalles del reporte..."></textarea>
+
+  <button class="btn-panel" id="enviar-reporte">Enviar reporte</button>
+</div>
 </div>
 
 <!-- PANEL 3: Noticias de la ruta -->
