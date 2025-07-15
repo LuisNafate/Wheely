@@ -866,6 +866,32 @@ body {
   justify-content: space-between;
   margin-top: 20px;
   gap: 10px;
+  
+}
+
+.ruta-direcciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  margin-left: 7px;
+  margin-right: 10px;
+  justify-content: center;
+}
+
+.ruta-direcciones button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #FB6D10;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ruta-direcciones button:hover {
+  background-color: #d95a08;
+
 }
 
 
