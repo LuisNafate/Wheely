@@ -370,6 +370,125 @@ L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=HlXj
   maxZoom: 22
 }).addTo(map);
 
+
+// Esto es la nueva manera para el detaLLE de ruta
+
+let capaIda = null;
+let capaRegreso = null;
+
+function pintarRuta(geoIda, geoRegreso) {
+  // Limpiar anteriores
+  if (capaIda) map.removeLayer(capaIda);
+  if (capaRegreso) map.removeLayer(capaRegreso);
+
+  capaIda = L.geoJSON(geoIda, { style: { color: 'orange', weight: 4 } });
+  capaRegreso = L.geoJSON(geoRegreso, { style: { color: 'dodgerblue', weight: 4 } });
+}
+
+function mostrarSoloIda() {
+  if (capaRegreso) map.removeLayer(capaRegreso);
+  if (capaIda && !map.hasLayer(capaIda)) capaIda.addTo(map);
+  map.fitBounds(capaIda.getBounds());
+}
+
+function mostrarSoloRegreso() {
+  if (capaIda) map.removeLayer(capaIda);
+  if (capaRegreso && !map.hasLayer(capaRegreso)) capaRegreso.addTo(map);
+  map.fitBounds(capaRegreso.getBounds());
+}
+
+function mostrarAmbas() {
+  if (capaIda && !map.hasLayer(capaIda)) capaIda.addTo(map);
+  if (capaRegreso && !map.hasLayer(capaRegreso)) capaRegreso.addTo(map);
+
+  const group = new L.featureGroup([capaIda, capaRegreso]);
+  map.fitBounds(group.getBounds());
+}
+// Función para mostrar el detalle de la ruta
+function mostrarDetalleRuta(data) {
+  document.getElementById('detalle-ruta-nombre').textContent = data.nombre;
+  document.getElementById('detalle-direccion').textContent = `Origen: ${data.origen} → Destino: ${data.destino}`;
+
+  document.getElementById('detalle-tiempo').textContent = `Espera promedio: ${data.espera}`;
+  document.getElementById('detalle-manana').textContent = `Mañana: ${data.manana}`;
+  document.getElementById('detalle-tarde').textContent = `Tarde: ${data.tarde}`;
+  document.getElementById('detalle-noche').textContent = `Noche: ${data.noche}`;
+
+  // Mostrar panel
+  document.getElementById('detalle-ruta-panel').classList.add('active');
+  document.getElementById('detalle-ruta-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+const geojsonPorRuta = {
+  "45": {
+    ida: {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-93.118, 16.753],
+          [-93.120, 16.755],
+          [-93.123, 16.757]
+        ]
+      }
+    },
+    regreso: {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-93.123, 16.757],
+          [-93.120, 16.755],
+          [-93.118, 16.753]
+        ]
+      }
+    }
+  }
+};
+
+document.querySelectorAll('.ruta-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const rutaId = item.dataset.ruta;
+
+    // Simulación de datos para la ruta seleccionada
+    const datosRuta = {
+      nombre: `Ruta ${rutaId}`,
+      origen:  'Parque del 5 de mayo',
+      destino: 'Unach',
+      espera: '8 min',
+      manana: '6 min',
+      tarde: '10 min',
+      noche: '12 min'
+    };
+    
+
+
+    // Supongamos que ya tienes los geojson cargados por id
+    const geoIda = geojsonPorRuta[rutaId]?.ida;
+    const geoRegreso = geojsonPorRuta[rutaId]?.regreso;
+
+    pintarRuta(geoIda, geoRegreso);
+    mostrarAmbas(); // Pintamos ambos de entrada
+    mostrarDetalleRuta(datosRuta);
+
+    closeAllPanels(); // Oculta favoritos o rutas
+  });
+});
+
+
+document.getElementById('btn-mostrar-ida').addEventListener('click', mostrarSoloIda);
+document.getElementById('btn-mostrar-regreso').addEventListener('click', mostrarSoloRegreso);
+document.getElementById('btn-mostrar-ambas').addEventListener('click', mostrarAmbas);
+
+function cerrarDetalleRuta() {
+  document.getElementById('detalle-ruta-overlay').classList.remove('active');
+  document.getElementById('detalle-ruta-panel').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('close-detalle-ruta').addEventListener('click', cerrarDetalleRuta);
+document.getElementById('detalle-ruta-overlay').addEventListener('click', cerrarDetalleRuta);
+
 // Ejemplo de geo jason de como se vería una ruta solo lo habilite en favoritos 
 
 // Simulamos una ruta (ejemplo de la Ruta 45)
@@ -391,9 +510,9 @@ L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=HlXj
 };
 
 // Creamos la capa para pintarla en el mapa
-let ruta45Layer = null;
+let ruta45Layer = null;*/
 
-function mostrarRuta45() {
+/*function mostrarRuta45() {
   // Elimina la capa anterior si ya existe
   if (ruta45Layer) {
     map.removeLayer(ruta45Layer);
@@ -409,13 +528,54 @@ function mostrarRuta45() {
 
   // Centrar el mapa sobre la ruta
   map.fitBounds(ruta45Layer.getBounds());
+  document.querySelector('[data-ruta="45"]')?.addEventListener('click', () => {
+  mostrarRuta45();
+  mostrarDetalleRuta({
+    nombre: 'Ruta 45',
+    direccion: 'Centro Histórico',
+    espera: '8 min',
+    manana: '6 min',
+    tarde: '10 min',
+    noche: '12 min'
+  });
+});
+
 }
 
 // Vinculamos la función a un evento (por ejemplo al hacer clic en una ruta)
 // Ejemplo directo (puedes reemplazar esto con un listener real)
-document.querySelector('[data-ruta="45"]')?.addEventListener('click', () => {
+/*document.querySelector('[data-ruta="45"]')?.addEventListener('click', () => {
   mostrarRuta45();
-}); */
+}); 
+
+
+// ELEMENTOS DEL PANEL DE DETALLE DE RUTA hola
+const detalleOverlay = document.getElementById('detalle-ruta-overlay');
+const detallePanel = document.getElementById('detalle-ruta-panel');
+const closeDetalle = document.getElementById('close-detalle-ruta');
+
+// Función para mostrar los datos
+function mostrarDetalleRuta({ nombre, direccion, espera, manana, tarde, noche }) {
+  document.getElementById('detalle-ruta-nombre').textContent = nombre;
+  document.getElementById('detalle-direccion').textContent = `Dirección: ${direccion}`;
+  document.getElementById('detalle-tiempo').textContent = `Espera promedio: ${espera}`;
+  document.getElementById('detalle-manana').textContent = `Mañana: ${manana}`;
+  document.getElementById('detalle-tarde').textContent = `Tarde: ${tarde}`;
+  document.getElementById('detalle-noche').textContent = `Noche: ${noche}`;
+
+  detalleOverlay.classList.add('active');
+  detallePanel.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarDetalleRuta() {
+  detalleOverlay.classList.remove('active');
+  detallePanel.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+closeDetalle.addEventListener('click', cerrarDetalleRuta);
+detalleOverlay.addEventListener('click', cerrarDetalleRuta);*/
 
 // Ruta al archivo GeoJSON
 /*fetch('rutas/rutaA.geojson')
@@ -445,7 +605,7 @@ document.querySelector('[data-ruta="45"]')?.addEventListener('click', () => {
   })
   .catch(err => {
     console.error('Error al cargar GeoJSON:', err);
-  });*/
+  }); */
 
 
 // === MANEJO DE PANELES (CON TÍTULOS DE REPORTE) === //

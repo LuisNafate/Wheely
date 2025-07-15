@@ -859,6 +859,16 @@ body {
   background-color: var(--color-hover-primary);
 }
 
+/* Botones de dirección para las combis */ 
+
+.botones-direccion {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+
 
 /* MEDIA QUERIES PARA RESPONSIVIDAD */
 
