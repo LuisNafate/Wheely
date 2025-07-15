@@ -102,7 +102,33 @@ function openRutas() {
     activarBotonMenu('rutas-trigger');
 
 }
+ function openDetalleRuta() {
+  const detallePanel = document.getElementById('detalle-ruta-panel');
+  const detalleOverlay = document.getElementById('detalle-ruta-overlay');
 
+  closeAllPanels(); // Oculta favoritos y rutas si es necesario
+
+  detallePanel.classList.add('active');
+  detalleOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // Aplica desplazamiento si el sidebar está expandido en escritorio
+  if (!sidebar.classList.contains('collapsed') && !isMobile()) {
+    detallePanel.classList.add('panel-shifted');
+  } else {
+    detallePanel.classList.remove('panel-shifted');
+  }
+}
+
+function closeDetalleRuta() {
+  const detallePanel = document.getElementById('detalle-ruta-panel');
+  const detalleOverlay = document.getElementById('detalle-ruta-overlay');
+
+  detallePanel.classList.remove('active');
+  detalleOverlay.classList.remove('active');
+  detallePanel.classList.remove('panel-shifted');
+  document.body.style.overflow = '';
+}
 
 function closeRutasPanel() {
     rutasPanel.classList.remove('active');
@@ -119,8 +145,15 @@ function closeAllPanels() {
     favoritosOverlay.classList.remove('active');
     rutasPanel.classList.remove('active');
     rutasOverlay.classList.remove('active');
+
+    // También cerramos detalle
+    document.getElementById('detalle-ruta-panel').classList.remove('active');
+    document.getElementById('detalle-ruta-overlay').classList.remove('active');
+    document.getElementById('detalle-ruta-panel').classList.remove('panel-shifted');
+
     document.body.style.overflow = '';
 }
+
 
 // Event listeners principales
 sidebarToggleBtn.addEventListener('click', toggleSidebar);
@@ -413,11 +446,14 @@ function mostrarDetalleRuta(data) {
   document.getElementById('detalle-manana').textContent = `Mañana: ${data.manana}`;
   document.getElementById('detalle-tarde').textContent = `Tarde: ${data.tarde}`;
   document.getElementById('detalle-noche').textContent = `Noche: ${data.noche}`;
+  
+  
 
   // Mostrar panel
-  document.getElementById('detalle-ruta-panel').classList.add('active');
-  document.getElementById('detalle-ruta-overlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
+
+
+ openDetalleRuta(); // ⬅️ este se encarga de mostrar y ajustar
+
 }
 const geojsonPorRuta = {
   "45": {
@@ -446,6 +482,8 @@ const geojsonPorRuta = {
   }
 };
 
+ closeAllPanels(); // Oculta favoritos o rutas
+
 document.querySelectorAll('.ruta-item').forEach(item => {
   item.addEventListener('click', () => {
     const rutaId = item.dataset.ruta;
@@ -471,7 +509,7 @@ document.querySelectorAll('.ruta-item').forEach(item => {
     mostrarAmbas(); // Pintamos ambos de entrada
     mostrarDetalleRuta(datosRuta);
 
-    closeAllPanels(); // Oculta favoritos o rutas
+   
   });
 });
 
@@ -488,6 +526,7 @@ function cerrarDetalleRuta() {
 
 document.getElementById('close-detalle-ruta').addEventListener('click', cerrarDetalleRuta);
 document.getElementById('detalle-ruta-overlay').addEventListener('click', cerrarDetalleRuta);
+
 
 // Ejemplo de geo jason de como se vería una ruta solo lo habilite en favoritos 
 
