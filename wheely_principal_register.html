@@ -234,11 +234,71 @@
                 <button id="btn-mostrar-ambas">Ver ambas</button>
             </div>
         </div>
+<!-- PANEL 2: Formulario de reporte -->
+<div class="panel-overlay" id="formulario-overlay"></div>
+<div class="panel-flotante" id="formulario-panel">
+  <div class="panel-header">
+  <h2>Realizar reporte</h2>
+  <button class="btn-close" id="close-formulario">
+    <span class="material-symbols-rounded">close</span>
+  </button>
+</div>
+
+<div class="panel-content">
+  <label for="tipo-reporte">Tipo de reporte</label>
+  <select id="tipo-reporte">
+    <option value="sugerencia">Sugerencia</option>
+    <option value="incidencia">Incidencia</option>
+  </select>
+
+  <label for="titulo-reporte">Título</label>
+  <input type="text" id="titulo-reporte" placeholder="Ej. Desvió en la ruta, falta de paradas...">
+
+  <label for="mensaje-reporte">Descripción</label>
+  <textarea id="mensaje-reporte" placeholder="Ej. Calle cerrada DESDE libramiento sur 883 hasta la 2da oriente 295"></textarea>
+
+  <button class="btn-panel" id="enviar-reporte">Enviar reporte</button>
+</div>
+</div>
+
+<!-- PANEL 3: Noticias de la ruta -->
+<div class="panel-overlay" id="noticias-overlay"></div>
+<div class="panel-flotante" id="noticias-panel">
+  <div class="panel-header">
+    <h2>Noticias de esta ruta</h2>
+    <button class="btn-close" id="close-noticias">
+      <span class="material-symbols-rounded">close</span>
+    </button>
+  </div>
+  <div class="panel-content" id="lista-noticias">
+    <!-- Aquí se llenarán los reportes de los usuarios -->
+  </div>
+</div>
+
+<!-- PANEL DE INFORMACIÓN DE RUTA -->
+<!-- PANEL DE DETALLE DE RUTA -->
+<div id="detalle-ruta-overlay" class="panel-overlay"></div>
+
+<div id="detalle-ruta-panel" class="panel-flotante">
+  <div class="panel-header">
+    <h2 id="detalle-ruta-nombre">Ruta X</h2>
+    <button id="close-detalle-ruta" class="btn-close">&times;</button>
+  </div>
+  <div class="panel-content">
+    <p id="detalle-direccion"></p>
+    <p id="detalle-tiempo"></p>
+    <p id="detalle-manana"></p>
+    <p id="detalle-tarde"></p>
+    <p id="detalle-noche"></p>
+    <div class="ruta-direcciones">
+      <button id="btn-toggle-direccion">Cambiar dirección</button>
+        <button id="btn-mostrar-ambas">Ver ambas</button>
+
     </div>
 
     <!-- Scripts -->
-    <script src="js/wheely-api-integration.js"></script>
-    <script src="js/Wheely_principal_registered_user.js"></script>
+    <script src="js/wheely-auth-integration.js"></script>
+<script src="js/Wheely_principal_registered_user.js"></script>
 
 </body>
 </html>
