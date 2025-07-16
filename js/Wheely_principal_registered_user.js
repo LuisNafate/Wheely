@@ -404,7 +404,7 @@ L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=HlXj
 }).addTo(map);
 
 
-// Esto es la nueva manera para el detaLLE de ruta
+// Esto es la nueva manera para el detaLLE de ruta   desde aqui veo todo lo del panel de detalle de ruta
 
 let capaIda = null;
 let capaRegreso = null;
@@ -446,9 +446,9 @@ function mostrarDetalleRuta(data) {
   document.getElementById('detalle-manana').textContent = `Mañana: ${data.manana}`;
   document.getElementById('detalle-tarde').textContent = `Tarde: ${data.tarde}`;
   document.getElementById('detalle-noche').textContent = `Noche: ${data.noche}`;
-  
-  
 
+
+  mostrandoIda = true; // o false si prefieres comenzar con regreso
   // Mostrar panel
 
 
@@ -513,9 +513,21 @@ document.querySelectorAll('.ruta-item').forEach(item => {
   });
 });
 
+let mostrandoIda = true; // por defecto
 
-document.getElementById('btn-mostrar-ida').addEventListener('click', mostrarSoloIda);
-document.getElementById('btn-mostrar-regreso').addEventListener('click', mostrarSoloRegreso);
+// funcion para alternar entre ida y regreso
+function toggleDireccion() {
+  if (mostrandoIda) {
+    mostrarSoloRegreso();
+  } else {
+    mostrarSoloIda();
+  }
+
+  mostrandoIda = !mostrandoIda;
+}
+
+
+document.getElementById('btn-toggle-direccion').addEventListener('click', toggleDireccion);
 document.getElementById('btn-mostrar-ambas').addEventListener('click', mostrarAmbas);
 
 function cerrarDetalleRuta() {
