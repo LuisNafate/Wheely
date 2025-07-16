@@ -8,9 +8,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/wheely_principal_register.css">
     <!-- Leaflet core -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
     <aside class="sidebar">
@@ -63,45 +62,42 @@
         
         <!-- Footer section -->
         <div class="sidebar-footer">
-    <div class="profile">
-        <img src="https://i.pinimg.com/736x/a0/f6/d8/a0f6d8722e2ca13e433591c68bc5401f.jpg" alt="Avatar de usuario" class="avatar">
-        <div class="profile-info">
-            <h3 class="name">Usuario</h3>
-            <p class="role">Registrado</p>
+            <div class="profile">
+                <img src="https://i.pinimg.com/736x/a0/f6/d8/a0f6d8722e2ca13e433591c68bc5401f.jpg" alt="Avatar de usuario" class="avatar">
+                <div class="profile-info">
+                    <h3 class="name">Usuario</h3>
+                    <p class="role">Registrado</p>
+                </div>
+            </div>
+            
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="#" class="menu-link logout-link" aria-label="Cerrar sesión" id="logout-trigger">
+                        <span class="material-symbols-rounded">logout</span>
+                        <span class="menu-label">Cerrar Sesión</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-    </div>
-    
-    <ul class="menu-list">
-        <li class="menu-item">
-            <a href="#" class="menu-link logout-link" aria-label="Cerrar sesión" id="logout-trigger">
-                <span class="material-symbols-rounded">logout</span>
-                <span class="menu-label">Cerrar Sesión</span>
-            </a>
-        </li>
-    </ul>
-</div>
-
     </aside>
   
-     <!-- Integracion de la barar de busqueda y el mapita -->
-      <header class="nav-principal">
-  <div class="nav-container">
-    
-    <div class="nav-busqueda">
-      <input type="text" id="input-busqueda" placeholder="¿A donde deseas ir?">
-      <i class="bi bi-search"></i>
+    <!-- Integración de la barra de búsqueda y el mapa -->
+    <header class="nav-principal">
+        <div class="nav-container">
+            <div class="nav-busqueda">
+                <input type="text" id="input-busqueda" placeholder="¿A donde deseas ir?">
+                <i class="bi bi-search"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="right-buttons">
+        <button class="btn" title="Marcar inicio y fin"><i class="bi bi-geo-alt-fill"></i></button>
+        <button class="btn" title="Marcar punto único"><i class="bi bi-geo-alt"></i></button>
+        <button class="btn" title="Centrar mapa"><i class="bi bi-crosshair"></i></button>
     </div>
-  </div>
-</header>
 
-<div class="right-buttons">
-  <button class="btn" title="Marcar inicio y fin"><i class="bi bi-geo-alt-fill"></i></button>
-  <button class="btn" title="Marcar punto único"><i class="bi bi-geo-alt"></i></button>
-  <button class="btn" title="Centrar mapa"><i class="bi bi-crosshair"></i></button>
-</div>
-
-  <!-- Integracion del mapa Jawn.Dark ando provando -->
-
+    <!-- Integración del mapa -->
     <div id="mapa-wheely"></div>
 
     <!-- Panel de Favoritos -->
@@ -117,97 +113,10 @@
             </div>
         </div>
         
-        <div class="panel-content">
-            <!-- Ruta favorita 1 -->
-            <div class="ruta-item" data-ruta="90">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 90</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 5 min</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star-fill action-icon star-icon" title="Quitar de favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta favorita 2 -->
-            <div class="ruta-item" data-ruta="45">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 45</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 8 min</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star-fill action-icon star-icon" title="Quitar de favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta favorita 3 -->
-            <div class="ruta-item" data-ruta="23">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 23</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 12 min</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star-fill action-icon star-icon" title="Quitar de favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta favorita 4 -->
-            <div class="ruta-item" data-ruta="67">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 67</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star-fill action-icon star-icon" title="Quitar de favoritos"></i>
-                </div>
+        <div class="panel-content" id="favoritos-content">
+            <!-- Las rutas favoritas se cargarán dinámicamente aquí -->
+            <div class="loading-message">
+                <p>Cargando rutas favoritas...</p>
             </div>
         </div>
     </div>
@@ -227,341 +136,108 @@
 
         <div class="panel-filters">
             <input type="text" class="search-box" placeholder="Buscar ruta por número..." id="search-rutas">
-           
         </div>
         
         <div class="panel-content" id="rutas-content">
-            <!-- Ruta 1 -->
-            <div class="ruta-item" data-ruta="12" data-zona="norte">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 12</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
+            <!-- Las rutas se cargarán dinámicamente aquí -->
+            <div class="loading-message">
+                <p>Cargando rutas...</p>
+            </div>
+        </div>
+    </div>
 
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
+    <!-- Paneles de reporte -->
+    <!-- PANEL 1: Elección de acción -->
+    <div class="panel-overlay" id="reporte-overlay"></div>
+    <div class="panel-flotante" id="reporte-panel">
+        <div class="panel-header">
+            <h2>Ayuda a otros usuarios</h2>
+            <button class="btn-close" id="close-reporte">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div class="panel-content">
+            <div class="reporte-opcion" id="btn-ver-noticias">
+                <i class="material-symbols-rounded icono-opcion">campaign</i>
+                <div>
+                    <h4>Ver noticias de ruta</h4>
+                    <p>Consulta los reportes recientes de esta ruta</p>
                 </div>
             </div>
-
-            <!-- Ruta 2 -->
-            <div class="ruta-item" data-ruta="23" data-zona="sur">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 23</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-                    
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta 3 -->
-            <div class="ruta-item" data-ruta="34" data-zona="centro">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 34</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta 4 -->
-            <div class="ruta-item" data-ruta="45" data-zona="centro">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 45</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta 5 -->
-            <div class="ruta-item" data-ruta="56" data-zona="norte">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 56</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta 6 -->
-            <div class="ruta-item" data-ruta="67" data-zona="sur">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 67</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta 7 -->
-            <div class="ruta-item" data-ruta="78" data-zona="norte">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 78</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta 8 -->
-            <div class="ruta-item" data-ruta="89" data-zona="sur">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 89</h4>
-                        <p><strong>Origen:</strong> Mercado 5 de Mayo</p>
-                        <p><strong>Destino:</strong> UNACH</p>
-
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta 9 -->
-            <div class="ruta-item" data-ruta="90" data-zona="sur">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 90</h4>
-                        <p>Dirección Cañón del Sumidero</p>
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-                        <div class="ruta-tiempo">
-                        </div>
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
-                </div>
-            </div>
-
-            <!-- Ruta 10 -->
-            <div class="ruta-item" data-ruta="101" data-zona="centro">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 101</h4>
-                        <p>Dirección Hospital Central</p>
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="ruta-actions">
-                    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
-                    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
+            <div class="reporte-opcion" id="btn-realizar-reporte">
+                <i class="material-symbols-rounded icono-opcion">edit_square</i>
+                <div>
+                    <h4>Realizar un reporte</h4>
+                    <p>Envía una sugerencia o reporta una incidencia</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- paneles de reporte -->
-<!-- PANEL 1: Elección de acción -->
-<div class="panel-overlay" id="reporte-overlay"></div>
-<div class="panel-flotante" id="reporte-panel">
-  <div class="panel-header">
-    <h2>Ayuda a otros usuarios</h2>
-    <button class="btn-close" id="close-reporte">
-      <span class="material-symbols-rounded">close</span>
-    </button>
-  </div>
-  <div class="panel-content">
-    <div class="reporte-opcion" id="btn-ver-noticias">
-      <i class="material-symbols-rounded icono-opcion">campaign</i>
-      <div>
-        <h4>Ver noticias de ruta</h4>
-        <p>Consulta los reportes recientes de esta ruta</p>
-      </div>
+    <!-- PANEL 2: Formulario de reporte -->
+    <div class="panel-overlay" id="formulario-overlay"></div>
+    <div class="panel-flotante" id="formulario-panel">
+        <div class="panel-header">
+            <h2>Realizar reporte</h2>
+            <button class="btn-close" id="close-formulario">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+
+        <div class="panel-content">
+            <label for="tipo-reporte">Tipo de reporte</label>
+            <select id="tipo-reporte">
+                <option value="sugerencia">Sugerencia</option>
+                <option value="incidencia">Incidencia</option>
+            </select>
+
+            <label for="titulo-reporte">Título</label>
+            <input type="text" id="titulo-reporte" placeholder="Ej. Desvió en la ruta, falta de paradas...">
+
+            <label for="mensaje-reporte">Descripción</label>
+            <textarea id="mensaje-reporte" placeholder="Ej. Calle cerrada DESDE libramiento sur 883 hasta la 2da oriente 295"></textarea>
+
+            <button class="btn-panel" id="enviar-reporte">Enviar reporte</button>
+        </div>
     </div>
-    <div class="reporte-opcion" id="btn-realizar-reporte">
-      <i class="material-symbols-rounded icono-opcion">edit_square</i>
-      <div>
-        <h4>Realizar un reporte</h4>
-        <p>Envía una sugerencia o reporta una incidencia</p>
-      </div>
+
+    <!-- PANEL 3: Noticias de la ruta -->
+    <div class="panel-overlay" id="noticias-overlay"></div>
+    <div class="panel-flotante" id="noticias-panel">
+        <div class="panel-header">
+            <h2>Noticias de esta ruta</h2>
+            <button class="btn-close" id="close-noticias">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div class="panel-content" id="lista-noticias">
+            <!-- Aquí se llenarán los reportes de los usuarios -->
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- PANEL 2: Formulario de reporte -->
-<div class="panel-overlay" id="formulario-overlay"></div>
-<div class="panel-flotante" id="formulario-panel">
-  <div class="panel-header">
-  <h2>Realizar reporte</h2>
-  <button class="btn-close" id="close-formulario">
-    <span class="material-symbols-rounded">close</span>
-  </button>
-</div>
-
-<div class="panel-content">
-  <label for="tipo-reporte">Tipo de reporte</label>
-  <select id="tipo-reporte">
-    <option value="sugerencia">Sugerencia</option>
-    <option value="incidencia">Incidencia</option>
-  </select>
-
-  <label for="titulo-reporte">Título</label>
-  <input type="text" id="titulo-reporte" placeholder="Ej. Desvió en la ruta, falta de paradas...">
-
-  <label for="mensaje-reporte">Descripción</label>
-  <textarea id="mensaje-reporte" placeholder="Ej. Calle cerrada DESDE libramiento sur 883 hasta la 2da oriente 295"></textarea>
-
-  <button class="btn-panel" id="enviar-reporte">Enviar reporte</button>
-</div>
-</div>
-
-<!-- PANEL 3: Noticias de la ruta -->
-<div class="panel-overlay" id="noticias-overlay"></div>
-<div class="panel-flotante" id="noticias-panel">
-  <div class="panel-header">
-    <h2>Noticias de esta ruta</h2>
-    <button class="btn-close" id="close-noticias">
-      <span class="material-symbols-rounded">close</span>
-    </button>
-  </div>
-  <div class="panel-content" id="lista-noticias">
-    <!-- Aquí se llenarán los reportes de los usuarios -->
-  </div>
-</div>
-
-<!-- PANEL DE INFORMACIÓN DE RUTA -->
-<!-- PANEL DE DETALLE DE RUTA -->
-<div id="detalle-ruta-overlay" class="panel-overlay"></div>
-
-<div id="detalle-ruta-panel" class="panel-flotante">
-  <div class="panel-header">
-    <h2 id="detalle-ruta-nombre">Ruta X</h2>
-    <button id="close-detalle-ruta" class="btn-close">&times;</button>
-  </div>
-  <div class="panel-content">
-    <p id="detalle-direccion"></p>
-    <p id="detalle-tiempo"></p>
-    <p id="detalle-manana"></p>
-    <p id="detalle-tarde"></p>
-    <p id="detalle-noche"></p>
-    <div class="ruta-direcciones">
-      <button id="btn-mostrar-ida">Ver ida</button>
-      <button id="btn-mostrar-regreso">Ver regreso</button>
-      <button id="btn-mostrar-ambas">Ver ambas</button>
+    <!-- PANEL DE DETALLE DE RUTA -->
+    <div id="detalle-ruta-overlay" class="panel-overlay"></div>
+    <div id="detalle-ruta-panel" class="panel-flotante">
+        <div class="panel-header">
+            <h2 id="detalle-ruta-nombre">Ruta X</h2>
+            <button id="close-detalle-ruta" class="btn-close">&times;</button>
+        </div>
+        <div class="panel-content">
+            <p id="detalle-direccion"></p>
+            <p id="detalle-tiempo"></p>
+            <p id="detalle-manana"></p>
+            <p id="detalle-tarde"></p>
+            <p id="detalle-noche"></p>
+            <div class="ruta-direcciones">
+                <button id="btn-mostrar-ida">Ver ida</button>
+                <button id="btn-mostrar-regreso">Ver regreso</button>
+                <button id="btn-mostrar-ambas">Ver ambas</button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-
-
-    
+    <!-- Scripts -->
+    <script src="js/wheely-api-integration.js"></script>
     <script src="js/Wheely_principal_registered_user.js"></script>
 
 </body>
