@@ -170,122 +170,112 @@
         }
 
         // Función principal de login
-        async function handleLogin(event) {
-            event.preventDefault();
+        // Función para verificar credenciales de admin
+async function verificarCredencialesAdmin(email, password) {
+    // Credenciales de administrador
+    const adminEmail = 'luv@gmail.com';
+    const adminPassword = 'Luvia123#'; // Cambia esto por tu contraseña real
+    
+    return email === adminEmail && password === adminPassword;
+}
 
-            if (isLoading) return;
+// Función principal de login MODIFICADA
+async function handleLogin(event) {
+    event.preventDefault();
 
-            const email = document.getElementById('emailInput').value.trim();
-            const password = document.getElementById('passwordInput').value;
+    if (isLoading) return;
 
-            // Limpiar mensajes previos
-            clearMessages();
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
 
-            // Validaciones del lado del cliente
-            if (!email || !password) {
-                showMessage('Por favor, completa todos los campos.', 'error');
-                return;
-            }
+    // Limpiar mensajes previos
+    clearMessages();
 
-            if (!isValidEmail(email)) {
-                showMessage('Por favor, ingresa un email válido.', 'error');
-                return;
-            }
+    // Validaciones básicas
+    if (!email || !password) {
+        showMessage('Por favor, completa todos los campos.', 'error');
+        return;
+    }
 
-            if (password.length < 1) {
-                showMessage('La contraseña es requerida.', 'error');
-                return;
-            }
+    if (!isValidEmail(email)) {
+        showMessage('Por favor, ingresa un email válido.', 'error');
+        return;
+    }
 
-            // Mostrar loading
-            toggleLoading(true);
+    // Mostrar loading
+    toggleLoading(true);
 
-            try {
-                console.log('Enviando datos de login a:', `${API_CONFIG.baseURL}${API_CONFIG.endpoints.login}`);
-                console.log('Datos enviados:', { email, password: '***' });
-                
-                // Realizar petición de login
-                const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.login}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
-                });
+    try {
+        // 🔥 PRIMERO: Verificar si es administrador
+        const esAdmin = await verificarCredencialesAdmin(email, password);
+        
+        if (esAdmin) {
+            // Guardar sesión de admin
+            const adminSession = {
+                id: 0,
+                name: 'Administrador',
+                email: email,
+                role: 'admin',
+                loginTime: new Date().toISOString()
+            };
 
-                console.log('Status de respuesta:', response.status);
-                console.log('Headers de respuesta:', response.headers);
-                
-                // Verificar si la respuesta es JSON válida
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('La respuesta no es JSON válida. Content-Type: ' + contentType);
-                }
-                
-                const data = await response.json();
-                console.log('Datos recibidos completos:', data);
-
-                if (response.ok && data.success) {
-                    // Login exitoso
-                    const userData = data.data;
-                    console.log('Login exitoso, datos del usuario:', userData);
-                    
-                    // Guardar datos del usuario en localStorage
-                    const userDataToStore = {
-                        id: userData.idUsuario,
-                        name: userData.nombre,
-                        email: userData.email,
-                        loginTime: new Date().getTime()
-                    };
-                    
-                    localStorage.setItem('wheelyUser', JSON.stringify(userDataToStore));
-                    console.log('Usuario guardado en localStorage:', userDataToStore);
-
-                    // Mostrar mensaje de éxito
-                    showMessage('¡Login exitoso! Redirigiendo...', 'success');
-
-                    // Redirigir después de un breve delay
-                    setTimeout(() => {
-                        window.location.href = 'wheely_log_register.html';
-                    }, 1500);
-
-                } else {
-                    // Login fallido
-                    console.error('Login fallido. Respuesta completa:', {
-                        status: response.status,
-                        data: data
-                    });
-                    
-                    let errorMessage = 'Email o contraseña incorrectos';
-                    if (data.message) {
-                        errorMessage = data.message;
-                    }
-                    
-                    showMessage(errorMessage, 'error');
-                }
-
-            } catch (error) {
-                console.error('Error durante el login:', error);
-                
-                // Verificar diferentes tipos de errores
-                if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                    showMessage('No se pudo conectar con el servidor. Verifica que el servidor esté ejecutándose en http://localhost:7000', 'error');
-                } else if (error.name === 'SyntaxError' || error.message.includes('JSON')) {
-                    showMessage('Error en la respuesta del servidor. El servidor puede no estar devolviendo JSON válido.', 'error');
-                } else if (error.message.includes('Content-Type')) {
-                    showMessage('El servidor no está devolviendo una respuesta JSON válida. Verifica la configuración del backend.', 'error');
-                } else {
-                    showMessage('Error: ' + error.message, 'error');
-                }
-            } finally {
-                // Ocultar loading
-                toggleLoading(false);
-            }
+            localStorage.setItem('wheelyUser', JSON.stringify(adminSession));
+            
+            showMessage('¡Acceso de administrador exitoso!', 'success');
+            
+            // Redirigir al panel de admin
+            setTimeout(() => {
+                window.location.href = 'wheely_admin_panel.html';
+            }, 1500);
+            
+            return; // Terminar aquí para admin
         }
+
+        // 🔥 SEGUNDO: Si no es admin, proceder con login normal
+        console.log('Enviando datos de login a:', `${API_CONFIG.baseURL}${API_CONFIG.endpoints.login}`);
+        
+        const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.login}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+            // Login exitoso de usuario normal
+            const userSession = {
+                id: data.data.idUsuario,
+                name: data.data.nombre,
+                email: data.data.email,
+                role: 'user',
+                loginTime: new Date().toISOString()
+            };
+
+            localStorage.setItem('wheelyUser', JSON.stringify(userSession));
+            
+            showMessage('¡Inicio de sesión exitoso!', 'success');
+            
+            setTimeout(() => {
+                window.location.href = 'wheely_principal_register.html';
+            }, 1500);
+        } else {
+            showMessage(data.message || 'Credenciales incorrectas', 'error');
+        }
+        
+    } catch (error) {
+        console.error('Error en login:', error);
+        showMessage('Error de conexión. Inténtalo de nuevo.', 'error');
+    } finally {
+        toggleLoading(false);
+    }
+}
 
         // Función para manejar "olvidé mi contraseña"
         function handleForgotPassword(event) {

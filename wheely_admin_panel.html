@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheely - Panel de Administración</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg-primary: #1a1a1a;
+            --color-bg-secondary: #2a2a2a;
+            --color-sidebar-bg: #212227;
+            --color-text-primary: #ffffff;
+            --color-text-secondary: #a0aec0;
+            --color-hover-primary: #fb6d10;
+            --color-hover-secondary: #ff7c2a;
+            --color-border-hr: #3a3a3a;
+            --color-success: #48bb78;
+            --color-error: #f56565;
+            --color-warning: #ed8936;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 250px;
+            background: var(--color-sidebar-bg);
+            z-index: 1000;
+            transition: width 0.4s ease;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar.collapsed {
+            width: 90px;
+        }
+
+        .sidebar-header {
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--color-border-hr);
+        }
+
+        .Logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-hover-primary);
+            white-space: nowrap;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .Logo {
+            opacity: 0;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--color-text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            color: var(--color-hover-primary);
+        }
+
+        .sidebar-content {
+            padding: 20px 0;
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 0 15px;
+        }
+
+        .menu-item {
+            margin-bottom: 8px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-link:hover {
+            background: rgba(251, 109, 16, 0.1);
+            color: var(--color-hover-primary);
+        }
+
+        .menu-link.active {
+            background: var(--color-hover-primary);
+            color: white;
+        }
+
+        .menu-link .material-symbols-rounded {
+            font-size: 24px;
+            margin-right: 15px;
+            transition: margin-right 0.3s ease;
+        }
+
+        .sidebar.collapsed .menu-link .material-symbols-rounded {
+            margin-right: 0;
+        }
+
+        .menu-label {
+            font-size: 16px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .menu-label {
+            opacity: 0;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-top: 1px solid var(--color-border-hr);
+            padding: 20px 15px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            flex: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .profile-info {
+            opacity: 0;
+        }
+
+        .name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 2px;
+        }
+
+        .role {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.4s ease;
+            min-height: 100vh;
+        }
+
+        .sidebar.collapsed + .main-content {
+            margin-left: 90px;
+        }
+
+        /* Header */
+        .admin-header {
+            background: var(--color-bg-secondary);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .admin-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--color-hover-primary);
+        }
+
+        .admin-header .subtitle {
+            color: var(--color-text-secondary);
+            font-size: 1.1em;
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--color-bg-secondary);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: var(--color-hover-primary);
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: var(--color-text-secondary);
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            background: var(--color-bg-secondary);
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--color-text-secondary);
+        }
+
+        .tab-button.active {
+            background: var(--color-hover-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(251, 109, 16, 0.4);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: rgba(251, 109, 16, 0.1);
+            color: var(--color-hover-primary);
+        }
+
+        /* Tab content */
+        .tab-content {
+            display: none;
+            background: var(--color-bg-secondary);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Forms */
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: var(--color-text-primary);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            border-bottom: 2px solid var(--color-border-hr);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--color-border-hr);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-hover-primary);
+            box-shadow: 0 0 0 3px rgba(251, 109, 16, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: var(--color-hover-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-hover-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 109, 16, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--color-border-hr);
+            color: var(--color-text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #4a4a4a;
+        }
+
+        .btn-danger {
+            background: var(--color-error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        /* File upload */
+        .file-upload-area {
+            border: 2px dashed var(--color-border-hr);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: var(--color-bg-primary);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--color-hover-primary);
+            background: rgba(251, 109, 16, 0.05);
+        }
+
+        .file-upload-area.drag-over {
+            border-color: var(--color-hover-primary);
+            background: rgba(251, 109, 16, 0.1);
+        }
+
+        /* Lists */
+        .items-list {
+            background: var(--color-bg-primary);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .item-card {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border-hr);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-info h4 {
+            color: var(--color-text-primary);
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .item-info p {
+            color: var(--color-text-secondary);
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-active {
+            background: var(--color-success);
+        }
+
+        .status-inactive {
+            background: var(--color-warning);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--color-success);
+        }
+
+        .notification.error {
+            background: var(--color-error);
+        }
+
+        .notification.warning {
+            background: var(--color-warning);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--color-text-secondary);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--color-border-hr);
+            border-top: 4px solid var(--color-hover-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .item-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-actions {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <header class="sidebar-header">
+            <span class="Logo">Wheely Admin</span>
+            <button class="sidebar-toggle" aria-label="Toggle sidebar">
+                <span class="material-symbols-rounded">dehaze</span>
+            </button>
+        </header>
+
+        <div class="sidebar-content">
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="#" class="menu-link active" aria-label="Dashboard" onclick="showTab('dashboard')">
+                        <span class="material-symbols-rounded">dashboard</span>
+                        <span class="menu-label">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Rutas" onclick="showTab('rutas')">
+                        <span class="material-symbols-rounded">directions_bus</span>
+                        <span class="menu-label">Rutas</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Periodos" onclick="showTab('periodos')">
+                        <span class="material-symbols-rounded">schedule</span>
+                        <span class="menu-label">Periodos</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Tiempos" onclick="showTab('tiempos')">
+                        <span class="material-symbols-rounded">timer</span>
+                        <span class="menu-label">Tiempos</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Coordenadas" onclick="showTab('coordenadas')">
+                        <span class="material-symbols-rounded">my_location</span>
+                        <span class="menu-label">Coordenadas</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Paradas" onclick="showTab('paradas')">
+                        <span class="material-symbols-rounded">location_on</span>
+                        <span class="menu-label">Paradas</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Usuarios" onclick="showTab('usuarios')">
+                        <span class="material-symbols-rounded">group</span>
+                        <span class="menu-label">Usuarios</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" aria-label="Reportes" onclick="showTab('reportes')">
+                        <span class="material-symbols-rounded">report</span>
+                        <span class="menu-label">Reportes</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="profile">
+                <img src="https://i.pinimg.com/736x/a0/f6/d8/a0f6d8722e2ca13e433591c68bc5401f.jpg" alt="Avatar de administrador" class="avatar">
+                <div class="profile-info">
+                    <h3 class="name">Administrador</h3>
+                    <p class="role">Sistema</p>
+                </div>
+            </div>
+            
+            <ul class="menu-list">
+                <li class="menu-item">
+                    <a href="wheely_principal_register.html" class="menu-link" aria-label="Volver">
+                        <span class="material-symbols-rounded">arrow_back</span>
+                        <span class="menu-label">Volver</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1>Panel de Administración</h1>
+            <p class="subtitle">Gestión completa del sistema Wheely</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalRoutes">0</h3>
+                <p>Rutas Totales</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalUsers">0</h3>
+                <p>Usuarios Registrados</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalReports">0</h3>
+                <p>Reportes Activos</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalCoordinates">0</h3>
+                <p>Coordenadas</p>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+            <button class="tab-button active" onclick="showTab('dashboard')">Dashboard</button>
+            <button class="tab-button" onclick="showTab('rutas')">Rutas</button>
+            <button class="tab-button" onclick="showTab('periodos')">Periodos</button>
+            <button class="tab-button" onclick="showTab('tiempos')">Tiempos</button>
+            <button class="tab-button" onclick="showTab('coordenadas')">Coordenadas</button>
+            <button class="tab-button" onclick="showTab('paradas')">Paradas</button>
+            <button class="tab-button" onclick="showTab('usuarios')">Usuarios</button>
+            <button class="tab-button" onclick="showTab('reportes')">Reportes</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content active">
+            <div class="form-section">
+                <h3>Resumen del Sistema</h3>
+                <div class="items-list">
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h4>Estado del Sistema</h4>
+                            <p><span class="status-indicator status-active"></span>Operativo</p>
+                            <p>Última actualización: <span id="lastUpdate">-</span></p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-primary" onclick="updateSystem()">Actualizar</button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h4>Base de Datos</h4>
+                            <p><span class="status-indicator status-active"></span>Conectada</p>
+                            <p>Servidor: localhost:3306</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-secondary" onclick="backupDatabase()">Backup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rutas Tab -->
+        <div id="rutas-tab" class="tab-content">
+            <div class="form-section">
+                <h3>Gestión de Rutas</h3>
+                <form id="rutaForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombreRuta">Nombre de la Ruta</label>
+                            <input type="text" id="nombreRuta" name="nombreRuta" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="origen">Origen</label>
+                            <input type="text" id="origen" name="origen" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="destino">Destino</label>
+                        <input type="text" id="destino" name="destino" required>
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn btn-primary">Crear Ruta</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearForm('rutaForm')">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>Rutas Existentes</h3>
+                <div class="loading" id="rutasLoading">
+                    <div class="spinner"></div>
+                    <p>Cargando rutas...</p>
+                </div>
+                <div id="rutasList" class="items-list" style="display: none;">
+                    <!-- Las rutas se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Periodos Tab -->
+        <div id="periodos-tab" class="tab-content">
+            <div class="form-section">
+                <h3>Gestión de Periodos</h3>
+                <form id="periodoForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombrePeriodo">Nombre del Periodo</label>
+                            <input type="text" id="nombrePeriodo" name="nombrePeriodo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionPeriodo">Descripción</label>
+                            <input type="text" id="descripcionPeriodo" name="descripcionPeriodo">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="horaInicio">Hora de Inicio</label>
+                            <input type="time" id="horaInicio" name="horaInicio" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="horaFin">Hora de Fin</label>
+                            <input type="time" id="horaFin" name="horaFin" required>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn btn-primary">Crear Periodo</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearForm('periodoForm')">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>Periodos Existentes</h3>
+                <div class="loading" id="periodosLoading">
+                    <div class="spinner"></div>
+                    <p>Cargando periodos...</p>
+                </div>
+                <div id="periodosList" class="items-list" style="display: none;">
+                    <!-- Los periodos se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tiempos Tab -->
+        <div id="tiempos-tab" class="tab-content">
+            <div class="form-section">
+                <h3>Gestión de Tiempos por Ruta y Periodo</h3>
+                <form id="tiempoForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="selectRuta">Ruta</label>
+                            <select id="selectRuta" name="selectRuta" required>
+                                <option value="">Seleccione una ruta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectPeriodo">Periodo</label>
+                            <select id="selectPeriodo" name="selectPeriodo" required>
+                                <option value="">Seleccione un periodo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tiempoPromedio">Tiempo Promedio (minutos)</label>
+                        <input type="number" id="tiempoPromedio" name="tiempoPromedio" min="1" required>
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn btn-primary">Guardar Tiempo</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearForm('tiempoForm')">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>Tiempos Configurados</h3>
+                <div class="loading" id="tiemposLoading">
+                    <div class="spinner"></div>
+                    <p>Cargando tiempos...</p>
+                </div>
+                <div id="tiemposList" class="items-list" style="display: none;">
+                    <!-- Los tiempos se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Coordenadas Tab -->
+        <div id="coordenadas-tab" class="tab-content">
+            <div class="form-section">
+                <h3>Carga de Coordenadas JSON</h3>
+                <div class="file-upload-area" id="coordinatesUploadArea">
+                    <p style="margin-bottom: 10px;">📁 Arrastra y suelta tu archivo JSON aquí</p>
+                    <p style="font-size: 0.9em; color: var(--color-text-secondary);">o haz clic para seleccionar archivo</p>
+                    <input type="file" id="coordinatesFileInput" accept=".json" style="display: none;">
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="coordinatesRoute">Asociar a Ruta</label>
+                    <select id="coordinatesRoute" name="coordinatesRoute">
+                        <option value="">Seleccione una ruta</option>
+                    </select>
+                </div>
+
+                <div class="item-actions">
+                    <button type="button" class="btn btn-primary" onclick="uploadCoordinates()">Subir Coordenadas</button>
+                    <button type="button" class="btn btn-secondary" onclick="validateJSON()">Validar JSON</button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Vista Previa JSON</h3>
+                <textarea id="coordinatesPreview" readonly style="font-family: monospace; background: var(--color-bg-primary); height: 200px; color: var(--color-text-primary);"></textarea>
+            </div>
+
+            <div class="form-section">
+                <h3>Coordenadas por Ruta</h3>
+                <div class="loading" id="coordinatesLoading">
+                    <div class="spinner"></div>
+                    <p>Cargando coordenadas...</p>
+                </div>
+                <div id="coordinatesList" class="items-list" style="display: none;">
+                    <!-- Las coordenadas se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Paradas Tab -->
+        <div id="paradas-tab" class="tab-content">
+            <div class="form-section">
+                <h3>Gestión de Paradas</h3>
+                <form id="paradaForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombreParada">Nombre de la Parada</label>
+                            <input type="text" id="nombreParada" name="nombreParada" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionParada">Descripción</label>
+                            <input type="text" id="descripcionParada" name="descripcionParada">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="latitudParada">Latitud</label>
+                            <input type="number" id="latitudParada" name="latitudParada" step="0.000001" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="longitudParada">Longitud</label>
+                            <input type="number" id="longitudParada" name="longitudParada" step="0.000001" required>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn btn-primary">Crear Parada</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearForm('paradaForm')">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>Paradas Existentes</h3>
+                <div class="loading" id="paradasLoading">
+                    <div class="spinner"></div>
+                    <p>Cargando paradas...</p>
+                </div>
+                <div id="paradasList" class="items-list" style="display: none;">
+                    <!-- Las paradas se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Usuarios Tab -->
+        <div id="usuarios-tab" class="tab-content">
+            <div class="form-section">
+                <h3>Gestión de Usuarios</h3>
+                <form id="usuarioForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombreUsuario">Nombre</label>
+                            <input type="text" id="nombreUsuario" name="nombreUsuario" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailUsuario">Email</label>
+                            <input type="email" id="emailUsuario" name="emailUsuario" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordUsuario">Contraseña</label>
+                        <input type="password" id="passwordUsuario" name="passwordUsuario" required>
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearForm('usuarioForm')">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>Usuarios Registrados</h3>
+                <div class="loading" id="usuariosLoading">
+                    <div class="spinner"></div>
+                    <p>Cargando usuarios...</p>
+                </div>
+                <div id="usuariosList" class="items-list" style="display: none;">
+                    <!-- Los usuarios se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Reportes Tab -->
+        <div id="reportes-tab" class="tab-content">
+            <div class="form-section">
+                <h3>Tipos de Reporte</h3>
+                <form id="tipoReporteForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombreTipoReporte">Nombre del Tipo</label>
+                            <input type="text" id="nombreTipoReporte" name="nombreTipoReporte" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionTipoReporte">Descripción</label>
+                            <input type="text" id="descripcionTipoReporte" name="descripcionTipoReporte">
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button type="submit" class="btn btn-primary">Crear Tipo</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearForm('tipoReporteForm')">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>Reportes Activos</h3>
+                <div class="loading" id="reportesLoading">
+                    <div class="spinner"></div>
+                    <p>Cargando reportes...</p>
+                </div>
+                <div id="reportesList" class="items-list" style="display: none;">
+                    <!-- Los reportes se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Configuración de la API
+        const API_BASE_URL = 'http://localhost:7000';
+        let currentFile = null;
+
+        // Estado de la aplicación
+        let rutas = [];
+        let periodos = [];
+        let tiempos = [];
+        let coordenadas = [];
+        let paradas = [];
+        let usuarios = [];
+        let reportes = [];
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSidebar();
+            setupFileUpload();
+            loadAllData();
+            setupForms();
+            updateLastUpdate();
+        });
+
+        // Verificar acceso de administrador
+function verificarAccesoAdmin() {
+    try {
+        const userSession = localStorage.getItem('wheelyUser');
+        
+        if (!userSession) {
+            alert('Acceso denegado. Debes iniciar sesión.');
+            window.location.href = 'wheely_login.html';
+            return false;
+        }
+        
+        const user = JSON.parse(userSession);
+        
+        if (user.role !== 'admin') {
+            alert('Acceso denegado. Solo administradores pueden acceder.');
+            window.location.href = 'wheely_principal_register.html';
+            return false;
+        }
+        
+        // Actualizar información del admin en la interfaz
+        const nameElement = document.querySelector('.profile-info .name');
+        const roleElement = document.querySelector('.profile-info .role');
+        
+        if (nameElement) nameElement.textContent = user.name;
+        if (roleElement) roleElement.textContent = 'Administrador';
+        
+        return true;
+        
+    } catch (error) {
+        console.error('Error verificando acceso:', error);
+        alert('Error de sesión. Inicia sesión nuevamente.');
+        window.location.href = 'wheely_login.html';
+        return false;
+    }
+}
+
+// Modificar la inicialización existente
+document.addEventListener('DOMContentLoaded', function() {
+    // 🔥 VERIFICAR ACCESO PRIMERO
+    if (!verificarAccesoAdmin()) {
+        return; // No continuar si no tiene acceso
+    }
+    
+    // Resto del código existente...
+    setupSidebar();
+    setupFileUpload();
+    setupEnhancedForms();
+    setupValidation();
+    setupAdvancedFeatures();
+    loadAllData();
+    updateLastUpdate();
+});
+
+        // ========== SIDEBAR ==========
+        function setupSidebar() {
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+            });
+        }
+
+        // ========== TABS ==========
+        function showTab(tabName) {
+            // Actualizar estado de pestañas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Mostrar pestaña seleccionada
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Activar botón de tab
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(tabName)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Activar enlace del menú
+            const menuLinks = document.querySelectorAll('.menu-link');
+            menuLinks.forEach(link => {
+                if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(tabName)) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Cargar datos específicos de la pestaña si es necesario
+            loadTabData(tabName);
+        }
+
+        // ========== API CALLS ==========
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            try {
+                const config = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                };
+                
+                if (data) {
+                    config.body = JSON.stringify(data);
+                }
+                
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.message || 'Error en la petición');
+                }
+                
+                return result;
+            } catch (error) {
+                console.error('Error en API call:', error);
+                showNotification(error.message, 'error');
+                return null;
+            }
+        }
+
+        // ========== LOAD DATA ==========
+        async function loadAllData() {
+            await Promise.all([
+                loadRutas(),
+                loadPeriodos(),
+                loadTiempos(),
+                loadUsuarios(),
+                loadReportes()
+            ]);
+            updateStats();
+        }
+
+        async function loadRutas() {
+            const loading = document.getElementById('rutasLoading');
+            const list = document.getElementById('rutasList');
+            
+            loading.style.display = 'block';
+            list.style.display = 'none';
+            
+            const result = await apiCall('/rutas');
+            if (result && result.success) {
+                rutas = result.data;
+                renderRutas();
+                populateRutaSelects();
+            }
+            
+            loading.style.display = 'none';
+            list.style.display = 'block';
+        }
+
+        async function loadPeriodos() {
+            const loading = document.getElementById('periodosLoading');
+            const list = document.getElementById('periodosList');
+            
+            loading.style.display = 'block';
+            list.style.display = 'none';
+            
+            const result = await apiCall('/periodo');
+            if (result && result.success) {
+                periodos = result.data;
+                renderPeriodos();
+                populatePeriodoSelects();
+            }
+            
+            loading.style.display = 'none';
+            list.style.display = 'block';
+        }
+
+        async function loadTiempos() {
+            const loading = document.getElementById('tiemposLoading');
+            const list = document.getElementById('tiemposList');
+            
+            loading.style.display = 'block';
+            list.style.display = 'none';
+            
+            const result = await apiCall('/tiempos-ruta-periodo');
+            if (result && result.success) {
+                tiempos = result.data;
+                renderTiempos();
+            }
+            
+            loading.style.display = 'none';
+            list.style.display = 'block';
+        }
+
+        async function loadUsuarios() {
+            const loading = document.getElementById('usuariosLoading');
+            const list = document.getElementById('usuariosList');
+            
+            loading.style.display = 'block';
+            list.style.display = 'none';
+            
+            const result = await apiCall('/usuarios');
+            if (result && result.success) {
+                usuarios = result.data;
+                renderUsuarios();
+            }
+            
+            loading.style.display = 'none';
+            list.style.display = 'block';
+        }
+
+        async function loadReportes() {
+            const loading = document.getElementById('reportesLoading');
+            const list = document.getElementById('reportesList');
+            
+            loading.style.display = 'block';
+            list.style.display = 'none';
+            
+            const result = await apiCall('/reportes');
+            if (result && result.success) {
+                reportes = result.data;
+                renderReportes();
+            }
+            
+            loading.style.display = 'none';
+            list.style.display = 'block';
+        }
+
+        // ========== RENDER FUNCTIONS ==========
+        function renderRutas() {
+            const container = document.getElementById('rutasList');
+            container.innerHTML = '';
+            
+            rutas.forEach(ruta => {
+                const item = document.createElement('div');
+                item.className = 'item-card';
+                item.innerHTML = `
+                    <div class="item-info">
+                        <h4>${ruta.nombre_ruta}</h4>
+                        <p><strong>Origen:</strong> ${ruta.origen}</p>
+                        <p><strong>Destino:</strong> ${ruta.destino}</p>
+                        <p><strong>ID:</strong> ${ruta.idRuta}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-secondary" onclick="editRuta(${ruta.idRuta})">Editar</button>
+                        <button class="btn btn-danger" onclick="deleteRuta(${ruta.idRuta})">Eliminar</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderPeriodos() {
+            const container = document.getElementById('periodosList');
+            container.innerHTML = '';
+            
+            periodos.forEach(periodo => {
+                const item = document.createElement('div');
+                item.className = 'item-card';
+                item.innerHTML = `
+                    <div class="item-info">
+                        <h4>${periodo.nombre_periodo}</h4>
+                        <p><strong>Horario:</strong> ${periodo.hora_inicio} - ${periodo.hora_fin}</p>
+                        <p><strong>Descripción:</strong> ${periodo.descripcion || 'N/A'}</p>
+                        <p><strong>ID:</strong> ${periodo.idPeriodo}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-secondary" onclick="editPeriodo(${periodo.idPeriodo})">Editar</button>
+                        <button class="btn btn-danger" onclick="deletePeriodo(${periodo.idPeriodo})">Eliminar</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderTiempos() {
+            const container = document.getElementById('tiemposList');
+            container.innerHTML = '';
+            
+            tiempos.forEach(tiempo => {
+                const ruta = rutas.find(r => r.idRuta === tiempo.idRuta);
+                const periodo = periodos.find(p => p.idPeriodo === tiempo.idPeriodo);
+                
+                const item = document.createElement('div');
+                item.className = 'item-card';
+                item.innerHTML = `
+                    <div class="item-info">
+                        <h4>${ruta ? ruta.nombre_ruta : 'Ruta desconocida'}</h4>
+                        <p><strong>Periodo:</strong> ${periodo ? periodo.nombre_periodo : 'Periodo desconocido'}</p>
+                        <p><strong>Tiempo promedio:</strong> ${tiempo.tiempo_promedio_minutos} minutos</p>
+                        <p><strong>ID:</strong> ${tiempo.idTiempoRutaPeriodo}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-secondary" onclick="editTiempo(${tiempo.idTiempoRutaPeriodo})">Editar</button>
+                        <button class="btn btn-danger" onclick="deleteTiempo(${tiempo.idTiempoRutaPeriodo})">Eliminar</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderUsuarios() {
+            const container = document.getElementById('usuariosList');
+            container.innerHTML = '';
+            
+            usuarios.forEach(usuario => {
+                const item = document.createElement('div');
+                item.className = 'item-card';
+                item.innerHTML = `
+                    <div class="item-info">
+                        <h4>${usuario.nombre}</h4>
+                        <p><strong>Email:</strong> ${usuario.email}</p>
+                        <p><strong>ID:</strong> ${usuario.idUsuario}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-secondary" onclick="editUsuario(${usuario.idUsuario})">Editar</button>
+                        <button class="btn btn-danger" onclick="deleteUsuario(${usuario.idUsuario})">Eliminar</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderReportes() {
+            const container = document.getElementById('reportesList');
+            container.innerHTML = '';
+            
+            reportes.forEach(reporte => {
+                const item = document.createElement('div');
+                item.className = 'item-card';
+                item.innerHTML = `
+                    <div class="item-info">
+                        <h4>Reporte #${reporte.idReporte}</h4>
+                        <p><strong>Tipo:</strong> ${reporte.tipo_reporte || 'N/A'}</p>
+                        <p><strong>Usuario:</strong> ${reporte.nombre_usuario || 'N/A'}</p>
+                        <p><strong>Fecha:</strong> ${new Date(reporte.fecha_reporte).toLocaleDateString()}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-secondary" onclick="viewReporte(${reporte.idReporte})">Ver</button>
+                        <button class="btn btn-danger" onclick="deleteReporte(${reporte.idReporte})">Eliminar</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // ========== FORM HANDLERS ==========
+        function setupForms() {
+            // Formulario de rutas
+            document.getElementById('rutaForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {
+                    nombre_ruta: formData.get('nombreRuta'),
+                    origen: formData.get('origen'),
+                    destino: formData.get('destino')
+                };
+                
+                const result = await apiCall('/rutas', 'POST', data);
+                if (result && result.success) {
+                    showNotification('Ruta creada exitosamente', 'success');
+                    clearForm('rutaForm');
+                    loadRutas();
+                }
+            });
+
+            // Formulario de periodos
+            document.getElementById('periodoForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {
+                    nombre_periodo: formData.get('nombrePeriodo'),
+                    hora_inicio: formData.get('horaInicio'),
+                    hora_fin: formData.get('horaFin'),
+                    descripcion: formData.get('descripcionPeriodo')
+                };
+                
+                const result = await apiCall('/periodos', 'POST', data);
+                if (result && result.success) {
+                    showNotification('Periodo creado exitosamente', 'success');
+                    clearForm('periodoForm');
+                    loadPeriodos();
+                }
+            });
+
+            // Formulario de tiempos
+            document.getElementById('tiempoForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {
+                    idRuta: parseInt(formData.get('selectRuta')),
+                    idPeriodo: parseInt(formData.get('selectPeriodo')),
+                    tiempo_promedio_minutos: parseInt(formData.get('tiempoPromedio'))
+                };
+                
+                const result = await apiCall('/tiempos-ruta-periodo', 'POST', data);
+                if (result && result.success) {
+                    showNotification('Tiempo guardado exitosamente', 'success');
+                    clearForm('tiempoForm');
+                    loadTiempos();
+                }
+            });
+
+            // Formulario de usuarios
+            document.getElementById('usuarioForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {
+                    nombre: formData.get('nombreUsuario'),
+                    email: formData.get('emailUsuario'),
+                    password: formData.get('passwordUsuario')
+                };
+                
+                const result = await apiCall('/usuarios', 'POST', data);
+                if (result && result.success) {
+                    showNotification('Usuario creado exitosamente', 'success');
+                    clearForm('usuarioForm');
+                    loadUsuarios();
+                }
+            });
+        }
+
+        // ========== DELETE FUNCTIONS ==========
+        async function deleteRuta(id) {
+            if (confirm('¿Está seguro de que desea eliminar esta ruta?')) {
+                const result = await apiCall(`/rutas/${id}`, 'DELETE');
+                if (result && result.success) {
+                    showNotification('Ruta eliminada exitosamente', 'success');
+                    loadRutas();
+                }
+            }
+        }
+
+        async function deletePeriodo(id) {
+            if (confirm('¿Está seguro de que desea eliminar este periodo?')) {
+                const result = await apiCall(`/periodos/${id}`, 'DELETE');
+                if (result && result.success) {
+                    showNotification('Periodo eliminado exitosamente', 'success');
+                    loadPeriodos();
+                }
+            }
+        }
+
+        async function deleteTiempo(id) {
+            if (confirm('¿Está seguro de que desea eliminar este tiempo?')) {
+                const result = await apiCall(`/tiempos-ruta-periodo/${id}`, 'DELETE');
+                if (result && result.success) {
+                    showNotification('Tiempo eliminado exitosamente', 'success');
+                    loadTiempos();
+                }
+            }
+        }
+
+        async function deleteUsuario(id) {
+            if (confirm('¿Está seguro de que desea eliminar este usuario?')) {
+                const result = await apiCall(`/usuarios/${id}`, 'DELETE');
+                if (result && result.success) {
+                    showNotification('Usuario eliminado exitosamente', 'success');
+                    loadUsuarios();
+                }
+            }
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        function populateRutaSelects() {
+            const selects = ['selectRuta', 'coordinatesRoute'];
+            
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    const currentValue = select.value;
+                    
+                    // Limpiar opciones existentes excepto la primera
+                    select.innerHTML = select.children[0].outerHTML;
+                    
+                    rutas.forEach(ruta => {
+                        const option = document.createElement('option');
+                        option.value = ruta.idRuta;
+                        option.textContent = ruta.nombre_ruta;
+                        select.appendChild(option);
+                    });
+                    
+                    if (currentValue) select.value = currentValue;
+                }
+            });
+        }
+
+        function populatePeriodoSelects() {
+            const select = document.getElementById('selectPeriodo');
+            if (select) {
+                const currentValue = select.value;
+                
+                // Limpiar opciones existentes excepto la primera
+                select.innerHTML = select.children[0].outerHTML;
+                
+                periodos.forEach(periodo => {
+                    const option = document.createElement('option');
+                    option.value = periodo.idPeriodo;
+                    option.textContent = periodo.nombre_periodo;
+                    select.appendChild(option);
+                });
+                
+                if (currentValue) select.value = currentValue;
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalRoutes').textContent = rutas.length;
+            document.getElementById('totalUsers').textContent = usuarios.length;
+            document.getElementById('totalReports').textContent = reportes.length;
+            document.getElementById('totalCoordinates').textContent = coordenadas.length;
+        }
+
+        function clearForm(formId) {
+            document.getElementById(formId).reset();
+        }
+
+        function showNotification(message, type) {
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        function loadTabData(tabName) {
+            switch(tabName) {
+                case 'rutas':
+                    loadRutas();
+                    break;
+                case 'periodos':
+                    loadPeriodos();
+                    break;
+                case 'tiempos':
+                    loadTiempos();
+                    break;
+                case 'usuarios':
+                    loadUsuarios();
+                    break;
+                case 'reportes':
+                    loadReportes();
+                    break;
+            }
+        }
+
+        // ========== FILE UPLOAD ==========
+        function setupFileUpload() {
+            const fileUploadArea = document.getElementById('coordinatesUploadArea');
+            const fileInput = document.getElementById('coordinatesFileInput');
+
+            if (fileUploadArea && fileInput) {
+                fileUploadArea.addEventListener('click', () => fileInput.click());
+                
+                fileUploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    fileUploadArea.classList.add('drag-over');
+                });
+                
+                fileUploadArea.addEventListener('dragleave', () => {
+                    fileUploadArea.classList.remove('drag-over');
+                });
+                
+                fileUploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    fileUploadArea.classList.remove('drag-over');
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        handleFileSelect(files[0]);
+                    }
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) {
+                        handleFileSelect(e.target.files[0]);
+                    }
+                });
+            }
+        }
+
+        function handleFileSelect(file) {
+            if (file.type !== 'application/json') {
+                showNotification('Por favor seleccione un archivo JSON válido', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+                    currentFile = {
+                        name: file.name,
+                        size: file.size,
+                        data: jsonData
+                    };
+                    
+                    document.getElementById('coordinatesPreview').value = JSON.stringify(jsonData, null, 2);
+                    showNotification('Archivo cargado correctamente', 'success');
+                } catch (error) {
+                    showNotification('Error al leer el archivo JSON: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function validateJSON() {
+            if (!currentFile) {
+                showNotification('Por favor seleccione un archivo primero', 'error');
+                return;
+            }
+
+            try {
+                const data = currentFile.data;
+                
+                // Validaciones básicas para coordenadas
+                if (!Array.isArray(data) && !data.coordinates) {
+                    showNotification('El archivo debe contener un array de coordenadas o un objeto con propiedad "coordinates"', 'error');
+                    return;
+                }
+
+                const coords = Array.isArray(data) ? data : data.coordinates;
+                
+                if (!Array.isArray(coords) || coords.length < 2) {
+                    showNotification('El archivo debe contener al menos 2 coordenadas', 'error');
+                    return;
+                }
+
+                // Validar que cada coordenada tenga lat y lng
+                for (let i = 0; i < coords.length; i++) {
+                    const coord = coords[i];
+                    if (typeof coord.lat !== 'number' || typeof coord.lng !== 'number') {
+                        showNotification(`Coordenada ${i + 1} inválida. Debe tener propiedades "lat" y "lng" numéricas`, 'error');
+                        return;
+                    }
+                }
+
+                showNotification('Archivo JSON válido ✓', 'success');
+            } catch (error) {
+                showNotification('Error al validar JSON: ' + error.message, 'error');
+            }
+        }
+
+        async function uploadCoordinates() {
+            if (!currentFile) {
+                showNotification('Por favor seleccione un archivo primero', 'error');
+                return;
+            }
+
+            const rutaId = document.getElementById('coordinatesRoute').value;
+            if (!rutaId) {
+                showNotification('Por favor seleccione una ruta', 'error');
+                return;
+            }
+
+            try {
+                const coords = Array.isArray(currentFile.data) ? currentFile.data : currentFile.data.coordinates;
+                
+                // Subir coordenadas una por una
+                for (let coord of coords) {
+                    const data = {
+                        idRuta: parseInt(rutaId),
+                        latitud: coord.lat,
+                        longitud: coord.lng
+                    };
+                    
+                    await apiCall('/coordenadas', 'POST', data);
+                }
+                
+                showNotification('Coordenadas subidas exitosamente', 'success');
+                
+                // Limpiar
+                currentFile = null;
+                document.getElementById('coordinatesPreview').value = '';
+                document.getElementById('coordinatesFileInput').value = '';
+                document.getElementById('coordinatesRoute').value = '';
+                
+                loadCoordinates();
+            } catch (error) {
+                showNotification('Error al subir coordenadas: ' + error.message, 'error');
+            }
+        }
+
+        async function loadCoordinates() {
+            const loading = document.getElementById('coordinatesLoading');
+            const list = document.getElementById('coordinatesList');
+            
+            loading.style.display = 'block';
+            list.style.display = 'none';
+            
+            const result = await apiCall('/coordenadas');
+            if (result && result.success) {
+                coordenadas = result.data;
+                renderCoordinates();
+            }
+            
+            loading.style.display = 'none';
+            list.style.display = 'block';
+        }
+
+        function renderCoordinates() {
+            const container = document.getElementById('coordinatesList');
+            container.innerHTML = '';
+            
+            // Agrupar coordenadas por ruta
+            const coordenadasPorRuta = {};
+            coordenadas.forEach(coord => {
+                if (!coordenadasPorRuta[coord.idRuta]) {
+                    coordenadasPorRuta[coord.idRuta] = [];
+                }
+                coordenadasPorRuta[coord.idRuta].push(coord);
+            });
+            
+            Object.keys(coordenadasPorRuta).forEach(rutaId => {
+                const ruta = rutas.find(r => r.idRuta == rutaId);
+                const coords = coordenadasPorRuta[rutaId];
+                
+                const item = document.createElement('div');
+                item.className = 'item-card';
+                item.innerHTML = `
+                    <div class="item-info">
+                        <h4>${ruta ? ruta.nombre_ruta : 'Ruta desconocida'}</h4>
+                        <p><strong>Coordenadas:</strong> ${coords.length} puntos</p>
+                        <p><strong>Rango:</strong> ${coords[0].latitud.toFixed(4)}, ${coords[0].longitud.toFixed(4)} ... ${coords[coords.length-1].latitud.toFixed(4)}, ${coords[coords.length-1].longitud.toFixed(4)}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-secondary" onclick="viewCoordinates(${rutaId})">Ver</button>
+                        <button class="btn btn-danger" onclick="deleteCoordinates(${rutaId})">Eliminar</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        async function deleteCoordinates(rutaId) {
+            if (confirm('¿Está seguro de que desea eliminar todas las coordenadas de esta ruta?')) {
+                const coordsToDelete = coordenadas.filter(c => c.idRuta == rutaId);
+                
+                for (let coord of coordsToDelete) {
+                    await apiCall(`/coordenadas/${coord.idCoordenada}`, 'DELETE');
+                }
+                
+                showNotification('Coordenadas eliminadas exitosamente', 'success');
+                loadCoordinates();
+            }
+        }
+
+        function viewCoordinates(rutaId) {
+            const coords = coordenadas.filter(c => c.idRuta == rutaId);
+            const coordsData = coords.map(c => ({
+                lat: c.latitud,
+                lng: c.longitud
+            }));
+            
+            document.getElementById('coordinatesPreview').value = JSON.stringify(coordsData, null, 2);
+        }
+
+        // ========== DASHBOARD FUNCTIONS ==========
+        function updateLastUpdate() {
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+        }
+
+        async function updateSystem() {
+            showNotification('Actualizando sistema...', 'warning');
+            await loadAllData();
+            updateLastUpdate();
+            showNotification('Sistema actualizado exitosamente', 'success');
+        }
+
+        async function backupDatabase() {
+            try {
+                const data = {
+                    rutas: rutas,
+                    periodos: periodos,
+                    tiempos: tiempos,
+                    coordenadas: coordenadas,
+                    usuarios: usuarios,
+                    reportes: reportes,
+                    backupDate: new Date().toISOString(),
+                    version: '1.0'
+                };
+
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `wheely_backup_${new Date().toISOString().split('T')[0]}.json`;
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                showNotification('Backup creado exitosamente', 'success');
+            } catch (error) {
+                showNotification('Error al crear backup: ' + error.message, 'error');
+            }
+        }
+
+        // ========== EDIT FUNCTIONS ==========
+        function editRuta(id) {
+            const ruta = rutas.find(r => r.idRuta === id);
+            if (ruta) {
+                document.getElementById('nombreRuta').value = ruta.nombre_ruta;
+                document.getElementById('origen').value = ruta.origen;
+                document.getElementById('destino').value = ruta.destino;
+                
+                // Cambiar el comportamiento del formulario para editar
+                const form = document.getElementById('rutaForm');
+                form.setAttribute('data-edit-id', id);
+                
+                showTab('rutas');
+            }
+        }
+
+        function editPeriodo(id) {
+            const periodo = periodos.find(p => p.idPeriodo === id);
+            if (periodo) {
+                document.getElementById('nombrePeriodo').value = periodo.nombre_periodo;
+                document.getElementById('horaInicio').value = periodo.hora_inicio;
+                document.getElementById('horaFin').value = periodo.hora_fin;
+                document.getElementById('descripcionPeriodo').value = periodo.descripcion || '';
+                
+                // Cambiar el comportamiento del formulario para editar
+                const form = document.getElementById('periodoForm');
+                form.setAttribute('data-edit-id', id);
+                
+                showTab('periodos');
+            }
+        }
+
+        function editTiempo(id) {
+            const tiempo = tiempos.find(t => t.idTiempoRutaPeriodo === id);
+            if (tiempo) {
+                document.getElementById('selectRuta').value = tiempo.idRuta;
+                document.getElementById('selectPeriodo').value = tiempo.idPeriodo;
+                document.getElementById('tiempoPromedio').value = tiempo.tiempo_promedio_minutos;
+                
+                // Cambiar el comportamiento del formulario para editar
+                const form = document.getElementById('tiempoForm');
+                form.setAttribute('data-edit-id', id);
+                
+                showTab('tiempos');
+            }
+        }
+
+        function editUsuario(id) {
+            const usuario = usuarios.find(u => u.idUsuario === id);
+            if (usuario) {
+                document.getElementById('nombreUsuario').value = usuario.nombre;
+                document.getElementById('emailUsuario').value = usuario.email;
+                document.getElementById('passwordUsuario').value = '';
+                
+                // Cambiar el comportamiento del formulario para editar
+                const form = document.getElementById('usuarioForm');
+                form.setAttribute('data-edit-id', id);
+                
+                showTab('usuarios');
+            }
+        }
+
+        // ========== ENHANCED FORM HANDLERS ==========
+        function setupEnhancedForms() {
+            // Mejorar el formulario de rutas para soportar edición
+            document.getElementById('rutaForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {
+                    nombre_ruta: formData.get('nombreRuta'),
+                    origen: formData.get('origen'),
+                    destino: formData.get('destino')
+                };
+                
+                const editId = this.getAttribute('data-edit-id');
+                
+                if (editId) {
+                    // Actualizar ruta existente
+                    const result = await apiCall(`/rutas/${editId}`, 'PUT', data);
+                    if (result && result.success) {
+                        showNotification('Ruta actualizada exitosamente', 'success');
+                        this.removeAttribute('data-edit-id');
+                        clearForm('rutaForm');
+                        loadRutas();
+                    }
+                } else {
+                    // Crear nueva ruta
+                    const result = await apiCall('/rutas', 'POST', data);
+                    if (result && result.success) {
+                        showNotification('Ruta creada exitosamente', 'success');
+                        clearForm('rutaForm');
+                        loadRutas();
+                    }
+                }
+            });
+
+            // Mejorar otros formularios de manera similar...
+            document.getElementById('periodoForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {
+                    nombre_periodo: formData.get('nombrePeriodo'),
+                    hora_inicio: formData.get('horaInicio'),
+                    hora_fin: formData.get('horaFin'),
+                    descripcion: formData.get('descripcionPeriodo')
+                };
+                
+                const editId = this.getAttribute('data-edit-id');
+                
+                if (editId) {
+                    const result = await apiCall(`/periodos/${editId}`, 'PUT', data);
+                    if (result && result.success) {
+                        showNotification('Periodo actualizado exitosamente', 'success');
+                        this.removeAttribute('data-edit-id');
+                        clearForm('periodoForm');
+                        loadPeriodos();
+                    }
+                } else {
+                    const result = await apiCall('/periodos', 'POST', data);
+                    if (result && result.success) {
+                        showNotification('Periodo creado exitosamente', 'success');
+                        clearForm('periodoForm');
+                        loadPeriodos();
+                    }
+                }
+            });
+        }
+
+        // ========== VALIDATION ==========
+        function setupValidation() {
+            // Validar horarios de periodos
+            const horaInicio = document.getElementById('horaInicio');
+            const horaFin = document.getElementById('horaFin');
+            
+            function validateTimeRange() {
+                if (horaInicio.value && horaFin.value) {
+                    if (horaFin.value <= horaInicio.value) {
+                        horaFin.style.borderColor = 'var(--color-error)';
+                        return false;
+                    } else {
+                        horaFin.style.borderColor = 'var(--color-border-hr)';
+                        return true;
+                    }
+                }
+                return true;
+            }
+            
+            horaInicio.addEventListener('change', validateTimeRange);
+            horaFin.addEventListener('change', validateTimeRange);
+
+            // Validar emails únicos
+            document.getElementById('emailUsuario').addEventListener('blur', async function() {
+                const email = this.value;
+                const editId = document.getElementById('usuarioForm').getAttribute('data-edit-id');
+                
+                if (email && usuarios.some(u => u.email === email && u.idUsuario != editId)) {
+                    this.style.borderColor = 'var(--color-error)';
+                    showNotification('Este email ya está registrado', 'error');
+                } else {
+                    this.style.borderColor = 'var(--color-border-hr)';
+                }
+            });
+        }
+
+        // ========== ADVANCED FEATURES ==========
+        function setupAdvancedFeatures() {
+            // Auto-refresh cada 30 segundos
+            setInterval(async () => {
+                await loadAllData();
+                updateLastUpdate();
+            }, 30000);
+
+            // Búsqueda en tiempo real
+            setupSearch();
+        }
+
+        function setupSearch() {
+            // Crear campos de búsqueda dinámicamente
+            const searchableContainers = ['rutasList', 'periodosList', 'usuariosList'];
+            
+            searchableContainers.forEach(containerId => {
+                const container = document.getElementById(containerId);
+                if (container) {
+                    const searchInput = document.createElement('input');
+                    searchInput.type = 'text';
+                    searchInput.className = 'form-control';
+                    searchInput.placeholder = 'Buscar...';
+                    searchInput.style.marginBottom = '20px';
+                    
+                    searchInput.addEventListener('input', function() {
+                        const searchTerm = this.value.toLowerCase();
+                        const items = container.querySelectorAll('.item-card');
+                        
+                        items.forEach(item => {
+                            const text = item.textContent.toLowerCase();
+                            if (text.includes(searchTerm)) {
+                                item.style.display = 'flex';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
+                    });
+                    
+                    container.parentNode.insertBefore(searchInput, container);
+                }
+            });
+        }
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSidebar();
+            setupFileUpload();
+            setupEnhancedForms();
+            setupValidation();
+            setupAdvancedFeatures();
+            loadAllData();
+            updateLastUpdate();
+        });
+    </script>
+</body>
+</html>
