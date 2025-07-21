@@ -1244,24 +1244,38 @@ window.viewReporte = function(id) {
                 }
             });
 
-            // Formulario de usuarios
-            document.getElementById('usuarioForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                const data = {
-                    nombre: formData.get('nombreUsuario'),
-                    email: formData.get('emailUsuario'),
-                    password: formData.get('passwordUsuario')
+            // Formulario de usuarios (creación y edición)
+            const usuarioForm = document.getElementById('usuarioForm');
+            if (usuarioForm) {
+                usuarioForm.onsubmit = async function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    const data = {
+                        nombre: formData.get('nombreUsuario'),
+                        email: formData.get('emailUsuario'),
+                        password: formData.get('passwordUsuario')
+                    };
+                    const editId = this.getAttribute('data-edit-id');
+                    if (editId) {
+                        // Actualizar usuario existente
+                        const result = await apiCall(`/usuarios/${editId}`, 'PUT', data);
+                        if (result && result.success) {
+                            showNotification('Usuario actualizado exitosamente', 'success');
+                            this.removeAttribute('data-edit-id');
+                            clearForm('usuarioForm');
+                            loadUsuarios();
+                        }
+                    } else {
+                        // Crear nuevo usuario
+                        const result = await apiCall('/usuarios', 'POST', data);
+                        if (result && result.success) {
+                            showNotification('Usuario creado exitosamente', 'success');
+                            clearForm('usuarioForm');
+                            loadUsuarios();
+                        }
+                    }
                 };
-                
-                const result = await apiCall('/usuarios', 'POST', data);
-                if (result && result.success) {
-                    showNotification('Usuario creado exitosamente', 'success');
-                    clearForm('usuarioForm');
-                    loadUsuarios();
-                }
-            });
+            }
         }
 
         // ========== DELETE FUNCTIONS ==========
@@ -1779,11 +1793,12 @@ window.viewReporte = function(id) {
                 document.getElementById('nombreUsuario').value = usuario.nombre;
                 document.getElementById('emailUsuario').value = usuario.email;
                 document.getElementById('passwordUsuario').value = '';
-                
                 // Cambiar el comportamiento del formulario para editar
                 const form = document.getElementById('usuarioForm');
                 form.setAttribute('data-edit-id', id);
-                
+                // Cambiar texto del botón
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) btn.textContent = 'Actualizar Usuario';
                 showTab('usuarios');
             }
         }
@@ -1835,6 +1850,7 @@ window.viewReporte = function(id) {
                         password: formData.get('passwordUsuario')
                     };
                     const editId = this.getAttribute('data-edit-id');
+                    const btn = this.querySelector('button[type="submit"]');
                     if (editId) {
                         // Actualizar usuario existente
                         const result = await apiCall(`/usuarios/${editId}`, 'PUT', data);
@@ -1843,6 +1859,7 @@ window.viewReporte = function(id) {
                             this.removeAttribute('data-edit-id');
                             clearForm('usuarioForm');
                             loadUsuarios();
+                            if (btn) btn.textContent = 'Crear Usuario';
                         }
                     } else {
                         // Crear nuevo usuario
@@ -1851,6 +1868,7 @@ window.viewReporte = function(id) {
                             showNotification('Usuario creado exitosamente', 'success');
                             clearForm('usuarioForm');
                             loadUsuarios();
+                            if (btn) btn.textContent = 'Crear Usuario';
                         }
                     }
                 };
