@@ -97,7 +97,7 @@
     <script>
                 // Configuración de la API
         const API_CONFIG = {
-            baseURL: 'http://localhost:7000',
+            baseURL: 'http://44.220.12.138:7000',
             endpoints: {
                 login: '/usuarios/login'
             }
@@ -376,7 +376,7 @@ async function handleLogin(event) {
                 }
             } catch (error) {
                 console.error('❌ No se pudo conectar con el servidor:', error);
-                showMessage('Advertencia: No se pudo verificar la conexión con el servidor. Asegúrate de que esté ejecutándose en http://localhost:7000', 'error');
+                showMessage('Advertencia: No se pudo verificar la conexión con el servidor. Asegúrate de que esté ejecutándose en http://44.220.12.138:7000', 'error');
             }
         }
 

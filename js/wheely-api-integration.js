@@ -1,5 +1,5 @@
 // Configuración de la API
-const API_BASE_URL = 'http://localhost:7000/';
+const API_BASE_URL = 'http://44.220.12.138:7000/';
 const USUARIO_ID = 1; // Aquí deberías obtener el ID del usuario actual desde el login/sesión
 
 // ========== FUNCIONES DE API ==========
