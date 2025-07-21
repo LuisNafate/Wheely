@@ -1,4 +1,4 @@
-   const sidebar = document.querySelector('.sidebar');
+const sidebar = document.querySelector('.sidebar');
 const sidebarToggleBtn = document.querySelector('.sidebar-toggle');
 
 // Elementos del panel de favoritos
@@ -75,6 +75,9 @@ function openFavoritos() {
         favoritosPanel.classList.add('panel-shifted');
     }
     activarBotonMenu('favoritos-trigger');
+
+      // Carga las rutas favoritas al abrir el panel
+ renderizarRutasFavoritas();
 
 }
 
@@ -165,6 +168,8 @@ favoritosTrigger.addEventListener('click', (e) => {
     
     if (favoritosPanel.classList.contains('active')) {
         closeFavoritosPanel();
+        renderizarRutasFavoritas();
+
     } else {
         openFavoritos();
         if (isMobile()) {
@@ -243,55 +248,176 @@ filterTabs.forEach(tab => {
 
 // Funcionalidad de las estrellas (favoritos)
 function setupStarActions() {
-    document.querySelectorAll('.star-icon').forEach(star => {
-        star.addEventListener('click', function(e) {
-            e.stopPropagation();
-            
-            const isCurrentlyFavorite = this.classList.contains('bi-star-fill');
-            
-            if (isCurrentlyFavorite) {
-                // Quitar de favoritos
-                this.classList.remove('bi-star-fill');
-                this.classList.add('bi-star');
-                this.classList.remove('favorito');
-                console.log('Removido de favoritos');
-            } else {
-                // Agregar a favoritos
-                this.classList.remove('bi-star');
-                this.classList.add('bi-star-fill');
-                this.classList.add('favorito');
-                console.log('Agregado a favoritos');
-            }
-            
-            // Efecto visual
-            this.style.transform = 'scale(1.3)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
-        });
+  document.querySelectorAll('.star-icon').forEach(starIcon => {
+    starIcon.addEventListener('click', function (e) {
+  e.stopPropagation();
+  const rutaItem = this.closest('.ruta-item');
+  const rutaId = parseInt(rutaItem.dataset.ruta);
+  const esFavorito = this.classList.contains("favorito");
+
+  if (esFavorito) {
+    eliminarRutaFavorita(rutaId, this);
+  } else {
+    agregarRutaFavorita(rutaId, this);
+  }
+;
+
+
+      // Efecto visual
+      this.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+      }, 150);
     });
+  });
 }
+
+
 
 // Funcionalidad de reportes
 function setupReportActions() {
-    document.querySelectorAll('.report-icon').forEach(reportIcon => {
-        reportIcon.addEventListener('click', function(e) {
-            e.stopPropagation();
-            
-            const rutaItem = this.closest('.ruta-item');
-            const rutaNumber = rutaItem.querySelector('h4').textContent;
-            const rutaDestination = rutaItem.querySelector('p').textContent;
-            
-            // Efecto visual
-            this.style.transform = 'scale(1.3)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
-            
-            //alert(`🚨 Reportar problema en:\n\n${rutaNumber}\n${rutaDestination}\n\n¿Qué tipo de problema deseas reportar?\n• Retraso en el servicio\n• Vehículo en mal estado\n• Conductor irresponsable\n• Ruta modificada\n• Otro problema\n\n(Aquí se abriría un formulario de reporte)`);
-        });
+  document.querySelectorAll('.report-icon').forEach(reportIcon => {
+    reportIcon.addEventListener('click', function (e) {
+      e.stopPropagation();
+
+      const rutaItem = this.closest('.ruta-item');
+      const rutaId = rutaItem.dataset.ruta;
+
+      // Guardamos la ruta activa para noticias y reportes
+      window.rutaSeleccionada = parseInt(rutaId);
+
+      // efecto visual (opcional)
+      this.style.transform = 'scale(1.3)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+      }, 200);
+
+      // Abrir panel de reporte
+      abrirPanel(overlayReporte, panelReporte);
+    });
+  });
+}
+
+
+// Eso es para cargar las rutas desde el baskend
+
+function cargarRutasDesdeBackend() {
+  console.log("Intentando cargar rutas desde backend...");
+
+  fetch('http://107.21.12.104:7000/rutas')
+    .then(res => {
+      if (!res.ok) throw new Error("No se pudieron cargar las rutas");
+      return res.json();
+    })
+    .then(respuesta => {
+      const rutas = respuesta.data; // 👈 AQUÍ está el arreglo real
+      console.log("Rutas recibidas:", rutas);
+
+      const contenedor = document.querySelector('#rutas-panel .panel-content');
+      contenedor.innerHTML = ''; // Limpiar antes
+
+      rutas.forEach(ruta => {
+        const rutaItem = document.createElement('div');
+        rutaItem.classList.add('ruta-item');
+        rutaItem.dataset.ruta = ruta.idRuta;
+        rutaItem.dataset.origen = ruta.origen;
+        rutaItem.dataset.destino = ruta.destino;
+
+     rutaItem.innerHTML = `
+  <div class="ruta-info">
+    <div class="ruta-icon">
+      <i class="bi bi-bus-front-fill"></i>
+    </div>
+    <div class="ruta-details">
+      <h4>${ruta.nombreRuta}</h4>
+      <p><strong>Origen:</strong> ${ruta.origen}</p>
+      <p><strong>Destino:</strong> ${ruta.destino}</p>
+      <div class="ruta-tiempo">
+        <i class="bi bi-clock"></i>
+        <span>Espera: 5 min</span>
+      </div>
+    </div>
+  </div>
+  <div class="ruta-actions">
+    <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+    <i class="bi bi-star action-icon star-icon" title="Agregar a favoritos"></i>
+  </div>
+`;
+setupStarActions();
+
+
+      
+rutaItem.addEventListener('click', () => {
+  const id = rutaItem.dataset.ruta;
+  const origen = rutaItem.dataset.origen;
+  const destino = rutaItem.dataset.destino;
+  const nombreRuta = ruta.nombreRuta; // Para que ya no mejale el id y solo el no,bre de la ruta
+
+  cargarDetalleDeRuta(id, origen, destino, nombreRuta);
+  
+
+});
+
+fetch(`http://107.21.12.104:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`)
+
+
+  .then(res => res.json())
+  .then(tiemposData => {
+    const tiempos = tiemposData.data;
+
+    const tiemposValidos = tiempos
+      .filter(t => t.tiempoPromedio > 0)
+      .map(t => t.tiempoPromedio);
+
+    let promedio = 'N/A';
+    if (tiemposValidos.length > 0) {
+      const suma = tiemposValidos.reduce((a, b) => a + b, 0);
+      promedio = Math.round(suma / tiemposValidos.length) + ' min';
+    }
+
+    // Reemplazar el texto en el DOM
+    const esperaEl = rutaItem.querySelector('.ruta-tiempo span');
+    if (esperaEl) {
+      esperaEl.textContent = `Espera: ${promedio}`;
+    }
+  })
+  .catch(err => {
+    console.warn(`No se pudieron cargar los tiempos para la ruta ${ruta.idRuta}`, err);
+  });
+  
+
+contenedor.appendChild(rutaItem);
+
+   setupStarActions();
+setupReportActions();
+      });
+    })
+    .catch(err => {
+      console.error("Error cargando rutas:", err);
+      alert("No se pudieron cargar las rutas.");
     });
 }
+// para la estrellita de favoritos
+function marcarFavoritosEnRutas(favoritas) {
+  document.querySelectorAll('.ruta-item').forEach(item => {
+    const rutaId = parseInt(item.dataset.ruta);
+    const starIcon = item.querySelector('.star-icon');
+
+    const esFavorita = favoritas.some(f => f.idRuta === rutaId);
+
+    if (esFavorita) {
+      starIcon.classList.add('bi-star-fill');
+      starIcon.classList.remove('bi-star');
+      starIcon.classList.add('favorito');
+    } else {
+      starIcon.classList.remove('bi-star-fill');
+      starIcon.classList.add('bi-star');
+      starIcon.classList.remove('favorito');
+    }
+  });
+}
+
+
 
 // Funcionalidad de los items de ruta
 function setupRutaItemActions() {
@@ -360,6 +486,8 @@ document.addEventListener('keydown', (e) => {
 // Inicializar todas las funcionalidades
 setupStarActions();
 setupReportActions();
+cargarRutasDesdeBackend();
+
 setupRutaItemActions();
 
 // Soporte para gestos de swipe en móvil
@@ -393,6 +521,81 @@ function handleSwipe() {
         document.body.style.overflow = 'hidden';
     }
 }
+//Para que me aparezca el panel de favoritos al cargar la página
+async function renderizarRutasFavoritas() {
+  const panel = document.querySelector('#favoritos-panel .panel-content');
+  panel.innerHTML = ''; // limpiar contenido
+
+  const user = JSON.parse(localStorage.getItem('wheelyUser'));
+  if (!user) return;
+
+  try {
+    const [rutasRes, favsRes] = await Promise.all([
+      fetch('http://107.21.12.104:7000/rutas').then(r => r.json()),
+      fetch(`http://107.21.12.104:7000/usuarios/${user.id}/rutas-favoritas`).then(r => r.json())
+    ]);
+
+    const rutas = rutasRes.data;
+    const favoritas = favsRes.data;
+
+    favoritas.forEach(async fav => {
+      const ruta = rutas.find(r => r.idRuta === fav.idRuta);
+      if (!ruta) return;
+
+      const rutaItem = document.createElement('div');
+      rutaItem.classList.add('ruta-item');
+      rutaItem.dataset.ruta = ruta.idRuta;
+
+      rutaItem.innerHTML = `
+        <div class="ruta-info">
+          <div class="ruta-icon"><i class="bi bi-bus-front-fill"></i></div>
+          <div class="ruta-details">
+            <h4>${ruta.nombreRuta}</h4>
+            <p><strong>Origen:</strong> ${ruta.origen}</p>
+            <p><strong>Destino:</strong> ${ruta.destino}</p>
+            <div class="ruta-tiempo">
+              <i class="bi bi-clock"></i>
+              <span>Espera: Cargando...</span>
+            </div>
+          </div>
+        </div>
+        <div class="ruta-actions">
+          <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
+          <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
+        </div>
+      `;
+
+      // Cargar tiempos reales
+      try {
+        const tiemposRes = await fetch(`http://107.21.12.104:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`);
+        const tiemposData = await tiemposRes.json();
+
+        const tiempos = tiemposData.data;
+        const proms = tiempos.map(t => t.tiempoPromedio).filter(t => t > 0);
+        const esperaProm = proms.length ? Math.round(proms.reduce((a, b) => a + b) / proms.length) + ' min' : 'N/A';
+
+        rutaItem.querySelector('.ruta-tiempo span').textContent = `Espera: ${esperaProm}`;
+      } catch (err) {
+        rutaItem.querySelector('.ruta-tiempo span').textContent = 'Espera: N/A';
+        console.warn(`Error cargando tiempo de ruta ${ruta.idRuta}`, err);
+      }
+
+      rutaItem.addEventListener('click', () => {
+        cargarDetalleDeRuta(ruta.idRuta);
+      });
+
+      panel.appendChild(rutaItem);
+    });
+
+    // sincroniza estrellas en rutas generales
+    marcarFavoritosEnRutas(favoritas);
+    setupStarActions();
+    setupReportActions();
+  } catch (err) {
+    console.error("Error al renderizar favoritos:", err);
+  }
+}
+
 
 // Inicializar mapa de Leaflet
 const map = L.map('mapa-wheely').setView([16.75, -93.12], 13); // Coordenadas iniciales de Tuxtla
@@ -403,6 +606,81 @@ L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=HlXj
   maxZoom: 22
 }).addTo(map);
 
+// --- INICIO GESTIÓN DE FAVORITOS CON BACKEND ---
+
+function obtenerUsuarioActual() {
+  const user = JSON.parse(localStorage.getItem('wheelyUser'));
+  return user?.id || null;  // ✅ usa 'id' en lugar de 'idUsuario'
+}
+
+function mostrarToast(mensaje, tipo = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `toast ${tipo}`;
+  toast.textContent = mensaje;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('visible');
+  }, 100);
+
+  setTimeout(() => {
+    toast.classList.remove('visible');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+
+function agregarRutaFavorita(rutaId, starIcon) {
+  const user = JSON.parse(localStorage.getItem('wheelyUser'));
+  const API_BASE_URL = 'http://107.21.12.104:7000';
+
+  fetch(`${API_BASE_URL}/usuarios/${user.id}/rutas-favoritas`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rutaId })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        starIcon.classList.add("favorito");
+        mostrarToast("Ruta agregada a favoritos");
+        renderizarRutasFavoritas();
+      } else {
+        mostrarToast("No se pudo agregar a favoritos");
+      }
+    })
+    .catch(err => {
+      console.error("Error al agregar a favoritos:", err);
+      mostrarToast("Error al agregar a favoritos");
+    });
+}
+
+function eliminarRutaFavorita(rutaId, starIcon) {
+  const user = JSON.parse(localStorage.getItem('wheelyUser'));
+  const API_BASE_URL = 'http://107.21.12.104:7000';
+
+  fetch(`${API_BASE_URL}/usuarios/${user.id}/rutas-favoritas/${rutaId}`, {
+    method: 'DELETE'
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        starIcon.classList.remove("favorito");
+        mostrarToast("Ruta eliminada de favoritos");
+        renderizarRutasFavoritas();
+      } else {
+        mostrarToast("No se pudo eliminar de favoritos");
+      }
+    })
+    .catch(err => {
+      console.error("Error al eliminar favorita:", err);
+      mostrarToast("Error al eliminar de favoritos");
+    });
+}
+
+
+
+// --- FIN GESTIÓN DE FAVORITOS CON BACKEND ---
 
 // Esto es la nueva manera para el detaLLE de ruta   desde aqui veo todo lo del panel de detalle de ruta
 
@@ -437,10 +715,96 @@ function mostrarAmbas() {
   const group = new L.featureGroup([capaIda, capaRegreso]);
   map.fitBounds(group.getBounds());
 }
+
+//Para los detalles de ruta
+
+function cargarGeoJsonSiExiste(url) {
+  return fetch(url)
+    .then(res => res.ok ? res.json() : null)
+    .catch(() => null);
+}
+
+
+function cargarDetalleDeRuta(rutaId, origenRuta, destinoRuta, nombreRuta) {
+
+  window.rutaSeleccionada = rutaId;
+
+ // Si lleva /api
+const tiemposURL = `http://107.21.12.104:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`;
+
+  const urlIda = `rutas/ruta${rutaId}_ida.geojson`;
+  const urlRegreso = `rutas/ruta${rutaId}_vuelta.geojson`;
+
+  console.log(`[Ruta ${rutaId}] Cargando detalle...`);
+  console.log(`Origen: ${origenRuta}, Destino: ${destinoRuta}`);
+
+  fetch(tiemposURL)
+    .then(res => {
+      if (!res.ok) throw new Error("No se pudo obtener tiempos");
+      return res.json();
+    })
+    .then(tiemposData => {
+      const tiemposPorPeriodo = {
+        manana: 'N/A',
+        tarde: 'N/A',
+        noche: 'N/A'
+      };
+
+      if (Array.isArray(tiemposData.data)) {
+        tiemposData.data.forEach(item => {
+          if (item.idPeriodo === 1) tiemposPorPeriodo.manana = item.tiempoPromedio + ' min';
+          if (item.idPeriodo === 2) tiemposPorPeriodo.tarde = item.tiempoPromedio + ' min';
+          if (item.idPeriodo === 3) tiemposPorPeriodo.noche = item.tiempoPromedio + ' min';
+        });
+      }
+mostrarDetalleRuta({
+  nombre: nombreRuta || `Ruta ${rutaId}`,
+  origen: origenRuta || 'Origen desconocido',
+  destino: destinoRuta || 'Destino desconocido',
+  espera: calcularPromedio(tiemposPorPeriodo),
+  ...tiemposPorPeriodo
+});
+
+
+      return Promise.all([
+        cargarGeoJsonSiExiste(urlIda),
+        cargarGeoJsonSiExiste(urlRegreso)
+      ]);
+    })
+    .then(([geoIda, geoRegreso]) => {
+      console.log("GeoJSON cargado:", { geoIda, geoRegreso });
+
+      if (geoIda || geoRegreso) {
+        pintarRuta(geoIda, geoRegreso);
+        if (geoIda && geoRegreso) {
+          mostrarAmbas();
+        } else if (geoIda) {
+          mostrarSoloIda();
+        } else {
+          mostrarSoloRegreso();
+        }
+      } else {
+        mostrarToast("Esta ruta aún no tiene GeoJSON disponible", "info");
+      }
+    })
+    .catch(err => {
+      console.error("❌ Error real detectado:", err);
+      mostrarToast("No se pudo cargar completamente la información de la ruta", "error");
+    });
+}
+
+
+let origenActual = "";
+let destinoActual = "";
+let direccionInvertida = false;
+
 // Función para mostrar el detalle de la ruta
 function mostrarDetalleRuta(data) {
   document.getElementById('detalle-ruta-nombre').textContent = data.nombre;
   document.getElementById('detalle-direccion').textContent = `Origen: ${data.origen} → Destino: ${data.destino}`;
+  origenActual = data.origen;
+  destinoActual = data.destino;
+
 
   document.getElementById('detalle-tiempo').textContent = `Espera promedio: ${data.espera}`;
   document.getElementById('detalle-manana').textContent = `Mañana: ${data.manana}`;
@@ -455,7 +819,18 @@ function mostrarDetalleRuta(data) {
  openDetalleRuta(); // ⬅️ este se encarga de mostrar y ajustar
 
 }
-const geojsonPorRuta = {
+
+function alternarOrigenDestino() {
+  direccionInvertida = !direccionInvertida;
+
+  const origen = direccionInvertida ? destinoActual : origenActual;
+  const destino = direccionInvertida ? origenActual : destinoActual;
+
+  const direccionTexto = `Origen: ${origen} → Destino: ${destino}`;
+  document.getElementById('detalle-direccion').textContent = direccionTexto;
+}
+
+/*const geojsonPorRuta = {
   "45": {
     ida: {
       "type": "Feature",
@@ -480,11 +855,11 @@ const geojsonPorRuta = {
       }
     }
   }
-};
+};*/
 
  closeAllPanels(); // Oculta favoritos o rutas
 
-document.querySelectorAll('.ruta-item').forEach(item => {
+/*document.querySelectorAll('.ruta-item').forEach(item => {
   item.addEventListener('click', () => {
     const rutaId = item.dataset.ruta;
 
@@ -511,7 +886,7 @@ document.querySelectorAll('.ruta-item').forEach(item => {
 
    
   });
-});
+});*/
 
 let mostrandoIda = true; // por defecto
 
@@ -527,7 +902,11 @@ function toggleDireccion() {
 }
 
 
-document.getElementById('btn-toggle-direccion').addEventListener('click', toggleDireccion);
+document.getElementById('btn-toggle-direccion').addEventListener('click', () => {
+  toggleDireccion();          // esto cambia lo que se pinta en el mapa
+  alternarOrigenDestino();    // esto cambia el texto de origen/destino
+});
+
 document.getElementById('btn-mostrar-ambas').addEventListener('click', mostrarAmbas);
 
 function cerrarDetalleRuta() {
@@ -539,6 +918,19 @@ function cerrarDetalleRuta() {
 document.getElementById('close-detalle-ruta').addEventListener('click', cerrarDetalleRuta);
 document.getElementById('detalle-ruta-overlay').addEventListener('click', cerrarDetalleRuta);
 
+
+
+//del nuevo chatsito
+function calcularPromedio({ manana, tarde, noche }) {
+  const valores = [manana, tarde, noche]
+    .filter(t => typeof t === 'string' && t.includes('min'))
+    .map(t => parseInt(t));
+
+  if (valores.length === 0) return 'N/A';
+
+  const suma = valores.reduce((a, b) => a + b, 0);
+  return Math.round(suma / valores.length) + ' min';
+}
 
 // Ejemplo de geo jason de como se vería una ruta solo lo habilite en favoritos 
 
@@ -696,8 +1088,80 @@ btnRealizarReporte.addEventListener('click', () => {
 btnVerNoticias.addEventListener('click', () => {
   cerrarPanel(overlayReporte, panelReporte);
   abrirPanel(overlayNoticias, panelNoticias);
-  mostrarNoticiasEjemplo();
+
+  // Usar la ruta seleccionada desde el detalle
+  if (window.rutaSeleccionada) {
+    cargarNoticiasDeRuta(window.rutaSeleccionada);
+  } else {
+    document.getElementById('lista-noticias').innerHTML = '<p>No se seleccionó ruta.</p>';
+  }
 });
+
+
+
+//Para lo de enviar reporte hola
+document.getElementById('enviar-reporte').addEventListener('click', () => {
+  const tipo = document.getElementById('tipo-reporte').value;
+  const titulo = document.getElementById('titulo-reporte').value.trim();
+  const mensaje = document.getElementById('mensaje-reporte').value.trim();
+
+  if (!titulo || !mensaje) {
+    mostrarToast('Por favor llena todos los campos.', 'error');
+    return;
+  }
+
+ if (!window.rutaSeleccionada) {
+  mostrarToast('No se ha seleccionado ninguna ruta.', 'error');
+  return;
+}
+
+  const user = JSON.parse(localStorage.getItem('wheelyUser'));
+  const tipoSeleccionado = document.getElementById('tipo-reporte').value;
+
+const usuario = JSON.parse(localStorage.getItem('wheelyUser'));
+if (!usuario || !usuario.id) {
+  console.error('No se encontró el ID del usuario');
+  mostrarToast('No se pudo enviar el reporte (usuario no identificado).', 'error');
+  return;
+}
+
+
+
+ const body = {
+  idRuta: parseInt(window.rutaSeleccionada),
+  idTipoReporte: parseInt(tipoSeleccionado),
+  titulo,
+  descripcion: mensaje, // este es el nombre que el backend espera
+  idUsuario: usuario.id
+};
+
+
+
+
+  console.log("Enviando body:", body);
+
+  fetch('http://107.21.12.104:7000/reportes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Error al enviar reporte');
+      return res.json();
+    })
+    .then(() => {
+      mostrarToast('✅ Reporte enviado con éxito');
+      cerrarPanel(
+        document.getElementById('formulario-overlay'),
+        document.getElementById('formulario-panel')
+      );
+    })
+    .catch(err => {
+      console.error('Error al enviar reporte:', err);
+      mostrarToast('❌ No se pudo enviar el reporte.', 'error');
+    });
+});
+
 
 // Cierre de cada panel
 btnCerrarReporte.addEventListener('click', () => cerrarPanel(overlayReporte, panelReporte));
@@ -725,7 +1189,7 @@ function cerrarPanel(overlay, panel) {
 }
 
 // Simulación de noticias con título
-function mostrarNoticiasEjemplo() {
+/*function mostrarNoticiasEjemplo() {
   const lista = document.getElementById('lista-noticias');
   lista.innerHTML = '';
 
@@ -745,7 +1209,42 @@ function mostrarNoticiasEjemplo() {
     `;
     lista.appendChild(item);
   });
+}*/
+//Ver noticias reales de una ruta
+function cargarNoticiasDeRuta(idRuta) {
+  fetch("http://107.21.12.104:7000/reportes")
+    .then(res => res.json())
+    .then(data => {
+      const lista = document.getElementById("lista-noticias");
+      lista.innerHTML = "";
+
+      const reportes = data.data.filter(r => r.idRuta === parseInt(idRuta));
+
+      if (reportes.length === 0) {
+        lista.innerHTML = '<p>No hay noticias para esta ruta aún.</p>';
+        return;
+      }
+
+      reportes.forEach(reporte => {
+        const item = document.createElement("div");
+        item.classList.add("noticia-item");
+
+        item.innerHTML = `
+          <h4>${reporte.tipoReporte || 'Reporte'}</h4>
+          <h3>${reporte.titulo}</h3>
+          <p>${reporte.descripcion}</p>
+        `;
+
+        lista.appendChild(item);
+      });
+    })
+    .catch(err => {
+      console.error("Error al cargar reportes:", err);
+      document.getElementById("lista-noticias").innerHTML =
+        "<p>Error al cargar las noticias.</p>";
+    });
 }
+
 
 // Función para manejar el logout
 function handleLogout() {

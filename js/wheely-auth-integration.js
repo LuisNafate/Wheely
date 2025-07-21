@@ -401,7 +401,7 @@ async function renderizarTodasLasRutas() {
                 const estrellaTitle = usuarioAutenticado ? titleEstrella : 'Inicia sesión para agregar favoritos';
 
                 rutasHTML += `
-                    <div class="ruta-item" data-ruta="${ruta.idRuta}" data-zona="centro">
+                    <div class="ruta-item" data-ruta="${ruta.idRuta}" >
                         <div class="ruta-info">
                             <div class="ruta-icon">
                                 <i class="bi bi-bus-front-fill"></i>
@@ -420,6 +420,7 @@ async function renderizarTodasLasRutas() {
                             <span class="material-symbols-rounded action-icon report-icon" title="Reportar problema">chat_info</span>
                             <i class="bi ${estrellaClass} action-icon star-icon" title="${estrellaTitle}" data-ruta-id="${ruta.idRuta}" ${usuarioAutenticado ? '' : 'data-disabled="true"'}></i>
                         </div>
+                        
                     </div>
                 `;
             });
