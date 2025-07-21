@@ -109,7 +109,7 @@
             });
 
             // Agregar al mapa
-            this.geocoder.addTo(map);
+            
 
             // Configurar eventos
             this.setupGeocoderEvents();
