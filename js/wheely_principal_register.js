@@ -182,6 +182,8 @@ const sidebar = document.querySelector('.sidebar');
             alert('Función para agregar nueva ruta favorita\n(Aquí se abriría un modal o formulario)');
         });
 
+        
+
         // Funcionalidad de los items de ruta
         document.querySelectorAll('.ruta-item').forEach(item => {
             item.addEventListener('click', function(e) {
