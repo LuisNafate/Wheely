@@ -581,8 +581,14 @@ async function renderizarRutasFavoritas() {
       }
 
       rutaItem.addEventListener('click', () => {
-        cargarDetalleDeRuta(ruta.idRuta);
-      });
+  cargarDetalleDeRuta(
+    ruta.idRuta,
+    ruta.origen,
+    ruta.destino,
+    ruta.nombreRuta
+  );
+});
+
 
       panel.appendChild(rutaItem);
     });
