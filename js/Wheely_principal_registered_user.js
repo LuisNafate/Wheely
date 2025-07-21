@@ -581,8 +581,14 @@ async function renderizarRutasFavoritas() {
       }
 
       rutaItem.addEventListener('click', () => {
-        cargarDetalleDeRuta(ruta.idRuta);
-      });
+  cargarDetalleDeRuta(
+    ruta.idRuta,
+    ruta.origen,
+    ruta.destino,
+    ruta.nombreRuta
+  );
+});
+
 
       panel.appendChild(rutaItem);
     });
@@ -694,6 +700,16 @@ function pintarRuta(geoIda, geoRegreso) {
 
   capaIda = L.geoJSON(geoIda, { style: { color: 'orange', weight: 4 } });
   capaRegreso = L.geoJSON(geoRegreso, { style: { color: 'dodgerblue', weight: 4 } });
+}
+function limpiarRutas() {
+  if (capaIda) {
+    map.removeLayer(capaIda);
+    capaIda = null;
+  }
+  if (capaRegreso) {
+    map.removeLayer(capaRegreso);
+    capaRegreso = null;
+  }
 }
 
 function mostrarSoloIda() {
@@ -1436,8 +1452,10 @@ function activarBotonMenu(id) {
 }
 const inicioTrigger = document.getElementById('inicio-trigger');
 
+
 inicioTrigger.addEventListener('click', (e) => {
   e.preventDefault();
-  closeAllPanels();  // Cierra favoritos, rutas, etc.
-  activarBotonMenu('inicio-trigger');  // Asegura que se ilumine "Inicio"
+  closeAllPanels();  
+  limpiarRutas();      // Limpiar rutas del mapa
+  activarBotonMenu('inicio-trigger');
 });
