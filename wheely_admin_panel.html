@@ -669,9 +669,9 @@
             </div>
         </div>
         <!-- Gráfica de reportes por ruta -->
-        <div style="background:var(--color-bg-secondary);border-radius:15px;padding:30px;margin-bottom:30px;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
-            <h3 style="color:var(--color-hover-primary);margin-bottom:20px;">Reportes por Ruta</h3>
-            <canvas id="chartReportesRuta" style="max-width:100%;height:300px;"></canvas>
+        <div style="background:var(--color-bg-secondary);border-radius:15px;padding:15px 10px;margin-bottom:20px;box-shadow:0 2px 10px rgba(0,0,0,0.2);max-width:500px;margin-left:auto;margin-right:auto;">
+            <h3 style="color:var(--color-hover-primary);margin-bottom:10px;font-size:1.1em;">Reportes por Ruta</h3>
+            <canvas id="chartReportesRuta" style="max-width:100%;height:160px;"></canvas>
         </div>
 
         <!-- Barra de pestañas eliminada, solo se usa el menú lateral -->
@@ -1791,69 +1791,102 @@ window.viewReporte = function(id) {
         // ========== ENHANCED FORM HANDLERS ==========
         function setupEnhancedForms() {
             // Mejorar el formulario de rutas para soportar edición
-            document.getElementById('rutaForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                const data = {
-                    nombre_ruta: formData.get('nombreRuta'),
-                    origen: formData.get('origen'),
-                    destino: formData.get('destino')
+            const rutaForm = document.getElementById('rutaForm');
+            if (rutaForm) {
+                rutaForm.onsubmit = async function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    const data = {
+                        nombre_ruta: formData.get('nombreRuta'),
+                        origen: formData.get('origen'),
+                        destino: formData.get('destino')
+                    };
+                    const editId = this.getAttribute('data-edit-id');
+                    if (editId) {
+                        // Actualizar ruta existente
+                        const result = await apiCall(`/rutas/${editId}`, 'PUT', data);
+                        if (result && result.success) {
+                            showNotification('Ruta actualizada exitosamente', 'success');
+                            this.removeAttribute('data-edit-id');
+                            clearForm('rutaForm');
+                            loadRutas();
+                        }
+                    } else {
+                        // Crear nueva ruta
+                        const result = await apiCall('/rutas', 'POST', data);
+                        if (result && result.success) {
+                            showNotification('Ruta creada exitosamente', 'success');
+                            clearForm('rutaForm');
+                            loadRutas();
+                        }
+                    }
                 };
-                
-                const editId = this.getAttribute('data-edit-id');
-                
-                if (editId) {
-                    // Actualizar ruta existente
-                    const result = await apiCall(`/rutas/${editId}`, 'PUT', data);
-                    if (result && result.success) {
-                        showNotification('Ruta actualizada exitosamente', 'success');
-                        this.removeAttribute('data-edit-id');
-                        clearForm('rutaForm');
-                        loadRutas();
+            }
+
+            // Mejorar el formulario de usuarios para soportar edición y creación
+            const usuarioForm = document.getElementById('usuarioForm');
+            if (usuarioForm) {
+                usuarioForm.onsubmit = async function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    const data = {
+                        nombre: formData.get('nombreUsuario'),
+                        email: formData.get('emailUsuario'),
+                        password: formData.get('passwordUsuario')
+                    };
+                    const editId = this.getAttribute('data-edit-id');
+                    if (editId) {
+                        // Actualizar usuario existente
+                        const result = await apiCall(`/usuarios/${editId}`, 'PUT', data);
+                        if (result && result.success) {
+                            showNotification('Usuario actualizado exitosamente', 'success');
+                            this.removeAttribute('data-edit-id');
+                            clearForm('usuarioForm');
+                            loadUsuarios();
+                        }
+                    } else {
+                        // Crear nuevo usuario
+                        const result = await apiCall('/usuarios', 'POST', data);
+                        if (result && result.success) {
+                            showNotification('Usuario creado exitosamente', 'success');
+                            clearForm('usuarioForm');
+                            loadUsuarios();
+                        }
                     }
-                } else {
-                    // Crear nueva ruta
-                    const result = await apiCall('/rutas', 'POST', data);
-                    if (result && result.success) {
-                        showNotification('Ruta creada exitosamente', 'success');
-                        clearForm('rutaForm');
-                        loadRutas();
-                    }
-                }
-            });
+                };
+            }
 
             // Mejorar otros formularios de manera similar...
-            document.getElementById('periodoForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                const data = {
-                    nombre_periodo: formData.get('nombrePeriodo'),
-                    hora_inicio: formData.get('horaInicio'),
-                    hora_fin: formData.get('horaFin'),
-                    descripcion: formData.get('descripcionPeriodo')
+            const periodoForm = document.getElementById('periodoForm');
+            if (periodoForm) {
+                periodoForm.onsubmit = async function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    const data = {
+                        nombre_periodo: formData.get('nombrePeriodo'),
+                        hora_inicio: formData.get('horaInicio'),
+                        hora_fin: formData.get('horaFin'),
+                        descripcion: formData.get('descripcionPeriodo')
+                    };
+                    const editId = this.getAttribute('data-edit-id');
+                    if (editId) {
+                        const result = await apiCall(`/periodos/${editId}`, 'PUT', data);
+                        if (result && result.success) {
+                            showNotification('Periodo actualizado exitosamente', 'success');
+                            this.removeAttribute('data-edit-id');
+                            clearForm('periodoForm');
+                            loadPeriodos();
+                        }
+                    } else {
+                        const result = await apiCall('/periodos', 'POST', data);
+                        if (result && result.success) {
+                            showNotification('Periodo creado exitosamente', 'success');
+                            clearForm('periodoForm');
+                            loadPeriodos();
+                        }
+                    }
                 };
-                
-                const editId = this.getAttribute('data-edit-id');
-                
-                if (editId) {
-                    const result = await apiCall(`/periodos/${editId}`, 'PUT', data);
-                    if (result && result.success) {
-                        showNotification('Periodo actualizado exitosamente', 'success');
-                        this.removeAttribute('data-edit-id');
-                        clearForm('periodoForm');
-                        loadPeriodos();
-                    }
-                } else {
-                    const result = await apiCall('/periodos', 'POST', data);
-                    if (result && result.success) {
-                        showNotification('Periodo creado exitosamente', 'success');
-                        clearForm('periodoForm');
-                        loadPeriodos();
-                    }
-                }
-            });
+            }
         }
 
         // ========== VALIDATION ==========
