@@ -1047,55 +1047,6 @@ async function loadTiposReporte() {
             });
         }
 
-        function renderPeriodos() {
-            const container = document.getElementById('periodosList');
-            container.innerHTML = '';
-            
-            periodos.forEach(periodo => {
-                const item = document.createElement('div');
-                item.className = 'item-card';
-                item.innerHTML = `
-                    <div class="item-info">
-                        <h4>${periodo.nombre_periodo}</h4>
-                        <p><strong>Horario:</strong> ${periodo.hora_inicio} - ${periodo.hora_fin}</p>
-                        <p><strong>Descripción:</strong> ${periodo.descripcion || 'N/A'}</p>
-                        <p><strong>ID:</strong> ${periodo.idPeriodo}</p>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn btn-secondary" onclick="editPeriodo(${periodo.idPeriodo})">Editar</button>
-                        <button class="btn btn-danger" onclick="deletePeriodo(${periodo.idPeriodo})">Eliminar</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function renderTiempos() {
-            const container = document.getElementById('tiemposList');
-            container.innerHTML = '';
-            
-            tiempos.forEach(tiempo => {
-                const ruta = rutas.find(r => r.idRuta === tiempo.idRuta);
-                const periodo = periodos.find(p => p.idPeriodo === tiempo.idPeriodo);
-                
-                const item = document.createElement('div');
-                item.className = 'item-card';
-                item.innerHTML = `
-                    <div class="item-info">
-                        <h4>${ruta ? ruta.nombre_ruta : 'Ruta desconocida'}</h4>
-                        <p><strong>Periodo:</strong> ${periodo ? periodo.nombre_periodo : 'Periodo desconocido'}</p>
-                        <p><strong>Tiempo promedio:</strong> ${tiempo.tiempo_promedio_minutos} minutos</p>
-                        <p><strong>ID:</strong> ${tiempo.idTiempoRutaPeriodo}</p>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn btn-secondary" onclick="editTiempo(${tiempo.idTiempoRutaPeriodo})">Editar</button>
-                        <button class="btn btn-danger" onclick="deleteTiempo(${tiempo.idTiempoRutaPeriodo})">Eliminar</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
         function renderUsuarios() {
             const container = document.getElementById('usuariosList');
             container.innerHTML = '';
@@ -1205,45 +1156,6 @@ window.viewReporte = function(id) {
                 }
             });
 
-            // Formulario de periodos
-            document.getElementById('periodoForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                const data = {
-                    nombre_periodo: formData.get('nombrePeriodo'),
-                    hora_inicio: formData.get('horaInicio'),
-                    hora_fin: formData.get('horaFin'),
-                    descripcion: formData.get('descripcionPeriodo')
-                };
-                
-                const result = await apiCall('/periodos', 'POST', data);
-                if (result && result.success) {
-                    showNotification('Periodo creado exitosamente', 'success');
-                    clearForm('periodoForm');
-                    loadPeriodos();
-                }
-            });
-
-            // Formulario de tiempos
-            document.getElementById('tiempoForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                const data = {
-                    idRuta: parseInt(formData.get('selectRuta')),
-                    idPeriodo: parseInt(formData.get('selectPeriodo')),
-                    tiempo_promedio_minutos: parseInt(formData.get('tiempoPromedio'))
-                };
-                
-                const result = await apiCall('/tiempos-ruta-periodo', 'POST', data);
-                if (result && result.success) {
-                    showNotification('Tiempo guardado exitosamente', 'success');
-                    clearForm('tiempoForm');
-                    loadTiempos();
-                }
-            });
-
             // Formulario de usuarios (creación y edición)
             const usuarioForm = document.getElementById('usuarioForm');
             if (usuarioForm) {
@@ -1285,26 +1197,6 @@ window.viewReporte = function(id) {
                 if (result && result.success) {
                     showNotification('Ruta eliminada exitosamente', 'success');
                     loadRutas();
-                }
-            }
-        }
-
-        async function deletePeriodo(id) {
-            if (confirm('¿Está seguro de que desea eliminar este periodo?')) {
-                const result = await apiCall(`/periodos/${id}`, 'DELETE');
-                if (result && result.success) {
-                    showNotification('Periodo eliminado exitosamente', 'success');
-                    loadPeriodos();
-                }
-            }
-        }
-
-        async function deleteTiempo(id) {
-            if (confirm('¿Está seguro de que desea eliminar este tiempo?')) {
-                const result = await apiCall(`/tiempos-ruta-periodo/${id}`, 'DELETE');
-                if (result && result.success) {
-                    showNotification('Tiempo eliminado exitosamente', 'success');
-                    loadTiempos();
                 }
             }
         }
@@ -1524,181 +1416,11 @@ window.viewReporte = function(id) {
             }
         }
 
-        function handleFileSelect(file) {
-            if (file.type !== 'application/json') {
-                showNotification('Por favor seleccione un archivo JSON válido', 'error');
-                return;
-            }
+        
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const jsonData = JSON.parse(e.target.result);
-                    currentFile = {
-                        name: file.name,
-                        size: file.size,
-                        data: jsonData
-                    };
-                    
-                    document.getElementById('coordinatesPreview').value = JSON.stringify(jsonData, null, 2);
-                    showNotification('Archivo cargado correctamente', 'success');
-                } catch (error) {
-                    showNotification('Error al leer el archivo JSON: ' + error.message, 'error');
-                }
-            };
-            reader.readAsText(file);
-        }
+        
 
-        function validateJSON() {
-            if (!currentFile) {
-                showNotification('Por favor seleccione un archivo primero', 'error');
-                return;
-            }
-
-            try {
-                const data = currentFile.data;
-                
-                // Validaciones básicas para coordenadas
-                if (!Array.isArray(data) && !data.coordinates) {
-                    showNotification('El archivo debe contener un array de coordenadas o un objeto con propiedad "coordinates"', 'error');
-                    return;
-                }
-
-                const coords = Array.isArray(data) ? data : data.coordinates;
-                
-                if (!Array.isArray(coords) || coords.length < 2) {
-                    showNotification('El archivo debe contener al menos 2 coordenadas', 'error');
-                    return;
-                }
-
-                // Validar que cada coordenada tenga lat y lng
-                for (let i = 0; i < coords.length; i++) {
-                    const coord = coords[i];
-                    if (typeof coord.lat !== 'number' || typeof coord.lng !== 'number') {
-                        showNotification(`Coordenada ${i + 1} inválida. Debe tener propiedades "lat" y "lng" numéricas`, 'error');
-                        return;
-                    }
-                }
-
-                showNotification('Archivo JSON válido ✓', 'success');
-            } catch (error) {
-                showNotification('Error al validar JSON: ' + error.message, 'error');
-            }
-        }
-
-        async function uploadCoordinates() {
-            if (!currentFile) {
-                showNotification('Por favor seleccione un archivo primero', 'error');
-                return;
-            }
-
-            const rutaId = document.getElementById('coordinatesRoute').value;
-            if (!rutaId) {
-                showNotification('Por favor seleccione una ruta', 'error');
-                return;
-            }
-
-            try {
-                const coords = Array.isArray(currentFile.data) ? currentFile.data : currentFile.data.coordinates;
-                
-                // Subir coordenadas una por una
-                for (let coord of coords) {
-                    const data = {
-                        idRuta: parseInt(rutaId),
-                        latitud: coord.lat,
-                        longitud: coord.lng
-                    };
-                    
-                    await apiCall('/coordenadas', 'POST', data);
-                }
-                
-                showNotification('Coordenadas subidas exitosamente', 'success');
-                
-                // Limpiar
-                currentFile = null;
-                document.getElementById('coordinatesPreview').value = '';
-                document.getElementById('coordinatesFileInput').value = '';
-                document.getElementById('coordinatesRoute').value = '';
-                
-                loadCoordinates();
-            } catch (error) {
-                showNotification('Error al subir coordenadas: ' + error.message, 'error');
-            }
-        }
-
-        async function loadCoordinates() {
-            const loading = document.getElementById('coordinatesLoading');
-            const list = document.getElementById('coordinatesList');
-            
-            loading.style.display = 'block';
-            list.style.display = 'none';
-            
-            const result = await apiCall('/coordenadas');
-            if (result && result.success) {
-                coordenadas = result.data;
-                renderCoordinates();
-            }
-            
-            loading.style.display = 'none';
-            list.style.display = 'block';
-        }
-
-        function renderCoordinates() {
-            const container = document.getElementById('coordinatesList');
-            container.innerHTML = '';
-            
-            // Agrupar coordenadas por ruta
-            const coordenadasPorRuta = {};
-            coordenadas.forEach(coord => {
-                if (!coordenadasPorRuta[coord.idRuta]) {
-                    coordenadasPorRuta[coord.idRuta] = [];
-                }
-                coordenadasPorRuta[coord.idRuta].push(coord);
-            });
-            
-            Object.keys(coordenadasPorRuta).forEach(rutaId => {
-                const ruta = rutas.find(r => r.idRuta == rutaId);
-                const coords = coordenadasPorRuta[rutaId];
-                
-                const item = document.createElement('div');
-                item.className = 'item-card';
-                item.innerHTML = `
-                    <div class="item-info">
-                        <h4>${ruta ? ruta.nombre_ruta : 'Ruta desconocida'}</h4>
-                        <p><strong>Coordenadas:</strong> ${coords.length} puntos</p>
-                        <p><strong>Rango:</strong> ${coords[0].latitud.toFixed(4)}, ${coords[0].longitud.toFixed(4)} ... ${coords[coords.length-1].latitud.toFixed(4)}, ${coords[coords.length-1].longitud.toFixed(4)}</p>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn btn-secondary" onclick="viewCoordinates(${rutaId})">Ver</button>
-                        <button class="btn btn-danger" onclick="deleteCoordinates(${rutaId})">Eliminar</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        async function deleteCoordinates(rutaId) {
-            if (confirm('¿Está seguro de que desea eliminar todas las coordenadas de esta ruta?')) {
-                const coordsToDelete = coordenadas.filter(c => c.idRuta == rutaId);
-                
-                for (let coord of coordsToDelete) {
-                    await apiCall(`/coordenadas/${coord.idCoordenada}`, 'DELETE');
-                }
-                
-                showNotification('Coordenadas eliminadas exitosamente', 'success');
-                loadCoordinates();
-            }
-        }
-
-        function viewCoordinates(rutaId) {
-            const coords = coordenadas.filter(c => c.idRuta == rutaId);
-            const coordsData = coords.map(c => ({
-                lat: c.latitud,
-                lng: c.longitud
-            }));
-            
-            document.getElementById('coordinatesPreview').value = JSON.stringify(coordsData, null, 2);
-        }
+        
 
         // ========== DASHBOARD FUNCTIONS ==========
         function updateLastUpdate() {
@@ -1772,20 +1494,7 @@ window.viewReporte = function(id) {
             }
         }
 
-        function editTiempo(id) {
-            const tiempo = tiempos.find(t => t.idTiempoRutaPeriodo === id);
-            if (tiempo) {
-                document.getElementById('selectRuta').value = tiempo.idRuta;
-                document.getElementById('selectPeriodo').value = tiempo.idPeriodo;
-                document.getElementById('tiempoPromedio').value = tiempo.tiempo_promedio_minutos;
-                
-                // Cambiar el comportamiento del formulario para editar
-                const form = document.getElementById('tiempoForm');
-                form.setAttribute('data-edit-id', id);
-                
-                showTab('tiempos');
-            }
-        }
+        
 
         function editUsuario(id) {
             const usuario = usuarios.find(u => u.idUsuario === id);
@@ -1907,41 +1616,6 @@ window.viewReporte = function(id) {
             }
         }
 
-        // ========== VALIDATION ==========
-        function setupValidation() {
-            // Validar horarios de periodos
-            const horaInicio = document.getElementById('horaInicio');
-            const horaFin = document.getElementById('horaFin');
-            
-            function validateTimeRange() {
-                if (horaInicio.value && horaFin.value) {
-                    if (horaFin.value <= horaInicio.value) {
-                        horaFin.style.borderColor = 'var(--color-error)';
-                        return false;
-                    } else {
-                        horaFin.style.borderColor = 'var(--color-border-hr)';
-                        return true;
-                    }
-                }
-                return true;
-            }
-            
-            horaInicio.addEventListener('change', validateTimeRange);
-            horaFin.addEventListener('change', validateTimeRange);
-
-            // Validar emails únicos
-            document.getElementById('emailUsuario').addEventListener('blur', async function() {
-                const email = this.value;
-                const editId = document.getElementById('usuarioForm').getAttribute('data-edit-id');
-                
-                if (email && usuarios.some(u => u.email === email && u.idUsuario != editId)) {
-                    this.style.borderColor = 'var(--color-error)';
-                    showNotification('Este email ya está registrado', 'error');
-                } else {
-                    this.style.borderColor = 'var(--color-border-hr)';
-                }
-            });
-        }
 
         // ========== ADVANCED FEATURES ==========
         function setupAdvancedFeatures() {
