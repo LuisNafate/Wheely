@@ -646,15 +646,19 @@ function agregarRutaFavorita(rutaId, starIcon) {
     body: JSON.stringify({ rutaId })
   })
     .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        starIcon.classList.add("favorito");
-        mostrarToast("Ruta agregada a favoritos");
-        renderizarRutasFavoritas();
-      } else {
-        mostrarToast("No se pudo agregar a favoritos");
-      }
-    })
+   .then(data => {
+  if (data && data.message && data.message.includes("agregada")) {
+    starIcon.classList.add("favorito");
+    starIcon.classList.remove("bi-star");
+    starIcon.classList.add("bi-star-fill");
+
+    mostrarToast("Ruta agregada a favoritos");
+    renderizarRutasFavoritas();
+  } else {
+    mostrarToast(data.message || "No se pudo agregar a favoritos", "error");
+  }
+})
+
     .catch(err => {
       console.error("Error al agregar a favoritos:", err);
       mostrarToast("Error al agregar a favoritos");
@@ -672,6 +676,9 @@ function eliminarRutaFavorita(rutaId, starIcon) {
     .then(data => {
       if (data.success) {
         starIcon.classList.remove("favorito");
+        starIcon.classList.remove("bi-star-fill");
+        starIcon.classList.add("bi-star");
+
         mostrarToast("Ruta eliminada de favoritos");
         renderizarRutasFavoritas();
       } else {
