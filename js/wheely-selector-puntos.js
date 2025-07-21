@@ -854,7 +854,7 @@
                     position: fixed;
                     top: 50%;
                     left: 270px;
-                    background: var(--color-bg-primary);
+                    background: #212227;
                     border: 1px solid var(--color-border-hr);
                     border-radius: 15px;
                     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
