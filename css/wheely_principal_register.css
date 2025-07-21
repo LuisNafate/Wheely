@@ -1081,3 +1081,1556 @@ body {
     opacity: 0.5;
     pointer-events: none;
 }
+
+/* Estilos para el panel de rutas cercanas usando el mismo diseño que el sistema principal */
+.panel-rutas-cercanas {
+    position: fixed;
+    bottom: 20px;
+    left: 270px; /* Alineado con sidebar expandido */
+    width: 100%;
+    max-width: 500px;
+    max-height: 80vh;
+    background: var(--color-bg-sidebar);
+    border: 1px solid var(--color-border-hr);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    color: var(--color-text-primary);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1001;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: left 0.3s ease;
+}
+
+/* Panel sin rutas con el mismo estilo */
+.panel-sin-rutas {
+    position: fixed;
+    bottom: 20px;
+    left: 270px; /* Alineado con sidebar expandido */
+    width: 100%;
+    max-width: 500px;
+    max-height: 80vh;
+    background: var(--color-bg-sidebar);
+    border: 1px solid var(--color-border-hr);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    color: var(--color-text-primary);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1001;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: left 0.3s ease;
+}
+
+/* Contenedor específico para el panel del selector */
+#route-info-display {
+    position: fixed;
+    bottom: 20px;
+    left: 270px; /* Alineado con sidebar expandido */
+    width: 100%;
+    max-width: 500px;
+    max-height: 80vh;
+    z-index: 1001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease, left 0.3s ease;
+}
+
+#route-info-display.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Ajustar cuando el sidebar está colapsado - Reglas más específicas */
+.sidebar.collapsed ~ #route-info-display {
+    left: 110px;
+}
+
+/* Ajustar paneles generados dinámicamente cuando sidebar está colapsado */
+.sidebar.collapsed ~ * .panel-rutas-cercanas,
+.sidebar.collapsed ~ * .panel-sin-rutas {
+    left: 110px;
+}
+
+/* Regla específica para paneles dentro del body cuando sidebar está colapsado */
+body:has(.sidebar.collapsed) .panel-rutas-cercanas,
+body:has(.sidebar.collapsed) .panel-sin-rutas {
+    left: 110px !important;
+}
+
+/* Fallback para navegadores que no soportan :has() */
+.sidebar.collapsed + * .panel-rutas-cercanas,
+.sidebar.collapsed + * .panel-sin-rutas,
+.sidebar.collapsed ~ .panel-rutas-cercanas,
+.sidebar.collapsed ~ .panel-sin-rutas {
+    left: 110px !important;
+}
+
+/* Contenido del panel sin rutas */
+.no-routes-content {
+    text-align: center;
+    padding: 20px;
+}
+
+.no-routes-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.no-routes-content h3 {
+    margin: 0 0 8px 0;
+    color: var(--color-text-primary);
+    font-size: 18px;
+}
+
+.no-routes-content p {
+    margin: 0 0 20px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #a0aec0;
+}
+
+.suggestions-box {
+    text-align: left;
+    padding: 16px;
+    background: rgba(251, 109, 16, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(251, 109, 16, 0.2);
+    margin-bottom: 20px;
+}
+
+.suggestions-box h4 {
+    margin: 0 0 8px 0;
+    color: var(--color-hover-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.suggestions-box ul {
+    margin: 0;
+    padding-left: 16px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.suggestions-box li {
+    margin-bottom: 4px;
+    color: #a0aec0;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.action-buttons .btn-panel {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: var(--color-border-hr);
+    color: var(--color-text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-buttons .btn-panel.primary {
+    background: var(--color-hover-primary);
+}
+
+.action-buttons .btn-panel:hover {
+    background: var(--color-hover-primary);
+    transform: translateY(-1px);
+}
+
+/* Información del sentido de la ruta */
+.sentido-info {
+    font-size: 13px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.sentido-info i {
+    font-size: 12px;
+    color: var(--color-hover-primary);
+}
+
+/* Botón de limpiar puntos en el panel */
+.btn-limpiar-puntos {
+    background: #dc2626 !important;
+    color: white !important;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-limpiar-puntos:hover {
+    background: #b91c1c !important;
+    transform: translateY(-1px);
+}
+.distancia-info {
+    font-size: 13px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.distancia-info i {
+    font-size: 12px;
+    color: var(--color-hover-primary);
+}
+
+/* Explicación de la ruta */
+.ruta-explanation {
+    background: rgba(251, 109, 16, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--color-hover-primary);
+    margin-top: 15px;
+}
+
+.ruta-explanation small {
+    color: #a0aec0;
+    font-size: 11px;
+    line-height: 1.4;
+    display: block;
+}
+
+/* Estilos para marcadores del selector */
+.marcador-wheely {
+    background: transparent !important;
+    border: none !important;
+}
+
+.marcador-punto {
+    background: var(--color-hover-primary);
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    position: relative;
+    animation: markerPulse 2s infinite;
+}
+
+.marcador-punto::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+}
+
+@keyframes markerPulse {
+    0% {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(251, 109, 16, 0.7);
+    }
+    70% {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 10px rgba(251, 109, 16, 0);
+    }
+    100% {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(251, 109, 16, 0);
+    }
+}
+
+/* Instrucciones flotantes */
+.wheely-instructions {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-bg-sidebar);
+    color: var(--color-text-primary);
+    padding: 12px 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: none;
+    border: 1px solid var(--color-border-hr);
+    animation: instructionsFadeIn 0.3s ease;
+}
+
+.instruction-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.instruction-content .material-symbols-rounded {
+    color: var(--color-hover-primary);
+    font-size: 18px;
+}
+
+@keyframes instructionsFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Mejoras en los botones del mapa */
+.right-buttons .btn.selector-activo {
+    background-color: var(--color-hover-primary) !important;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(251, 109, 16, 0.4);
+}
+
+.right-buttons .btn:hover {
+    background-color: var(--color-hover-primary);
+    transform: scale(1.05);
+}
+
+/* Toast para el selector */
+.toast-selector {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10001;
+    opacity: 0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toast-selector.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-success {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+}
+
+.toast-error {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    color: white;
+}
+
+.toast-info {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    color: white;
+}
+
+/* Responsivo para móviles */
+@media (max-width: 768px) {
+    .panel-rutas-cercanas,
+    .panel-sin-rutas,
+    #route-info-display {
+        left: 20px;
+        right: 20px;
+        width: calc(100% - 40px);
+        max-width: none;
+    }
+    
+    .sidebar.collapsed ~ * .panel-rutas-cercanas,
+    .sidebar.collapsed ~ * .panel-sin-rutas,
+    .sidebar.collapsed ~ #route-info-display {
+        left: 20px;
+    }
+    
+    .wheely-instructions {
+        top: 70px;
+        max-width: calc(100vw - 40px);
+        margin: 0 20px;
+        left: 20px;
+        right: 20px;
+        transform: none;
+    }
+    
+    .instruction-content {
+        font-size: 12px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .suggestions-box {
+        padding: 12px;
+    }
+    
+    .suggestions-box ul {
+        font-size: 11px;
+    }
+}
+
+/* Contenido del panel sin rutas */
+.no-routes-content {
+    text-align: center;
+    padding: 20px;
+}
+
+.no-routes-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.no-routes-content h3 {
+    margin: 0 0 8px 0;
+    color: var(--color-text-primary);
+    font-size: 18px;
+}
+
+.no-routes-content p {
+    margin: 0 0 20px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #a0aec0;
+}
+
+.suggestions-box {
+    text-align: left;
+    padding: 16px;
+    background: rgba(251, 109, 16, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(251, 109, 16, 0.2);
+    margin-bottom: 20px;
+}
+
+.suggestions-box h4 {
+    margin: 0 0 8px 0;
+    color: var(--color-hover-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.suggestions-box ul {
+    margin: 0;
+    padding-left: 16px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.suggestions-box li {
+    margin-bottom: 4px;
+    color: #a0aec0;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.action-buttons .btn-panel {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: var(--color-border-hr);
+    color: var(--color-text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-buttons .btn-panel.primary {
+    background: var(--color-hover-primary);
+}
+
+.action-buttons .btn-panel:hover {
+    background: var(--color-hover-primary);
+    transform: translateY(-1px);
+}
+
+/* Información adicional en la ruta */
+.distancia-info {
+    font-size: 13px;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.distancia-info i {
+    font-size: 12px;
+    color: var(--color-hover-primary);
+}
+
+/* Explicación de la ruta */
+.ruta-explanation {
+    background: rgba(251, 109, 16, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--color-hover-primary);
+    margin-top: 15px;
+}
+
+.ruta-explanation small {
+    color: #a0aec0;
+    font-size: 11px;
+    line-height: 1.4;
+    display: block;
+}
+
+/* Estilos para marcadores del selector */
+.marcador-wheely {
+    background: transparent !important;
+    border: none !important;
+}
+
+.marcador-punto {
+    background: var(--color-hover-primary);
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    position: relative;
+    animation: markerPulse 2s infinite;
+}
+
+.marcador-punto::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+}
+
+@keyframes markerPulse {
+    0% {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(251, 109, 16, 0.7);
+    }
+    70% {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 10px rgba(251, 109, 16, 0);
+    }
+    100% {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(251, 109, 16, 0);
+    }
+}
+
+/* Instrucciones flotantes */
+.wheely-instructions {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-bg-sidebar);
+    color: var(--color-text-primary);
+    padding: 12px 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: none;
+    border: 1px solid var(--color-border-hr);
+    animation: instructionsFadeIn 0.3s ease;
+}
+
+.instruction-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.instruction-content .material-symbols-rounded {
+    color: var(--color-hover-primary);
+    font-size: 18px;
+}
+
+@keyframes instructionsFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Mejoras en los botones del mapa */
+.right-buttons .btn.selector-activo {
+    background-color: var(--color-hover-primary) !important;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(251, 109, 16, 0.4);
+}
+
+.right-buttons .btn:hover {
+    background-color: var(--color-hover-primary);
+    transform: scale(1.05);
+}
+
+/* Toast para el selector */
+.toast-selector {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10001;
+    opacity: 0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toast-selector.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-success {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+}
+
+.toast-error {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    color: white;
+}
+
+.toast-info {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    color: white;
+}
+
+/* Responsivo para móviles */
+@media (max-width: 768px) {
+    .panel-rutas-cercanas,
+    .panel-sin-rutas {
+        left: 20px;
+        right: 20px;
+        width: calc(100% - 40px);
+        max-width: none;
+    }
+    
+    .sidebar.collapsed ~ .panel-rutas-cercanas,
+    .sidebar.collapsed ~ .panel-sin-rutas {
+        left: 20px;
+    }
+    
+    .wheely-instructions {
+        top: 70px;
+        max-width: calc(100vw - 40px);
+        margin: 0 20px;
+        left: 20px;
+        right: 20px;
+        transform: none;
+    }
+    
+    .instruction-content {
+        font-size: 12px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .suggestions-box {
+        padding: 12px;
+    }
+    
+    .suggestions-box ul {
+        font-size: 11px;
+    }
+}
+
+
+.route-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.route-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 2;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.route-close-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+}
+
+.route-explanation {
+    background: rgba(251, 109, 16, 0.1);
+    padding: 12px 20px;
+    margin: 0;
+    color: #a0aec0;
+    font-size: 0.85em;
+    font-style: italic;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.route-content {
+    padding: 16px 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.route-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.route-content::-webkit-scrollbar-track {
+    background: #2a2a2a;
+}
+
+.route-content::-webkit-scrollbar-thumb {
+    background: #FB6D10;
+    border-radius: 3px;
+}
+
+.route-content::-webkit-scrollbar-thumb:hover {
+    background: #d95a08;
+}
+
+.route-list-wheely {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.route-item-wheely {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #3a3a3a;
+    border-radius: 0;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.route-item-wheely:last-child {
+    border-bottom: none;
+}
+
+.route-item-wheely:hover {
+    background: rgba(251, 109, 16, 0.1);
+    padding-left: 24px;
+}
+
+.route-item-wheely.closest-route-wheely {
+    background: rgba(251, 109, 16, 0.15);
+    border-left: 4px solid #FB6D10;
+}
+
+.route-item-wheely.closest-route-wheely:hover {
+    background: rgba(251, 109, 16, 0.2);
+}
+
+.route-rank {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.route-item-wheely.closest-route-wheely .route-rank {
+    background: #FB6D10;
+    color: white;
+}
+
+.route-item-wheely:not(.closest-route-wheely) .route-rank {
+    background: #3a3a3a;
+    color: #a0aec0;
+}
+
+.route-info-wheely {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.route-name-wheely {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.route-details-wheely {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.route-details-wheely small {
+    color: #a0aec0;
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+.route-time {
+    color: #FB6D10;
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+.route-distance-wheely {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+.distance-value {
+    font-weight: bold;
+    color: #FB6D10;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.distance-type {
+    font-size: 11px;
+    color: #a0aec0;
+    margin-top: 2px;
+    line-height: 1;
+}
+
+.closest-label-wheely {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #FB6D10;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.route-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 0 20px 16px;
+    justify-content: center;
+}
+
+.route-action-btn {
+    background: #3a3a3a;
+    border: none;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.route-action-btn:hover {
+    background: #FB6D10;
+    transform: translateY(-1px);
+}
+
+.route-action-btn.primary {
+    background: #FB6D10;
+}
+
+.route-action-btn.primary:hover {
+    background: #d95a08;
+}
+
+.algorithm-explanation {
+    margin: 16px 20px;
+    padding: 12px;
+    background: rgba(251, 109, 16, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #FB6D10;
+}
+
+.algorithm-explanation small {
+    color: #a0aec0;
+    font-size: 11px;
+    line-height: 1.4;
+    display: block;
+}
+
+.no-routes-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #a0aec0;
+}
+
+.no-routes-message .icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.no-routes-message h4 {
+    margin: 0 0 8px 0;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.no-routes-message p {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.suggestions {
+    text-align: left;
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(251, 109, 16, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(251, 109, 16, 0.2);
+}
+
+.suggestions h5 {
+    margin: 0 0 8px 0;
+    color: #FB6D10;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.suggestions ul {
+    margin: 0;
+    padding-left: 16px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.suggestions li {
+    margin-bottom: 4px;
+    color: #a0aec0;
+}
+
+/* Estilos para marcadores del selector */
+.marcador-wheely {
+    background: transparent !important;
+    border: none !important;
+}
+
+.marcador-punto {
+    background: #FB6D10;
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    position: relative;
+    animation: markerPulse 2s infinite;
+}
+
+.marcador-punto::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+}
+
+@keyframes markerPulse {
+    0% {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(251, 109, 16, 0.7);
+    }
+    70% {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 10px rgba(251, 109, 16, 0);
+    }
+    100% {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 0 rgba(251, 109, 16, 0);
+    }
+}
+
+/* Instrucciones flotantes */
+.wheely-instructions {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #212227;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: none;
+    border: 1px solid #3a3a3a;
+    animation: instructionsFadeIn 0.3s ease;
+}
+
+.instruction-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.instruction-content .material-symbols-rounded {
+    color: #FB6D10;
+    font-size: 18px;
+}
+
+@keyframes instructionsFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Mejoras en los botones del mapa */
+.right-buttons .btn.selector-activo {
+    background-color: #FB6D10 !important;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(251, 109, 16, 0.4);
+}
+
+.right-buttons .btn:hover {
+    background-color: #FB6D10;
+    transform: scale(1.05);
+}
+
+/* Toast mejorado */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-success {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    color: white;
+}
+
+.toast-error {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    color: white;
+}
+
+.toast-info {
+    background: linear-gradient(135deg, #2196f3, #1976d2);
+    color: white;
+}
+
+/* Animaciones para items de ruta */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.route-item-wheely {
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+.route-item-wheely:nth-child(1) { animation-delay: 0.1s; }
+.route-item-wheely:nth-child(2) { animation-delay: 0.15s; }
+.route-item-wheely:nth-child(3) { animation-delay: 0.2s; }
+.route-item-wheely:nth-child(4) { animation-delay: 0.25s; }
+.route-item-wheely:nth-child(5) { animation-delay: 0.3s; }
+
+/* Mejoras responsive */
+@media (max-width: 768px) {
+    #route-info-display {
+        width: calc(100vw - 40px);
+        right: 20px;
+        left: 20px;
+        top: 70px;
+    }
+    
+    .route-item-wheely {
+        padding: 12px 16px;
+        gap: 10px;
+    }
+    
+    .route-rank {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .route-name-wheely {
+        font-size: 14px;
+    }
+    
+    .route-details-wheely small {
+        font-size: 11px;
+    }
+    
+    .distance-value {
+        font-size: 14px;
+    }
+    
+    .wheely-instructions {
+        top: 70px;
+        max-width: calc(100vw - 40px);
+        margin: 0 20px;
+    }
+    
+    .instruction-content {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .route-actions {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .route-action-btn {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+    
+    .suggestions {
+        padding: 12px;
+        margin-top: 16px;
+    }
+    
+    .suggestions ul {
+        font-size: 11px;
+    }
+}
+
+/* === ESTILOS PARA ESTADÍSTICAS === */
+.stats-section {
+    margin-bottom: 30px;
+}
+
+.stats-section h3 {
+    color: var(--color-text-primary);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--color-hover-primary);
+}
+
+.stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: rgba(251, 109, 16, 0.05);
+    border-radius: 10px;
+    border-left: 4px solid var(--color-hover-primary);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background: rgba(251, 109, 16, 0.1);
+    transform: translateX(5px);
+}
+
+.stat-rank {
+    width: 35px;
+    height: 35px;
+    background: var(--color-hover-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.stat-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.stat-info h4 {
+    color: var(--color-text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+}
+
+.stat-info p {
+    color: #a0aec0;
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.stat-value {
+    text-align: right;
+    margin-left: 15px;
+}
+
+.usage-count {
+    color: var(--color-hover-primary);
+    font-size: 20px;
+    font-weight: bold;
+    display: block;
+    line-height: 1;
+}
+
+.stat-value small {
+    color: #9ca3af;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+.stat-indicator.high {
+    background: #dc2626;
+    box-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
+}
+
+.stat-indicator.medium {
+    background: #f59e0b;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+}
+
+.stat-indicator.low {
+    background: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.stats-chart {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stats-chart canvas {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.loading {
+    text-align: center;
+    color: #9ca3af;
+    font-style: italic;
+    padding: 20px;
+}
+
+.error {
+    text-align: center;
+    color: #dc2626;
+    font-size: 14px;
+    padding: 20px;
+    background: rgba(220, 38, 38, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+/* Responsive para estadísticas */
+@media (max-width: 768px) {
+    .stat-item {
+        padding: 12px;
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .stat-rank {
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+    
+    .stat-value {
+        margin-left: 0;
+        text-align: center;
+    }
+    
+    .stat-indicator {
+        margin-left: 0;
+        margin-top: 8px;
+    }
+    
+    .stats-chart {
+        padding: 15px;
+    }
+    
+    .stats-section h3 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-item {
+        padding: 10px;
+    }
+    
+    .stat-rank {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+    
+    .stat-info h4 {
+        font-size: 14px;
+    }
+    
+    .stat-info p {
+        font-size: 12px;
+    }
+    
+    .usage-count {
+        font-size: 18px;
+    }
+}
+
+/* Ajustes para controles de zoom */
+.leaflet-control-zoom {
+    margin-top: 80px !important;
+}
+
+/* Mejoras para el botón de centrar mapa */
+.right-buttons .btn#btn-centrar-mapa:hover {
+    background-color: #4CAF50 !important;
+    transform: scale(1.1);
+}
+
+.right-buttons .btn#btn-centrar-mapa:active {
+    transform: scale(0.95);
+}
+
+/* === ESTILOS PARA MARCADORES DE INICIO Y FIN DE RUTA === */
+
+/* Marcador de inicio */
+.marcador-inicio {
+    background: transparent !important;
+    border: none !important;
+}
+
+.marcador-punto-inicio {
+    background: #22c55e;
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 3px 12px rgba(34, 197, 94, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: markerPulseGreen 2s infinite;
+}
+
+.marcador-punto-inicio i {
+    color: white;
+    font-size: 16px;
+    z-index: 2;
+}
+
+/* Marcador de fin */
+.marcador-fin {
+    background: transparent !important;
+    border: none !important;
+}
+
+.marcador-punto-fin {
+    background: #dc2626;
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 3px 12px rgba(220, 38, 38, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: markerPulseRed 2s infinite;
+}
+
+.marcador-punto-fin i {
+    color: white;
+    font-size: 16px;
+    z-index: 2;
+}
+
+/* Animaciones para los marcadores */
+@keyframes markerPulseGreen {
+    0% {
+        box-shadow: 0 3px 12px rgba(34, 197, 94, 0.4), 0 0 0 0 rgba(34, 197, 94, 0.7);
+    }
+    70% {
+        box-shadow: 0 3px 12px rgba(34, 197, 94, 0.4), 0 0 0 15px rgba(34, 197, 94, 0);
+    }
+    100% {
+        box-shadow: 0 3px 12px rgba(34, 197, 94, 0.4), 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+@keyframes markerPulseRed {
+    0% {
+        box-shadow: 0 3px 12px rgba(220, 38, 38, 0.4), 0 0 0 0 rgba(220, 38, 38, 0.7);
+    }
+    70% {
+        box-shadow: 0 3px 12px rgba(220, 38, 38, 0.4), 0 0 0 15px rgba(220, 38, 38, 0);
+    }
+    100% {
+        box-shadow: 0 3px 12px rgba(220, 38, 38, 0.4), 0 0 0 0 rgba(220, 38, 38, 0);
+    }
+}
+
+/* Hover effects para los marcadores */
+.marcador-punto-inicio:hover,
+.marcador-punto-fin:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Estilos para los popups de los marcadores */
+.leaflet-popup-content-wrapper {
+    background: var(--color-bg-sidebar);
+    color: var(--color-text-primary);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.leaflet-popup-content {
+    margin: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.leaflet-popup-tip {
+    background: var(--color-bg-sidebar);
+}
+
+/* Responsive para marcadores */
+@media (max-width: 768px) {
+    .marcador-punto-inicio,
+    .marcador-punto-fin {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .marcador-punto-inicio i,
+    .marcador-punto-fin i {
+        font-size: 14px;
+    }
+}
