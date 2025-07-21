@@ -657,6 +657,22 @@
             </div>
             <!-- Card de coordenadas eliminada -->
         </div>
+        <!-- Sección de Estadísticas Avanzadas -->
+        <div class="stats-grid" style="margin-bottom:40px;">
+            <div class="stat-card">
+                <h3 id="reportesPorRuta">0</h3>
+                <p>Promedio de Reportes por Ruta</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="rutaMasReportes">-</h3>
+                <p>Ruta con más Reportes</p>
+            </div>
+        </div>
+        <!-- Gráfica de reportes por ruta -->
+        <div style="background:var(--color-bg-secondary);border-radius:15px;padding:30px;margin-bottom:30px;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+            <h3 style="color:var(--color-hover-primary);margin-bottom:20px;">Reportes por Ruta</h3>
+            <canvas id="chartReportesRuta" style="max-width:100%;height:300px;"></canvas>
+        </div>
 
         <!-- Barra de pestañas eliminada, solo se usa el menú lateral -->
 
@@ -785,6 +801,10 @@
     </main>
 
     <script>
+        // Chart.js CDN
+        const chartScript = document.createElement('script');
+        chartScript.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        document.head.appendChild(chartScript);
         // Configuración de la API
         const API_BASE_URL = 'http://localhost:7000';
         let currentFile = null;
@@ -1332,8 +1352,80 @@ window.viewReporte = function(id) {
             document.getElementById('totalRoutes').textContent = rutas.length;
             document.getElementById('totalUsers').textContent = usuarios.length;
             document.getElementById('totalReports').textContent = reportes.length;
-            document.getElementById('totalCoordinates').textContent = coordenadas.length;
+            // Estadísticas avanzadas
+            // Promedio de reportes por ruta
+            let promedioReportesPorRuta = 0;
+            let labels = [];
+            let dataReportes = [];
+            if (rutas.length > 0) {
+                const reportesPorRuta = rutas.map(r => reportes.filter(rep => rep.idRuta === r.idRuta).length);
+                promedioReportesPorRuta = (reportesPorRuta.reduce((a,b) => a+b, 0) / rutas.length).toFixed(2);
+                labels = rutas.map(r => r.nombreRuta || r.nombre_ruta);
+                dataReportes = reportesPorRuta;
+            }
+            document.getElementById('reportesPorRuta').textContent = promedioReportesPorRuta;
+
+            // Ruta con más reportes
+            let rutaMasReportes = '-';
+            if (rutas.length > 0 && reportes.length > 0) {
+                const conteo = rutas.map(r => ({ nombre: r.nombreRuta || r.nombre_ruta, total: reportes.filter(rep => rep.idRuta === r.idRuta).length }));
+                const max = conteo.reduce((a,b) => b.total > a.total ? b : a, {total: -1});
+                rutaMasReportes = max.total > 0 ? `${max.nombre} (${max.total})` : '-';
+            }
+            document.getElementById('rutaMasReportes').textContent = rutaMasReportes;
+
+            // Gráfica de reportes por ruta
+            chartScript.onload = function() {
+                renderChartReportesRuta(labels, dataReportes);
+            };
+            if (window.Chart) {
+                renderChartReportesRuta(labels, dataReportes);
+            }
         }
+
+        // Función para renderizar la gráfica
+        let chartReportesRutaInstance = null;
+        function renderChartReportesRuta(labels, dataReportes) {
+            const ctx = document.getElementById('chartReportesRuta').getContext('2d');
+            if (chartReportesRutaInstance) {
+                chartReportesRutaInstance.destroy();
+            }
+            chartReportesRutaInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Reportes',
+                        data: dataReportes,
+                        backgroundColor: 'rgba(251, 109, 16, 0.7)',
+                        borderColor: 'rgba(251, 109, 16, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#fff', font: { weight: 'bold' } },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#fff', font: { weight: 'bold' } },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+        
 
         function clearForm(formId) {
             document.getElementById(formId).reset();
