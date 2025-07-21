@@ -1140,7 +1140,7 @@ if (!usuario || !usuario.id) {
 
   console.log("Enviando body:", body);
 
-  fetch('http://107.21.12.104:7000/reportes', {
+  fetch('http://localhost:7000/reportes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
