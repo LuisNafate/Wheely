@@ -597,30 +597,7 @@
                         <span class="menu-label">Rutas</span>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Periodos" onclick="showTab('periodos')">
-                        <span class="material-symbols-rounded">schedule</span>
-                        <span class="menu-label">Periodos</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Tiempos" onclick="showTab('tiempos')">
-                        <span class="material-symbols-rounded">timer</span>
-                        <span class="menu-label">Tiempos</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Coordenadas" onclick="showTab('coordenadas')">
-                        <span class="material-symbols-rounded">my_location</span>
-                        <span class="menu-label">Coordenadas</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Paradas" onclick="showTab('paradas')">
-                        <span class="material-symbols-rounded">location_on</span>
-                        <span class="menu-label">Paradas</span>
-                    </a>
-                </li>
+                <!-- Eliminadas pestañas de periodos, tiempos, coordenadas y paradas -->
                 <li class="menu-item">
                     <a href="#" class="menu-link" aria-label="Usuarios" onclick="showTab('usuarios')">
                         <span class="material-symbols-rounded">group</span>
@@ -678,23 +655,10 @@
                 <h3 id="totalReports">0</h3>
                 <p>Reportes Activos</p>
             </div>
-            <div class="stat-card">
-                <h3 id="totalCoordinates">0</h3>
-                <p>Coordenadas</p>
-            </div>
+            <!-- Card de coordenadas eliminada -->
         </div>
 
-        <!-- Tabs -->
-        <div class="admin-tabs">
-            <button class="tab-button active" onclick="showTab('dashboard')">Dashboard</button>
-            <button class="tab-button" onclick="showTab('rutas')">Rutas</button>
-            <button class="tab-button" onclick="showTab('periodos')">Periodos</button>
-            <button class="tab-button" onclick="showTab('tiempos')">Tiempos</button>
-            <button class="tab-button" onclick="showTab('coordenadas')">Coordenadas</button>
-            <button class="tab-button" onclick="showTab('paradas')">Paradas</button>
-            <button class="tab-button" onclick="showTab('usuarios')">Usuarios</button>
-            <button class="tab-button" onclick="showTab('reportes')">Reportes</button>
-        </div>
+        <!-- Barra de pestañas eliminada, solo se usa el menú lateral -->
 
         <!-- Dashboard Tab -->
         <div id="dashboard-tab" class="tab-content active">
@@ -763,175 +727,7 @@
             </div>
         </div>
 
-        <!-- Periodos Tab -->
-        <div id="periodos-tab" class="tab-content">
-            <div class="form-section">
-                <h3>Gestión de Periodos</h3>
-                <form id="periodoForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nombrePeriodo">Nombre del Periodo</label>
-                            <input type="text" id="nombrePeriodo" name="nombrePeriodo" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="descripcionPeriodo">Descripción</label>
-                            <input type="text" id="descripcionPeriodo" name="descripcionPeriodo">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="horaInicio">Hora de Inicio</label>
-                            <input type="time" id="horaInicio" name="horaInicio" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="horaFin">Hora de Fin</label>
-                            <input type="time" id="horaFin" name="horaFin" required>
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button type="submit" class="btn btn-primary">Crear Periodo</button>
-                        <button type="button" class="btn btn-secondary" onclick="clearForm('periodoForm')">Limpiar</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="form-section">
-                <h3>Periodos Existentes</h3>
-                <div class="loading" id="periodosLoading">
-                    <div class="spinner"></div>
-                    <p>Cargando periodos...</p>
-                </div>
-                <div id="periodosList" class="items-list" style="display: none;">
-                    <!-- Los periodos se cargarán aquí -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Tiempos Tab -->
-        <div id="tiempos-tab" class="tab-content">
-            <div class="form-section">
-                <h3>Gestión de Tiempos por Ruta y Periodo</h3>
-                <form id="tiempoForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="selectRuta">Ruta</label>
-                            <select id="selectRuta" name="selectRuta" required>
-                                <option value="">Seleccione una ruta</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="selectPeriodo">Periodo</label>
-                            <select id="selectPeriodo" name="selectPeriodo" required>
-                                <option value="">Seleccione un periodo</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="tiempoPromedio">Tiempo Promedio (minutos)</label>
-                        <input type="number" id="tiempoPromedio" name="tiempoPromedio" min="1" required>
-                    </div>
-                    <div class="item-actions">
-                        <button type="submit" class="btn btn-primary">Guardar Tiempo</button>
-                        <button type="button" class="btn btn-secondary" onclick="clearForm('tiempoForm')">Limpiar</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="form-section">
-                <h3>Tiempos Configurados</h3>
-                <div class="loading" id="tiemposLoading">
-                    <div class="spinner"></div>
-                    <p>Cargando tiempos...</p>
-                </div>
-                <div id="tiemposList" class="items-list" style="display: none;">
-                    <!-- Los tiempos se cargarán aquí -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Coordenadas Tab -->
-        <div id="coordenadas-tab" class="tab-content">
-            <div class="form-section">
-                <h3>Carga de Coordenadas JSON</h3>
-                <div class="file-upload-area" id="coordinatesUploadArea">
-                    <p style="margin-bottom: 10px;">📁 Arrastra y suelta tu archivo JSON aquí</p>
-                    <p style="font-size: 0.9em; color: var(--color-text-secondary);">o haz clic para seleccionar archivo</p>
-                    <input type="file" id="coordinatesFileInput" accept=".json" style="display: none;">
-                </div>
-                
-                <div class="form-group" style="margin-top: 20px;">
-                    <label for="coordinatesRoute">Asociar a Ruta</label>
-                    <select id="coordinatesRoute" name="coordinatesRoute">
-                        <option value="">Seleccione una ruta</option>
-                    </select>
-                </div>
-
-                <div class="item-actions">
-                    <button type="button" class="btn btn-primary" onclick="uploadCoordinates()">Subir Coordenadas</button>
-                    <button type="button" class="btn btn-secondary" onclick="validateJSON()">Validar JSON</button>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>Vista Previa JSON</h3>
-                <textarea id="coordinatesPreview" readonly style="font-family: monospace; background: var(--color-bg-primary); height: 200px; color: var(--color-text-primary);"></textarea>
-            </div>
-
-            <div class="form-section">
-                <h3>Coordenadas por Ruta</h3>
-                <div class="loading" id="coordinatesLoading">
-                    <div class="spinner"></div>
-                    <p>Cargando coordenadas...</p>
-                </div>
-                <div id="coordinatesList" class="items-list" style="display: none;">
-                    <!-- Las coordenadas se cargarán aquí -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Paradas Tab -->
-        <div id="paradas-tab" class="tab-content">
-            <div class="form-section">
-                <h3>Gestión de Paradas</h3>
-                <form id="paradaForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nombreParada">Nombre de la Parada</label>
-                            <input type="text" id="nombreParada" name="nombreParada" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="descripcionParada">Descripción</label>
-                            <input type="text" id="descripcionParada" name="descripcionParada">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="latitudParada">Latitud</label>
-                            <input type="number" id="latitudParada" name="latitudParada" step="0.000001" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="longitudParada">Longitud</label>
-                            <input type="number" id="longitudParada" name="longitudParada" step="0.000001" required>
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button type="submit" class="btn btn-primary">Crear Parada</button>
-                        <button type="button" class="btn btn-secondary" onclick="clearForm('paradaForm')">Limpiar</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="form-section">
-                <h3>Paradas Existentes</h3>
-                <div class="loading" id="paradasLoading">
-                    <div class="spinner"></div>
-                    <p>Cargando paradas...</p>
-                </div>
-                <div id="paradasList" class="items-list" style="display: none;">
-                    <!-- Las paradas se cargarán aquí -->
-                </div>
-            </div>
-        </div>
+        <!-- Eliminadas secciones de periodos, tiempos, coordenadas y paradas -->
 
         <!-- Usuarios Tab -->
         <div id="usuarios-tab" class="tab-content">
@@ -973,25 +769,7 @@
 
         <!-- Reportes Tab -->
         <div id="reportes-tab" class="tab-content">
-            <div class="form-section">
-                <h3>Tipos de Reporte</h3>
-                <form id="tipoReporteForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nombreTipoReporte">Nombre del Tipo</label>
-                            <input type="text" id="nombreTipoReporte" name="nombreTipoReporte" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="descripcionTipoReporte">Descripción</label>
-                            <input type="text" id="descripcionTipoReporte" name="descripcionTipoReporte">
-                        </div>
-                    </div>
-                    <div class="item-actions">
-                        <button type="submit" class="btn btn-primary">Crear Tipo</button>
-                        <button type="button" class="btn btn-secondary" onclick="clearForm('tipoReporteForm')">Limpiar</button>
-                    </div>
-                </form>
-            </div>
+            <!-- Se eliminó la sección de formulario de tipo de reporte -->
 
             <div class="form-section">
                 <h3>Reportes Activos</h3>
@@ -1012,22 +790,19 @@
         let currentFile = null;
 
         // Estado de la aplicación
-        let rutas = [];
-        let periodos = [];
-        let tiempos = [];
-        let coordenadas = [];
-        let paradas = [];
-        let usuarios = [];
-        let reportes = [];
+let rutas = [];
+let usuarios = [];
+let reportes = [];
+let tiposReporte = [];
 
         // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
-            setupSidebar();
-            setupFileUpload();
-            loadAllData();
-            setupForms();
-            updateLastUpdate();
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    setupSidebar();
+    setupFileUpload();
+    loadAllData();
+    setupForms();
+    updateLastUpdate();
+});
 
         // Verificar acceso de administrador
 function verificarAccesoAdmin() {
@@ -1161,66 +936,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // ========== LOAD DATA ==========
-        async function loadAllData() {
-            await Promise.all([
-                loadRutas(),
-                loadPeriodos(),
-                loadTiempos(),
-                loadUsuarios(),
-                loadReportes()
-            ]);
-            updateStats();
+async function loadAllData() {
+    await Promise.all([
+        loadRutas(),
+        loadUsuarios(),
+        loadTiposReporte(),
+        loadReportes()
+    ]);
+    updateStats();
+}
+async function loadTiposReporte() {
+    try {
+        const result = await apiCall('/tipos-reporte');
+        if (result && result.success) {
+            // Ajusta los nombres de las propiedades según la respuesta real de tu API
+            tiposReporte = result.data.map(t => ({
+                idTipoReporte: t.idTipoReporte,
+                nombre_tipo: t.nombre_tipo,
+                descripcion: t.descripcion
+            }));
         }
+    } catch (error) {
+        tiposReporte = [];
+    }
+}
 
         async function loadRutas() {
             const loading = document.getElementById('rutasLoading');
             const list = document.getElementById('rutasList');
-            
             loading.style.display = 'block';
             list.style.display = 'none';
-            
             const result = await apiCall('/rutas');
             if (result && result.success) {
                 rutas = result.data;
                 renderRutas();
-                populateRutaSelects();
             }
-            
-            loading.style.display = 'none';
-            list.style.display = 'block';
-        }
-
-        async function loadPeriodos() {
-            const loading = document.getElementById('periodosLoading');
-            const list = document.getElementById('periodosList');
-            
-            loading.style.display = 'block';
-            list.style.display = 'none';
-            
-            const result = await apiCall('/periodo');
-            if (result && result.success) {
-                periodos = result.data;
-                renderPeriodos();
-                populatePeriodoSelects();
-            }
-            
-            loading.style.display = 'none';
-            list.style.display = 'block';
-        }
-
-        async function loadTiempos() {
-            const loading = document.getElementById('tiemposLoading');
-            const list = document.getElementById('tiemposList');
-            
-            loading.style.display = 'block';
-            list.style.display = 'none';
-            
-            const result = await apiCall('/tiempos-ruta-periodo');
-            if (result && result.success) {
-                tiempos = result.data;
-                renderTiempos();
-            }
-            
             loading.style.display = 'none';
             list.style.display = 'block';
         }
@@ -1228,16 +978,13 @@ document.addEventListener('DOMContentLoaded', function() {
         async function loadUsuarios() {
             const loading = document.getElementById('usuariosLoading');
             const list = document.getElementById('usuariosList');
-            
             loading.style.display = 'block';
             list.style.display = 'none';
-            
             const result = await apiCall('/usuarios');
             if (result && result.success) {
                 usuarios = result.data;
                 renderUsuarios();
             }
-            
             loading.style.display = 'none';
             list.style.display = 'block';
         }
@@ -1245,16 +992,13 @@ document.addEventListener('DOMContentLoaded', function() {
         async function loadReportes() {
             const loading = document.getElementById('reportesLoading');
             const list = document.getElementById('reportesList');
-            
             loading.style.display = 'block';
             list.style.display = 'none';
-            
             const result = await apiCall('/reportes');
             if (result && result.success) {
                 reportes = result.data;
                 renderReportes();
             }
-            
             loading.style.display = 'none';
             list.style.display = 'block';
         }
@@ -1269,7 +1013,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.className = 'item-card';
                 item.innerHTML = `
                     <div class="item-info">
-                        <h4>${ruta.nombre_ruta}</h4>
+                        <h4>${ruta.nombreRuta}</h4>
                         <p><strong>Origen:</strong> ${ruta.origen}</p>
                         <p><strong>Destino:</strong> ${ruta.destino}</p>
                         <p><strong>ID:</strong> ${ruta.idRuta}</p>
@@ -1364,9 +1108,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.innerHTML = `
                     <div class="item-info">
                         <h4>Reporte #${reporte.idReporte}</h4>
-                        <p><strong>Tipo:</strong> ${reporte.tipo_reporte || 'N/A'}</p>
-                        <p><strong>Usuario:</strong> ${reporte.nombre_usuario || 'N/A'}</p>
-                        <p><strong>Fecha:</strong> ${new Date(reporte.fecha_reporte).toLocaleDateString()}</p>
+                        <p><strong>Ruta:</strong> ${(() => { const ruta = rutas.find(r => r.idRuta === reporte.idRuta); return ruta ? ruta.nombreRuta : reporte.idRuta || 'N/A'; })()}</p>
+                        <p><strong>Tipo de Reporte:</strong> ${(() => {
+                            const tipo = tiposReporte.find(t => t.idTipoReporte === reporte.idTipoReporte);
+                            if (tipo && tipo.nombre_tipo) return tipo.nombre_tipo;
+                            if (reporte.idTipoReporte === 1) return 'Incidencia';
+                            if (reporte.idTipoReporte === 2) return 'Sugerencia';
+                            return reporte.idTipoReporte || 'N/A';
+                        })()}</p>
+                        <p><strong>Usuario:</strong> ${(() => { const usuario = usuarios.find(u => u.idUsuario === reporte.idUsuario); return usuario ? usuario.nombre : 'N/A'; })()}</p>
+                        <p><strong>Fecha:</strong> ${reporte.fecha_reporte ? new Date(reporte.fecha_reporte).toLocaleDateString() : 'N/A'}</p>
                     </div>
                     <div class="item-actions">
                         <button class="btn btn-secondary" onclick="viewReporte(${reporte.idReporte})">Ver</button>
@@ -1375,6 +1126,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 container.appendChild(item);
             });
+        // ...existing code...
+// Función global para mostrar el modal de reporte
+window.viewReporte = function(id) {
+    const reporte = reportes.find(r => r.idReporte === id);
+    if (reporte) {
+        const usuario = usuarios.find(u => u.idUsuario === reporte.idUsuario);
+        const ruta = rutas.find(r => r.idRuta === reporte.idRuta);
+        const tipo = tiposReporte.find(t => t.idTipoReporte === reporte.idTipoReporte);
+        const modal = document.createElement('div');
+        modal.className = 'notification show';
+        modal.style.background = '#333';
+        modal.style.color = '#fff';
+        modal.style.maxWidth = '400px';
+        modal.style.position = 'fixed';
+        modal.style.top = '50%';
+        modal.style.left = '50%';
+        modal.style.transform = 'translate(-50%, -50%)';
+        modal.style.zIndex = '2000';
+        modal.innerHTML = `
+            <h4>Reporte #${reporte.idReporte}</h4>
+            <p><strong>Usuario:</strong> ${usuario ? usuario.nombre : 'N/A'}</p>
+            <p><strong>Ruta:</strong> ${ruta ? ruta.nombreRuta : reporte.idRuta || 'N/A'}</p>
+            <p><strong>Tipo de Reporte:</strong> ${(() => {
+                if (tipo && tipo.nombre_tipo) return tipo.nombre_tipo;
+                if (reporte.idTipoReporte === 1) return 'Incidencia';
+                if (reporte.idTipoReporte === 2) return 'Sugerencia';
+                return reporte.idTipoReporte || 'N/A';
+            })()}</p>
+            <p><strong>Fecha:</strong> ${reporte.fecha_reporte ? new Date(reporte.fecha_reporte).toLocaleDateString('es-MX') : 'N/A'}</p>
+            <p><strong>Título:</strong> ${reporte.titulo || 'N/A'}</p>
+            <p><strong>Descripción:</strong> ${reporte.descripcion || 'N/A'}</p>
+            <button class="btn btn-secondary" style="margin-top:10px;" onclick="this.parentNode.remove()">Cerrar</button>
+        `;
+        document.body.appendChild(modal);
+    }
+}
         }
 
         // ========== FORM HANDLERS ==========
