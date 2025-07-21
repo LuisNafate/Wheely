@@ -358,7 +358,7 @@ rutaItem.addEventListener('click', () => {
 
 });
 
-fetch(`http://44.220.12.138:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`)
+fetch(`http://107.21.12.104:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`)
 
 
   .then(res => res.json())
@@ -531,8 +531,8 @@ async function renderizarRutasFavoritas() {
 
   try {
     const [rutasRes, favsRes] = await Promise.all([
-      fetch('http://44.220.12.138:7000/rutas').then(r => r.json()),
-      fetch(`http://44.220.12.138:7000/usuarios/${user.id}/rutas-favoritas`).then(r => r.json())
+      fetch('http://107.21.12.104:7000/rutas').then(r => r.json()),
+      fetch(`http://107.21.12.104:7000/usuarios/${user.id}/rutas-favoritas`).then(r => r.json())
     ]);
 
     const rutas = rutasRes.data;
@@ -567,7 +567,7 @@ async function renderizarRutasFavoritas() {
 
       // Cargar tiempos reales
       try {
-        const tiemposRes = await fetch(`http://44.220.12.138:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`);
+        const tiemposRes = await fetch(`http://107.21.12.104:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`);
         const tiemposData = await tiemposRes.json();
 
         const tiempos = tiemposData.data;
@@ -638,7 +638,7 @@ function mostrarToast(mensaje, tipo = 'success') {
 
 function agregarRutaFavorita(rutaId, starIcon) {
   const user = JSON.parse(localStorage.getItem('wheelyUser'));
-  const API_BASE_URL = 'http://44.220.12.138:7000';
+  const API_BASE_URL = 'http://107.21.12.104:7000';
 
   fetch(`${API_BASE_URL}/usuarios/${user.id}/rutas-favoritas`, {
     method: 'POST',
@@ -663,7 +663,7 @@ function agregarRutaFavorita(rutaId, starIcon) {
 
 function eliminarRutaFavorita(rutaId, starIcon) {
   const user = JSON.parse(localStorage.getItem('wheelyUser'));
-  const API_BASE_URL = 'http://44.220.12.138:7000';
+  const API_BASE_URL = 'http://107.21.12.104:7000';
 
   fetch(`${API_BASE_URL}/usuarios/${user.id}/rutas-favoritas/${rutaId}`, {
     method: 'DELETE'
@@ -746,7 +746,7 @@ function cargarDetalleDeRuta(rutaId, origenRuta, destinoRuta, nombreRuta) {
   window.rutaSeleccionada = rutaId;
 
  // Si lleva /api
-const tiemposURL = `http://44.220.12.138:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`;
+const tiemposURL = `http://107.21.12.104:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`;
 
   const urlIda = `rutas/ruta${rutaId}_ida.geojson`;
   const urlRegreso = `rutas/ruta${rutaId}_vuelta.geojson`;
@@ -1156,7 +1156,7 @@ if (!usuario || !usuario.id) {
 
   console.log("Enviando body:", body);
 
-  fetch('http://44.220.12.138:7000/reportes', {
+  fetch('http://107.21.12.104:7000/reportes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -1228,7 +1228,7 @@ function cerrarPanel(overlay, panel) {
 }*/
 //Ver noticias reales de una ruta
 function cargarNoticiasDeRuta(idRuta) {
-  fetch("http://44.220.12.138:7000/reportes")
+  fetch("http://107.21.12.104:7000/reportes")
     .then(res => res.json())
     .then(data => {
       const lista = document.getElementById("lista-noticias");

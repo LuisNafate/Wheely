@@ -468,7 +468,7 @@
         function cargarRutasDesdeBackend() {
             console.log("Cargando rutas desde backend para visitante...");
 
-            fetch('http://44.220.12.138:7000/rutas')
+            fetch('http://107.21.12.104:7000/rutas')
                 .then(res => {
                     if (!res.ok) throw new Error("No se pudieron cargar las rutas");
                     return res.json();
@@ -563,7 +563,7 @@
         // Cargar tiempo específico de una ruta
         async function cargarTiempoRuta(rutaId, rutaItem) {
             try {
-                const response = await fetch(`http://44.220.12.138:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`);
+                const response = await fetch(`http://107.21.12.104:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`);
                 if (!response.ok) throw new Error('Error al cargar tiempos');
                 
                 const tiemposData = await response.json();
@@ -596,7 +596,7 @@
             // URLs para los archivos GeoJSON
             const urlIda = `rutas/ruta${rutaId}_ida.geojson`;
             const urlRegreso = `rutas/ruta${rutaId}_vuelta.geojson`;
-            const tiemposURL = `http://44.220.12.138:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`;
+            const tiemposURL = `http://107.21.12.104:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`;
 
             // Cargar tiempos
             fetch(tiemposURL)
