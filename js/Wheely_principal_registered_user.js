@@ -45,7 +45,8 @@ function toggleSidebar() {
       favoritosPanel, rutasPanel,
       document.getElementById('reporte-panel'),
       document.getElementById('formulario-panel'),
-      document.getElementById('noticias-panel')
+      document.getElementById('noticias-panel'),
+      document.getElementById('detalle-ruta-panel')
     ];
 
     allPanels.forEach(panel => {
@@ -117,6 +118,10 @@ function openRutas() {
   detallePanel.classList.add('active');
   detalleOverlay.classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  document.getElementById('detalle-ruta-panel').classList.add('active');
+document.getElementById('detalle-ruta-overlay').classList.add('active');
+
 
   // Aplica desplazamiento si el sidebar está expandido en escritorio
   if (!sidebar.classList.contains('collapsed') && !isMobile()) {
@@ -1005,6 +1010,9 @@ function cerrarDetalleRuta() {
   document.getElementById('detalle-ruta-overlay').classList.remove('active');
   document.getElementById('detalle-ruta-panel').classList.remove('active');
   document.body.style.overflow = '';
+
+  document.getElementById('detalle-ruta-panel').classList.remove('active');
+document.getElementById('detalle-ruta-overlay').classList.remove('active');
 
 }
 
