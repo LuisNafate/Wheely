@@ -661,7 +661,7 @@ function agregarRutaFavorita(rutaId, starIcon) {
         mostrarToast("Ruta agregada a favoritos");
         renderizarRutasFavoritas();
       } else {
-        mostrarToast("No se pudo agregar a favoritos");
+        /*mostrarToast("No se pudo agregar a favoritos");*/
       }
     })
     .catch(err => {
@@ -688,7 +688,7 @@ function eliminarRutaFavorita(rutaId, starIcon) {
         mostrarToast("Ruta eliminada de favoritos");
         renderizarRutasFavoritas();
       } else {
-        mostrarToast("No se pudo eliminar de favoritos");
+        /*mostrarToast("No se pudo eliminar de favoritos");*/
       }
     })
     .catch(err => {
@@ -749,27 +749,34 @@ function mostrarParadasDeRuta(rutaId) {
       if (capaParadas) map.removeLayer(capaParadas);
 
       capaParadas = L.geoJSON(data, {
-        pointToLayer: (feature, latlng) =>
-          L.circleMarker(latlng, {
-            radius: 6,
-            color: "#28a745",
-            fillColor: "#28a745",
-            fillOpacity: 0.8
-          }),
+        pointToLayer: (feature, latlng) => {
+          const estilo = feature.properties?._umap_options || {};
+          const iconUrl = estilo.iconUrl;
+
+          const iconoFinal = L.icon({
+            iconUrl: iconUrl?.startsWith("/") || !iconUrl
+              ? "img/icono.png"
+              : iconUrl,
+            iconSize: estilo.iconSize || [28, 28],
+            iconAnchor: estilo.iconAnchor || [14, 28],
+            popupAnchor: estilo.popupAnchor || [0, -28]
+          });
+
+          return L.marker(latlng, { icon: iconoFinal });
+        },
         onEachFeature: (feature, layer) => {
-          if (feature.properties?.nombre) {
-            layer.bindPopup(`<b>Parada:</b> ${feature.properties.nombre}`);
-          }
+         
         }
       }).addTo(map);
 
-      estadoParadas[rutaId] = true; // 🟢 ← Esto guarda el estado activo
+      estadoParadas[rutaId] = true;
     })
     .catch(err => {
       console.error("Error al cargar paradas:", err);
       mostrarToast("No se pudieron cargar las paradas", "error");
     });
 }
+
 
 
 //Para los detalles de ruta
