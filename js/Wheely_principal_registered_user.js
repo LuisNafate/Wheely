@@ -565,6 +565,11 @@ async function renderizarRutasFavoritas() {
           <i class="bi bi-star-fill action-icon star-icon favorito" title="Quitar de favoritos"></i>
         </div>
       `;
+      const starIcon = rutaItem.querySelector('.star-icon');
+      starIcon.addEventListener('click', function(e) {
+      e.stopPropagation();
+       eliminarRutaFavorita(ruta.idRuta, this);
+      });
 
       // Cargar tiempos reales
       try {
@@ -582,8 +587,14 @@ async function renderizarRutasFavoritas() {
       }
 
       rutaItem.addEventListener('click', () => {
-        cargarDetalleDeRuta(ruta.idRuta);
-      });
+  cargarDetalleDeRuta(
+    ruta.idRuta,
+    ruta.origen,
+    ruta.destino,
+    ruta.nombreRuta
+  );
+});
+
 
       panel.appendChild(rutaItem);
     });
@@ -595,6 +606,7 @@ async function renderizarRutasFavoritas() {
   } catch (err) {
     console.error("Error al renderizar favoritos:", err);
   }
+  
 }
 
 
@@ -643,6 +655,8 @@ function agregarRutaFavorita(rutaId, starIcon) {
     .then(data => {
       if (data.success) {
         starIcon.classList.add("favorito");
+        starIcon.classList.remove("bi-star");
+        starIcon.classList.add("bi-star-fill");
         mostrarToast("Ruta agregada a favoritos");
         renderizarRutasFavoritas();
       } else {
@@ -665,9 +679,13 @@ function eliminarRutaFavorita(rutaId, starIcon) {
     .then(response => response.json())
     .then(data => {
       if (data.success) {
+       
         starIcon.classList.remove("favorito");
+        starIcon.classList.remove("bi-star-fill");
+        starIcon.classList.add("bi-star");
+
         mostrarToast("Ruta eliminada de favoritos");
-        renderizarFavoritos();
+        renderizarRutasFavoritas();
       } else {
         mostrarToast("No se pudo eliminar de favoritos");
       }
@@ -1049,6 +1067,18 @@ detalleOverlay.addEventListener('click', cerrarDetalleRuta);*/
   .catch(err => {
     console.error('Error al cargar GeoJSON:', err);
   }); */
+
+  function limpiarRutasDelMapa() {
+  if (capaIda) {
+    map.removeLayer(capaIda);
+    capaIda = null;
+  }
+  if (capaRegreso) {
+    map.removeLayer(capaRegreso);
+    capaRegreso = null;
+  }
+}
+
 
 
 // === MANEJO DE PANELES (CON TÍTULOS DE REPORTE) === //
@@ -1438,6 +1468,8 @@ const inicioTrigger = document.getElementById('inicio-trigger');
 
 inicioTrigger.addEventListener('click', (e) => {
   e.preventDefault();
-  closeAllPanels();  // Cierra favoritos, rutas, etc.
-  activarBotonMenu('inicio-trigger');  // Asegura que se ilumine "Inicio"
+  closeAllPanels();  // Cierra paneles
+  limpiarRutasDelMapa(); // 👈 LIMPIAR RUTAS DEL MAPA
+  activarBotonMenu('inicio-trigger');
 });
+

@@ -341,7 +341,7 @@
                 });
 
                 // Placeholder mejorado
-                existingInput.placeholder = '🔍 Buscar direcciones, lugares, coordenadas...';
+                existingInput.placeholder = ' Buscar direcciones, lugares, coordenadas...';
                 
                 console.log('✅ Integrado con barra de búsqueda existente');
             }
