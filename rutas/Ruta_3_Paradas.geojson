@@ -1,0 +1,885 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.067144,
+          16.741104
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "id": "6uGuf"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.172951,
+          16.759648
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "YiIaT"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.16873,
+          16.758698
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "na8ud"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.165543,
+          16.757989
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "IVej8"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.160415,
+          16.756859
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "9Ky8t"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.158484,
+          16.756427
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "bT7yS"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.154943,
+          16.755944
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "XfCib"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.153419,
+          16.75578
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "GTvjr"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.150587,
+          16.754907
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "zS6gy"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.150812,
+          16.752585
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "J6RjF"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.150952,
+          16.749657
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "2lxzq"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.146778,
+          16.74901
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "K5ol2"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.14459,
+          16.747941
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "ivgPT"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.142015,
+          16.747068
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "FoZqg"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.141328,
+          16.748876
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "npb8C"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.141747,
+          16.751578
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "k5UQ4"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.142401,
+          16.755194
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "yriLu"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.144815,
+          16.758841
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "YaqKZ"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.146456,
+          16.760382
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "SlaBQ"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.144461,
+          16.761892
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "AFtjv"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.142176,
+          16.763125
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "cgiYw"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.140523,
+          16.764132
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "oPAhS"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.136017,
+          16.766628
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "9tYs7"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.132681,
+          16.771282
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "gkwtD"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.125932,
+          16.774497
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "fNYLe"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.123647,
+          16.774672
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "0y7Oc"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.121845,
+          16.774189
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "1wKwr"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.119817,
+          16.773675
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "HnsgA"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.116695,
+          16.772597
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "I6pcy"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.112231,
+          16.770655
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "ss2Yq"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.109281,
+          16.77047
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "wefV6"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.107082,
+          16.770635
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "MVQTy"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.103434,
+          16.770819
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "tfbfQ"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.102522,
+          16.770696
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "UvPTf"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.100483,
+          16.769422
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "nZufu"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.097656,
+          16.767686
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "h2znI"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.095918,
+          16.766253
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "6utf7"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.093547,
+          16.764795
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "EbMBE"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.091285,
+          16.763188
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "gDnGD"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.09004,
+          16.762248
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "QrGnZ"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.089257,
+          16.761673
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "PV2JX"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.088645,
+          16.761219
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "pn03A"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.087137,
+          16.760187
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "IcKYJ"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.083645,
+          16.757768
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "hOPOE"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.080942,
+          16.75559
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "FbZI0"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.078774,
+          16.75411
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "fLJDW"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.076934,
+          16.753032
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "38Hl1"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.075105,
+          16.751419
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "htqFl"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.070942,
+          16.748419
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "v0qAr"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.067681,
+          16.7462
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "zg9BQ"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.065749,
+          16.743508
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        }
+      },
+      "id": "waFMu"
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "coordinates": [
+          -93.174845,
+          16.759324
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "_umap_options": {
+          "iconClass": "Drop",
+          "iconUrl": "/uploads/pictogram/bus.svg"
+        },
+        "name": "Ruta B sentido 1"
+      },
+      "id": "sQa6u"
+    }
+  ]
+}

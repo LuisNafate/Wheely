@@ -606,7 +606,6 @@ async function renderizarRutasFavoritas() {
   } catch (err) {
     console.error("Error al renderizar favoritos:", err);
   }
-  
 }
 
 
@@ -704,6 +703,8 @@ function eliminarRutaFavorita(rutaId, starIcon) {
 
 let capaIda = null;
 let capaRegreso = null;
+let capaParadas = null;
+
 
 function pintarRuta(geoIda, geoRegreso) {
   // Limpiar anteriores
@@ -733,6 +734,46 @@ function mostrarAmbas() {
   const group = new L.featureGroup([capaIda, capaRegreso]);
   map.fitBounds(group.getBounds());
 }
+
+function mostrarParadasDeRuta(rutaId) {
+  // Elimina las paradas anteriores
+  if (capaParadas) {
+    map.removeLayer(capaParadas);
+    capaParadas = null;
+  }
+
+  const url = `rutas/Ruta_${rutaId}_Paradas.geojson`;
+
+  fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error('GeoJSON de paradas no encontrado');
+      return res.json();
+    })
+    .then(geojson => {
+      capaParadas = L.geoJSON(geojson, {
+        pointToLayer: (feature, latlng) => {
+          return L.marker(latlng, {
+            icon: L.icon({
+              iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+              iconSize: [25, 25]
+            })
+          });
+        },
+        onEachFeature: (feature, layer) => {
+          if (feature.properties?.nombre) {
+            layer.bindPopup(`<strong>Parada:</strong> ${feature.properties.nombre}`);
+          }
+        }
+      }).addTo(map);
+
+      map.fitBounds(capaParadas.getBounds());
+    })
+    .catch(err => {
+      console.warn('No se pudieron cargar las paradas:', err);
+      mostrarToast("Esta ruta aún no tiene paradas registradas", "info");
+    });
+}
+
 
 //Para los detalles de ruta
 
@@ -926,11 +967,24 @@ document.getElementById('btn-toggle-direccion').addEventListener('click', () => 
 });
 
 document.getElementById('btn-mostrar-ambas').addEventListener('click', mostrarAmbas);
+document.getElementById('btn-mostrar-paradas').addEventListener('click', () => {
+  if (window.rutaSeleccionada) {
+    mostrarParadasDeRuta(window.rutaSeleccionada);
+  } else {
+    mostrarToast('No hay una ruta seleccionada', 'error');
+  }
+});
+
 
 function cerrarDetalleRuta() {
   document.getElementById('detalle-ruta-overlay').classList.remove('active');
   document.getElementById('detalle-ruta-panel').classList.remove('active');
   document.body.style.overflow = '';
+  if (capaParadas) {
+  map.removeLayer(capaParadas);
+  capaParadas = null;
+}
+
 }
 
 document.getElementById('close-detalle-ruta').addEventListener('click', cerrarDetalleRuta);
