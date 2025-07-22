@@ -104,7 +104,8 @@ document.addEventListener('DOMContentLoaded', function() {
         btnCentrarMapa.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            centrarEnTuxtla();
+            //centrarEnTuxtla();
+            centrarConGeolocation(); // Usar la función de geolocalización
         });
         
         // Cambiar el ID para mayor especificidad (opcional)
@@ -137,9 +138,9 @@ function centrarConGeolocation() {
                     userLat, userLng, 
                     TUXTLA_COORDINATES.lat, TUXTLA_COORDINATES.lng
                 );
-                
-                // Si está cerca de Tuxtla (menos de 50km), centrar en ubicación actual
-                if (distancia < 50) {
+
+                // Si está cerca de Tuxtla (menos de 10km), centrar en ubicación actual
+                if (distancia < 10) {
                     map.setView([userLat, userLng], 15);
                     mostrarToast('📍 Centrando en tu ubicación actual', 'success');
                 } else {
