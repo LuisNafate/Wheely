@@ -709,26 +709,7 @@
         <div id="rutas-tab" class="tab-content">
             <div class="form-section">
                 <h3>Gestión de Rutas</h3>
-                <form id="rutaForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nombreRuta">Nombre de la Ruta</label>
-                            <input type="text" id="nombreRuta" name="nombreRuta" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="origen">Origen</label>
-                            <input type="text" id="origen" name="origen" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="destino">Destino</label>
-                        <input type="text" id="destino" name="destino" required>
-                    </div>
-                    <div class="item-actions">
-                        <button type="submit" class="btn btn-primary">Crear Ruta</button>
-                        <button type="button" class="btn btn-secondary" onclick="clearForm('rutaForm')">Limpiar</button>
-                    </div>
-                </form>
+                
             </div>
 
             <div class="form-section">
@@ -870,7 +851,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Resto del código existente...
     setupSidebar();
     setupFileUpload();
-    setupEnhancedForms();
+    setupForms();
     setupValidation();
     setupAdvancedFeatures();
     loadAllData();
@@ -1039,7 +1020,6 @@ async function loadTiposReporte() {
                         <p><strong>ID:</strong> ${ruta.idRuta}</p>
                     </div>
                     <div class="item-actions">
-                        <button class="btn btn-secondary" onclick="editRuta(${ruta.idRuta})">Editar</button>
                         <button class="btn btn-danger" onclick="deleteRuta(${ruta.idRuta})">Eliminar</button>
                     </div>
                 `;
@@ -1136,59 +1116,84 @@ window.viewReporte = function(id) {
         }
 
         // ========== FORM HANDLERS ==========
-        function setupForms() {
-            // Formulario de rutas
-            document.getElementById('rutaForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                const data = {
-                    nombre_ruta: formData.get('nombreRuta'),
-                    origen: formData.get('origen'),
-                    destino: formData.get('destino')
-                };
-                
+function setupForms() {
+    // Formulario de rutas con soporte completo para crear y editar
+    const rutaForm = document.getElementById('rutaForm');
+    if (rutaForm) {
+        // REMOVER cualquier listener anterior
+        rutaForm.replaceWith(rutaForm.cloneNode(true));
+        const newRutaForm = document.getElementById('rutaForm');
+        
+        newRutaForm.onsubmit = async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                nombre_ruta: formData.get('nombreRuta'),
+                origen: formData.get('origen'),
+                destino: formData.get('destino')
+            };
+            
+            const editId = this.getAttribute('data-edit-id');
+            const btn = this.querySelector('button[type="submit"]');
+            
+            if (editId) {
+                // Actualizar ruta existente
+                console.log('Actualizando ruta:', editId, data);
+                const result = await apiCall(`/rutas/${editId}`, 'PUT', data);
+                if (result && result.success) {
+                    showNotification('Ruta actualizada exitosamente', 'success');
+                    this.removeAttribute('data-edit-id');
+                    if (btn) btn.textContent = 'Crear Ruta';
+                    clearForm('rutaForm');
+                    loadRutas();
+                }
+            } else {
+                // Crear nueva ruta
+                console.log('Creando ruta:', data);
                 const result = await apiCall('/rutas', 'POST', data);
                 if (result && result.success) {
                     showNotification('Ruta creada exitosamente', 'success');
                     clearForm('rutaForm');
                     loadRutas();
                 }
-            });
-
-            // Formulario de usuarios (creación y edición)
-            const usuarioForm = document.getElementById('usuarioForm');
-            if (usuarioForm) {
-                usuarioForm.onsubmit = async function(e) {
-                    e.preventDefault();
-                    const formData = new FormData(this);
-                    const data = {
-                        nombre: formData.get('nombreUsuario'),
-                        email: formData.get('emailUsuario'),
-                        password: formData.get('passwordUsuario')
-                    };
-                    const editId = this.getAttribute('data-edit-id');
-                    if (editId) {
-                        // Actualizar usuario existente
-                        const result = await apiCall(`/usuarios/${editId}`, 'PUT', data);
-                        if (result && result.success) {
-                            showNotification('Usuario actualizado exitosamente', 'success');
-                            this.removeAttribute('data-edit-id');
-                            clearForm('usuarioForm');
-                            loadUsuarios();
-                        }
-                    } else {
-                        // Crear nuevo usuario
-                        const result = await apiCall('/usuarios', 'POST', data);
-                        if (result && result.success) {
-                            showNotification('Usuario creado exitosamente', 'success');
-                            clearForm('usuarioForm');
-                            loadUsuarios();
-                        }
-                    }
-                };
             }
-        }
+        };
+    }
+
+    // Formulario de usuarios (mantener como está)
+    const usuarioForm = document.getElementById('usuarioForm');
+    if (usuarioForm) {
+        usuarioForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = {
+                nombre: formData.get('nombreUsuario'),
+                email: formData.get('emailUsuario'),
+                password: formData.get('passwordUsuario')
+            };
+            const editId = this.getAttribute('data-edit-id');
+            if (editId) {
+                // Actualizar usuario existente
+                const result = await apiCall(`/usuarios/${editId}`, 'PUT', data);
+                if (result && result.success) {
+                    showNotification('Usuario actualizado exitosamente', 'success');
+                    this.removeAttribute('data-edit-id');
+                    clearForm('usuarioForm');
+                    loadUsuarios();
+                }
+            } else {
+                // Crear nuevo usuario
+                const result = await apiCall('/usuarios', 'POST', data);
+                if (result && result.success) {
+                    showNotification('Usuario creado exitosamente', 'success');
+                    clearForm('usuarioForm');
+                    loadUsuarios();
+                }
+            }
+        };
+    }
+}
 
         // ========== DELETE FUNCTIONS ==========
         async function deleteRuta(id) {
@@ -1210,6 +1215,18 @@ window.viewReporte = function(id) {
                 }
             }
         }
+
+        async function deleteReporte(id) {
+    if (confirm('¿Está seguro de que desea eliminar este reporte?')) {
+        // Para el panel de admin, usamos usuarioId = 1 (admin) o cualquier valor
+        // ya que el endpoint requiere usuarioId pero para admin podemos saltarnos la validación
+        const result = await apiCall(`/reportes/${id}?usuarioId=1`, 'DELETE');
+        if (result && result.success) {
+            showNotification('Reporte eliminado exitosamente', 'success');
+            loadReportes();
+        }
+    }
+}
 
         // ========== UTILITY FUNCTIONS ==========
         function populateRutaSelects() {
@@ -1334,8 +1351,19 @@ window.viewReporte = function(id) {
         
 
         function clearForm(formId) {
-            document.getElementById(formId).reset();
+    const form = document.getElementById(formId);
+    if (form) {
+        form.reset();
+        form.removeAttribute('data-edit-id');
+        
+        // Restaurar texto del botón
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) {
+            if (formId === 'rutaForm') btn.textContent = 'Crear Ruta';
+            if (formId === 'usuarioForm') btn.textContent = 'Crear Usuario';
         }
+    }
+}
 
         function showNotification(message, type) {
             const existingNotification = document.querySelector('.notification');
@@ -1463,20 +1491,29 @@ window.viewReporte = function(id) {
         }
 
         // ========== EDIT FUNCTIONS ==========
-        function editRuta(id) {
-            const ruta = rutas.find(r => r.idRuta === id);
-            if (ruta) {
-                document.getElementById('nombreRuta').value = ruta.nombre_ruta;
-                document.getElementById('origen').value = ruta.origen;
-                document.getElementById('destino').value = ruta.destino;
-                
-                // Cambiar el comportamiento del formulario para editar
-                const form = document.getElementById('rutaForm');
-                form.setAttribute('data-edit-id', id);
-                
-                showTab('rutas');
-            }
-        }
+        // ========== EDIT FUNCTIONS ==========
+function editRuta(id) {
+    const ruta = rutas.find(r => r.idRuta === id);
+    if (ruta) {
+        // Llenar los campos del formulario
+        document.getElementById('nombreRuta').value = ruta.nombre_ruta;
+        document.getElementById('origen').value = ruta.origen;
+        document.getElementById('destino').value = ruta.destino;
+        
+        // Configurar formulario para edición
+        const form = document.getElementById('rutaForm');
+        form.setAttribute('data-edit-id', id);
+        
+        // Cambiar texto del botón
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) btn.textContent = 'Actualizar Ruta';
+        
+        // Ir a la pestaña de rutas
+        showTab('rutas');
+        
+        console.log('Editando ruta:', id, ruta);
+    }
+}
 
         function editPeriodo(id) {
             const periodo = periodos.find(p => p.idPeriodo === id);
@@ -1512,110 +1549,7 @@ window.viewReporte = function(id) {
             }
         }
 
-        // ========== ENHANCED FORM HANDLERS ==========
-        function setupEnhancedForms() {
-            // Mejorar el formulario de rutas para soportar edición
-            const rutaForm = document.getElementById('rutaForm');
-            if (rutaForm) {
-                rutaForm.onsubmit = async function(e) {
-                    e.preventDefault();
-                    const formData = new FormData(this);
-                    const data = {
-                        nombre_ruta: formData.get('nombreRuta'),
-                        origen: formData.get('origen'),
-                        destino: formData.get('destino')
-                    };
-                    const editId = this.getAttribute('data-edit-id');
-                    if (editId) {
-                        // Actualizar ruta existente
-                        const result = await apiCall(`/rutas/${editId}`, 'PUT', data);
-                        if (result && result.success) {
-                            showNotification('Ruta actualizada exitosamente', 'success');
-                            this.removeAttribute('data-edit-id');
-                            clearForm('rutaForm');
-                            loadRutas();
-                        }
-                    } else {
-                        // Crear nueva ruta
-                        const result = await apiCall('/rutas', 'POST', data);
-                        if (result && result.success) {
-                            showNotification('Ruta creada exitosamente', 'success');
-                            clearForm('rutaForm');
-                            loadRutas();
-                        }
-                    }
-                };
-            }
-
-            // Mejorar el formulario de usuarios para soportar edición y creación
-            const usuarioForm = document.getElementById('usuarioForm');
-            if (usuarioForm) {
-                usuarioForm.onsubmit = async function(e) {
-                    e.preventDefault();
-                    const formData = new FormData(this);
-                    const data = {
-                        nombre: formData.get('nombreUsuario'),
-                        email: formData.get('emailUsuario'),
-                        password: formData.get('passwordUsuario')
-                    };
-                    const editId = this.getAttribute('data-edit-id');
-                    const btn = this.querySelector('button[type="submit"]');
-                    if (editId) {
-                        // Actualizar usuario existente
-                        const result = await apiCall(`/usuarios/${editId}`, 'PUT', data);
-                        if (result && result.success) {
-                            showNotification('Usuario actualizado exitosamente', 'success');
-                            this.removeAttribute('data-edit-id');
-                            clearForm('usuarioForm');
-                            loadUsuarios();
-                            if (btn) btn.textContent = 'Crear Usuario';
-                        }
-                    } else {
-                        // Crear nuevo usuario
-                        const result = await apiCall('/usuarios', 'POST', data);
-                        if (result && result.success) {
-                            showNotification('Usuario creado exitosamente', 'success');
-                            clearForm('usuarioForm');
-                            loadUsuarios();
-                            if (btn) btn.textContent = 'Crear Usuario';
-                        }
-                    }
-                };
-            }
-
-            // Mejorar otros formularios de manera similar...
-            const periodoForm = document.getElementById('periodoForm');
-            if (periodoForm) {
-                periodoForm.onsubmit = async function(e) {
-                    e.preventDefault();
-                    const formData = new FormData(this);
-                    const data = {
-                        nombre_periodo: formData.get('nombrePeriodo'),
-                        hora_inicio: formData.get('horaInicio'),
-                        hora_fin: formData.get('horaFin'),
-                        descripcion: formData.get('descripcionPeriodo')
-                    };
-                    const editId = this.getAttribute('data-edit-id');
-                    if (editId) {
-                        const result = await apiCall(`/periodos/${editId}`, 'PUT', data);
-                        if (result && result.success) {
-                            showNotification('Periodo actualizado exitosamente', 'success');
-                            this.removeAttribute('data-edit-id');
-                            clearForm('periodoForm');
-                            loadPeriodos();
-                        }
-                    } else {
-                        const result = await apiCall('/periodos', 'POST', data);
-                        if (result && result.success) {
-                            showNotification('Periodo creado exitosamente', 'success');
-                            clearForm('periodoForm');
-                            loadPeriodos();
-                        }
-                    }
-                };
-            }
-        }
-
+        
 
         // ========== ADVANCED FEATURES ==========
         function setupAdvancedFeatures() {
