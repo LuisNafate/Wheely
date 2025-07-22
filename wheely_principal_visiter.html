@@ -3,12 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wheely - Sidebar Responsivo</title>
+    <title>Wheely - Principal - Visitante</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/wheely_principal_register.css">
+    <!-- Leaflet core -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="js/wheely-selector-puntos.js"></script>
+    
+    <style>
+        /* Estilos específicos para visitante */
+        .visitor-blocked {
+            opacity: 0.6;
+            position: relative;
+            pointer-events: none;
+        }
+        
+        .visitor-blocked::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #f59e0b;
+            font-size: 14px;
+            z-index: 2;
+        }
+        
+        .visitor-tooltip {
+            position: relative;
+            cursor: not-allowed;
+        }
+        
+        .visitor-tooltip::before {
+            content: 'Registrate para usar esta función';
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .visitor-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid #333;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .visitor-tooltip:hover::before,
+        .visitor-tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .register-promo {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px;
+            margin: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .register-promo h4 {
+            margin: 0 0 6px 0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .register-promo p {
+            margin: 0 0 10px 0;
+            font-size: 11px;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+        
+        .register-btn {
+            background: white;
+            color: #059669;
+            padding: 6px 14px;
+            border: none;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .register-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+        }
+        
+        .visitor-profile .profile {
+            background: linear-gradient(135deg, #FB6D10, #825a13);
+        }
+        
+        .visitor-badge {
+            background: rgba(245, 158, 11, 0.2);
+            color: #ffffff;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .blocked-action {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .blocked-action .star-icon,
+        .blocked-action .report-icon {
+            color: #9ca3af !important;
+        }
+    </style>
 </head>
 <body>
+    <!-- Modal de registro requerido -->
+    <div class="modal-overlay" id="register-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 30px; border-radius: 12px; max-width: 400px; text-align: center; margin: 20px;">
+            <div style="color: #f59e0b; font-size: 48px; margin-bottom: 20px;">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <h3 style="margin-bottom: 15px; color: #333;">Función Bloqueada</h3>
+            <p style="margin-bottom: 25px; color: #666; line-height: 1.5;">
+                Esta función está disponible solo para usuarios registrados. ¡Registrate gratis para acceder a favoritos, reportes y más!
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <a href="wheely_register.html" style="background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; text-decoration: none;">
+                    Registrarse Gratis
+                </a>
+                <button onclick="closeRegisterModal()" style="background: #e5e7eb; color: #374151; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                    Continuar como Visitante
+                </button>
+            </div>
+        </div>
+    </div>
+
     <aside class="sidebar">
         <header class="sidebar-header">
             <span class="Logo">Wheely</span>
@@ -18,183 +173,779 @@
         </header>
 
         <div class="sidebar-content">
+            <!-- Promoción de registro -->
+            <div class="register-promo">
+                <h4>🎉 ¡Desbloquea más funciones!</h4>
+                <p>Registrate para guardar favoritos, hacer reportes y personalizar tu experiencia</p>
+                <a href="wheely_register.html" class="register-btn">Registrarse Gratis</a>
+            </div>
+
             <!-- Menu list -->
             <ul class="menu-list">
                 <li class="menu-item">
-                    <a href="#" class="menu-link active" aria-label="Inicio">
+                    <a href="#" class="menu-link active" aria-label="Inicio" id="inicio-trigger">
                         <span class="material-symbols-rounded">home</span>
                         <span class="menu-label">Inicio</span>
                     </a>
                 </li>
 
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Favoritos" id="favoritos-trigger">
+                <li class="menu-item visitor-blocked visitor-tooltip">
+                    <a href="#" class="menu-link" aria-label="Favoritos" id="favoritos-trigger" onclick="showRegisterModal()">
                         <span class="material-symbols-rounded">star</span>
                         <span class="menu-label">Favoritos</span>
                     </a>
                 </li>
-
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Feedback">
-                        <span class="material-symbols-rounded">chat</span>
-                        <span class="menu-label">Feedback</span>
-                    </a>
-                </li>
                 
                 <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Rutas">
+                    <a href="#" class="menu-link" aria-label="Rutas" id="rutas-trigger">
                         <span class="material-symbols-rounded">directions_bus</span>
                         <span class="menu-label">Rutas</span>
                     </a>
                 </li>
                 
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Difunde">
-                        <span class="material-symbols-rounded">share</span>
-                        <span class="menu-label">Difunde</span>
-                    </a>
-                </li>
                 
-                <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Ayuda y Soporte">
-                        <span class="material-symbols-rounded">help</span>
-                        <span class="menu-label">Ayuda y Soporte</span>
+                <li class="menu-item visitor-blocked visitor-tooltip">
+                    <a href="#" class="menu-link" aria-label="Reportes" onclick="showRegisterModal()">
+                        <span class="material-symbols-rounded">report</span>
+                        <span class="menu-label">Reportes</span>
                     </a>
                 </li>
+
+                
+                
+                
             </ul>
         </div>
         
-        <!-- Footer section -->
-        <div class="sidebar-footer">
+        <!-- Footer section para visitante -->
+        <div class="sidebar-footer visitor-profile">
             <div class="profile">
-                <img src="https://i.pinimg.com/736x/a0/f6/d8/a0f6d8722e2ca13e433591c68bc5401f.jpg" alt="Avatar de Alix Montes" class="avatar">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Avatar de visitante" class="avatar">
                 <div class="profile-info">
-                    <h3 class="name">Alix Montes</h3>
-                    <p class="role">Admin</p>
+                    <h3 class="name">Visitante</h3>
+                    <div class="visitor-badge">Acceso Limitado</div>
                 </div>
             </div>
             
             <ul class="menu-list">
                 <li class="menu-item">
-                    <a href="#" class="menu-link" aria-label="Cerrar sesión">
-                        <span class="material-symbols-rounded">logout</span>
-                        <span class="menu-label">Logout</span>
+                    <a href="wheely_login.html" class="menu-link" aria-label="Iniciar Sesión">
+                        <span class="material-symbols-rounded">login</span>
+                        <span class="menu-label">Iniciar Sesión</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="wheely_register.html" class="menu-link" aria-label="Registrarse" style="color: #10b981;">
+                        <span class="material-symbols-rounded">person_add</span>
+                        <span class="menu-label">Registrarse</span>
                     </a>
                 </li>
             </ul>
         </div>
     </aside>
-
-    <!-- Panel de Favoritos -->
-    <div class="favoritos-overlay" id="favoritos-overlay"></div>
-    <div class="favoritos-panel" id="favoritos-panel">
-        <div class="favoritos-header">
-            <h2>Favoritos</h2>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <button class="agregar-btn" id="agregar-favorito">Agregar</button>
-                <button class="close-favoritos" id="close-favoritos">
-                    <span class="material-symbols-rounded">close</span>
-                </button>
+  
+    <!-- Integración de la barra de búsqueda y el mapa -->
+    <header class="nav-principal">
+        <div class="nav-container">
+            <div class="nav-busqueda">
+                <input type="text" id="input-busqueda" placeholder="¿A donde deseas ir?" aria-label="Búsqueda de destino">
+                <i class="bi bi-search"></i>
             </div>
         </div>
-        
-        <div class="favoritos-content">
-            <!-- Ruta favorita 1 -->
-            <div class="ruta-item">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 90</h4>
-                        <p>Dirección Cañón del Sumidero</p>
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 5 min</span>
-                        </div>
-                    </div>
-                </div>
-                <i class="bi bi-star-fill star-icon"></i>
-            </div>
+    </header>
 
-            <!-- Ruta favorita 2 -->
-            <div class="ruta-item">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 45</h4>
-                        <p>Dirección Centro Histórico</p>
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 8 min</span>
-                        </div>
-                    </div>
-                </div>
-                <i class="bi bi-star-fill star-icon"></i>
-            </div>
+    <!-- Mapa principal -->
+    <div id="mapa-wheely"></div>
 
-            <!-- Ruta favorita 3 -->
-            <div class="ruta-item">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 23</h4>
-                        <p>Dirección Universidad</p>
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 12 min</span>
-                        </div>
-                    </div>
-                </div>
-                <i class="bi bi-star-fill star-icon"></i>
-            </div>
-
-            <!-- Ruta favorita 4 -->
-            <div class="ruta-item">
-                <div class="ruta-info">
-                    <div class="ruta-icon">
-                        <i class="bi bi-bus-front-fill"></i>
-                    </div>
-                    <div class="ruta-details">
-                        <h4>Ruta 67</h4>
-                        <p>Dirección Aeropuerto</p>
-                        <div class="ruta-tiempo">
-                            <i class="bi bi-clock"></i>
-                            <span>Espera: 15 min</span>
-                        </div>
-                    </div>
-                </div>
-                <i class="bi bi-star-fill star-icon"></i>
+    <!-- PANEL 1: Favoritos (BLOQUEADO para visitante) -->
+    <div class="panel-overlay" id="favoritos-overlay"></div>
+    <div class="panel-flotante" id="favoritos-panel">
+        <div class="panel-header">
+            <h2>Favoritos</h2>
+            <button class="btn-close" id="close-favoritos">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div class="panel-content">
+            <div style="text-align: center; padding: 50px 20px; color: #666;">
+                <i class="bi bi-lock-fill" style="font-size: 64px; color: #f59e0b; margin-bottom: 20px;"></i>
+                <h3 style="margin-bottom: 15px; color: #333;">Función Bloqueada</h3>
+                <p style="margin-bottom: 25px; line-height: 1.5;">
+                    Los favoritos están disponibles solo para usuarios registrados. ¡Registrate gratis para guardar tus rutas favoritas!
+                </p>
+                <a href="wheely_register.html" style="background: #10b981; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
+                    Registrarse Ahora
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Contenido principal de demostración -->
-    <main class="main-content">
-        <div style="color: white; padding: 20px;">
-            <h1 style="color: var(--color-hover-primary); margin-bottom: 20px;">🚗 Wheely - Sidebar con Favoritos</h1>
-            <p style="margin-bottom: 15px; line-height: 1.6;">¡Tu sidebar ahora incluye un panel de favoritos completamente funcional!</p>
-            
-            <h2 style="color: var(--color-hover-primary); margin: 20px 0 10px 0;">⭐ Nuevas Características de Favoritos:</h2>
-            <p style="margin-bottom: 15px;">• <strong>Panel flotante:</strong> Se abre como overlay desde el menú lateral</p>
-            <p style="margin-bottom: 15px;">• <strong>Gestión de favoritos:</strong> Agrega y quita rutas de tus favoritos</p>
-            <p style="margin-bottom: 15px;">• <strong>Información en tiempo real:</strong> Muestra tiempos de espera estimados</p>
-            <p style="margin-bottom: 15px;">• <strong>Interfaz intuitiva:</strong> Diseño coherente con el sidebar</p>
-            
-            <h2 style="color: var(--color-hover-primary); margin: 20px 0 10px 0;">🎯 Cómo usar:</h2>
-            <p style="margin-bottom: 15px;">1. Haz clic en <strong>"Favoritos"</strong> en el menú lateral</p>
-            <p style="margin-bottom: 15px;">2. Explora tus rutas favoritas guardadas</p>
-            <p style="margin-bottom: 15px;">3. Haz clic en una ruta para ver más detalles</p>
-            <p style="margin-bottom: 15px;">4. Usa la estrella para agregar/quitar de favoritos</p>
-            <p style="margin-bottom: 15px;">5. Presiona "Agregar" para añadir nuevas rutas</p>
-            
-            <p style="margin-top: 30px; font-style: italic;">El panel mantiene toda la funcionalidad responsiva del sidebar principal.</p>
+    <!-- PANEL 2: Rutas (DISPONIBLE con limitaciones) -->
+    <div class="panel-overlay" id="rutas-overlay"></div>
+    <div class="panel-flotante" id="rutas-panel">
+        <div class="panel-header">
+            <h2>Rutas Disponibles</h2>
+            <button class="btn-close" id="close-rutas">
+                <span class="material-symbols-rounded">close</span>
+            </button>
         </div>
-    </main>
-    <script src="js/wheely_principal_register.js"></script>
+        
+        <div class="panel-filters">
+            <input type="text" class="search-box" id="search-rutas" placeholder="Buscar rutas..." disabled style="opacity: 0.7;">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="todas">Todas</button>
+                <button class="filter-tab" data-filter="cercanas" disabled style="opacity: 0.6;">Cercanas</button>
+                <button class="filter-tab" data-filter="frecuentes" disabled style="opacity: 0.6;">Frecuentes</button>
+            </div>
+            <p style="font-size: 12px; color: #666; margin-top: 10px; text-align: center;">
+                <i class="bi bi-info-circle"></i> Funcionalidad limitada para visitantes
+            </p>
+        </div>
+        
+        <div class="panel-content" id="rutas-content">
+            <!-- Las rutas se cargarán aquí dinámicamente -->
+            <div style="text-align: center; padding: 30px; color: #666;">
+                <i class="bi bi-bus-front" style="font-size: 48px; margin-bottom: 15px;"></i>
+                <h4>Rutas Disponibles</h4>
+                <p style="font-size: 14px; margin-top: 10px;">
+                    Como visitante puedes ver las rutas disponibles, pero no puedes guardar favoritos ni hacer reportes.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL 3: Reportes (BLOQUEADO) -->
+    <div class="panel-overlay" id="reportes-overlay"></div>
+    <div class="panel-flotante" id="reportes-panel">
+        <div class="panel-header">
+            <h2>Reportar Incidencia</h2>
+            <button class="btn-close" id="close-reportes">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div class="panel-content">
+            <div style="text-align: center; padding: 50px 20px; color: #666;">
+                <i class="bi bi-shield-exclamation" style="font-size: 64px; color: #f59e0b; margin-bottom: 20px;"></i>
+                <h3 style="margin-bottom: 15px; color: #333;">Reportes Bloqueados</h3>
+                <p style="margin-bottom: 25px; line-height: 1.5;">
+                    Solo usuarios registrados pueden hacer reportes de incidencias. ¡Registrate para ayudar a la comunidad!
+                </p>
+                <a href="wheely_register.html" style="background: #10b981; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">
+                    Registrarse Gratis
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL 4: Noticias de la ruta (DISPONIBLE) -->
+    <div class="panel-overlay" id="noticias-overlay"></div>
+    <div class="panel-flotante" id="noticias-panel">
+        <div class="panel-header">
+            <h2>Noticias de esta ruta</h2>
+            <button class="btn-close" id="close-noticias">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div class="panel-content" id="lista-noticias">
+            <div style="text-align: center; padding: 30px; color: #666;">
+                <i class="bi bi-newspaper" style="font-size: 48px; margin-bottom: 15px;"></i>
+                <h4>Noticias Públicas</h4>
+                <p style="font-size: 14px;">Como visitante puedes ver los reportes y noticias de otros usuarios</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE INFORMACIÓN DE RUTA -->
+    <div id="detalle-ruta-overlay" class="panel-overlay"></div>
+    <div id="detalle-ruta-panel" class="panel-flotante">
+        <div class="panel-header">
+            <h2 id="detalle-ruta-nombre">Ruta X</h2>
+            <button id="close-detalle-ruta" class="btn-close">&times;</button>
+        </div>
+        <div class="panel-content">
+            <p id="detalle-direccion"></p>
+            <p id="detalle-tiempo"></p>
+            <p id="detalle-manana"></p>
+            <p id="detalle-tarde"></p>
+            <p id="detalle-noche"></p>
+            <div class="ruta-direcciones">
+                <button id="btn-toggle-direccion">Cambiar dirección</button>
+                <button id="btn-mostrar-ambas">Ver ambas</button>
+            </div>
+            
+            <!-- Advertencia para visitante -->
+            <div style="margin-top: 20px; padding: 15px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                <div style="display: flex; align-items: center; gap: 10px; color: #92400e;">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <span style="font-size: 14px;">
+                        <strong>Visitante:</strong> Registrate para guardar esta ruta y recibir notificaciones
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== INICIALIZACIÓN DEL MAPA =====
+        // Inicializar mapa de Leaflet con estilo oscuro
+        const map = L.map('mapa-wheely').setView([16.75, -93.12], 13); // Coordenadas de Tuxtla Gutiérrez
+
+        L.tileLayer('https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=HlXj3HeA4zNFxaXLoaHzQ3bXUvYFKru9FpGCPa8PJGPVHw2Jsb3GX6HcJ8QFp1FD', {
+            attribution: '<a href="https://jawg.io" target="_blank">&copy; Jawg</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            minZoom: 0,
+            maxZoom: 22
+        }).addTo(map);
+
+        // Variables globales
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarToggleBtn = document.querySelector('.sidebar-toggle');
+        
+        // Paneles
+        const favoritosPanel = document.getElementById('favoritos-panel');
+        const favoritosOverlay = document.getElementById('favoritos-overlay');
+        const favoritosTrigger = document.getElementById('favoritos-trigger');
+        const closeFavoritos = document.getElementById('close-favoritos');
+        
+        const rutasPanel = document.getElementById('rutas-panel');
+        const rutasOverlay = document.getElementById('rutas-overlay');
+        const rutasTrigger = document.getElementById('rutas-trigger');
+        const closeRutas = document.getElementById('close-rutas');
+        
+        // Crear el overlay para móviles
+        const overlay = document.createElement('div');
+        overlay.classList.add('sidebar-overlay');
+        document.body.appendChild(overlay);
+
+        // Función para detectar si estamos en móvil
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        // Función para manejar el toggle del sidebar
+        function toggleSidebar() {
+            if (isMobile()) {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        }
+
+        // Función para cerrar el sidebar en móvil
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Función para mostrar modal de registro requerido
+        function showRegisterModal() {
+            document.getElementById('register-modal').style.display = 'flex';
+        }
+        
+        function closeRegisterModal() {
+            document.getElementById('register-modal').style.display = 'none';
+        }
+
+        // ===== FUNCIONES DE CARGA DE RUTAS REAL =====
+        
+        // Funciones para paneles
+        function openRutas() {
+            rutasPanel.classList.add('active');
+            rutasOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            cargarRutasDesdeBackend();
+        }
+
+        function closeRutasPanel() {
+            rutasPanel.classList.remove('active');
+            rutasOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Cargar rutas reales del backend para visitante
+        function cargarRutasDesdeBackend() {
+            console.log("Cargando rutas desde backend para visitante...");
+
+            fetch('http://localhost:7000/rutas')
+                .then(res => {
+                    if (!res.ok) throw new Error("No se pudieron cargar las rutas");
+                    return res.json();
+                })
+                .then(respuesta => {
+                    const rutas = respuesta.data;
+                    console.log("Rutas recibidas para visitante:", rutas);
+
+                    const contenedor = document.querySelector('#rutas-panel .panel-content');
+                    contenedor.innerHTML = '';
+
+                    rutas.forEach(ruta => {
+                        const rutaItem = document.createElement('div');
+                        rutaItem.classList.add('ruta-item');
+                        rutaItem.dataset.ruta = ruta.idRuta;
+                        rutaItem.dataset.origen = ruta.origen;
+                        rutaItem.dataset.destino = ruta.destino;
+                        rutaItem.dataset.nombre = ruta.nombreRuta;
+
+                        rutaItem.innerHTML = `
+                            <div class="ruta-info">
+                                <div class="ruta-icon">
+                                    <i class="bi bi-bus-front-fill"></i>
+                                </div>
+                                <div class="ruta-details">
+                                    <h4>${ruta.nombreRuta || `Ruta ${ruta.idRuta}`}</h4>
+                                    <p>${ruta.origen} - ${ruta.destino}</p>
+                                    <div class="ruta-tiempo">
+                                        <i class="bi bi-clock"></i>
+                                        <span>Cargando tiempo...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blocked-action">
+                                <i class="bi bi-star star-icon" onclick="showRegisterModal()" style="cursor: pointer; margin-right: 10px; color: #9ca3af;"></i>
+                                <i class="bi bi-exclamation-triangle report-icon" onclick="showRegisterModal()" style="cursor: pointer; color: #9ca3af;"></i>
+                            </div>
+                        `;
+
+                        // Cargar tiempo de la ruta
+                        cargarTiempoRuta(ruta.idRuta, rutaItem);
+
+                        // Agregar evento click para ver detalles (disponible para visitante)
+                        rutaItem.addEventListener('click', function(e) {
+                            if (!e.target.classList.contains('star-icon') && !e.target.classList.contains('report-icon')) {
+                                cargarDetalleDeRutaVisitante(ruta.idRuta, ruta.origen, ruta.destino, ruta.nombreRuta);
+                            }
+                        });
+
+                        contenedor.appendChild(rutaItem);
+                    });
+
+                    // Agregar mensaje informativo para visitante
+                    const infoDiv = document.createElement('div');
+                    infoDiv.style.cssText = 'text-align: center; padding: 20px; border-top: 1px solid #e5e7eb; margin-top: 20px; color: #666; background: #f9fafb; border-radius: 8px; margin: 20px 15px;';
+                    infoDiv.innerHTML = `
+                        <div style="margin-bottom: 10px;">
+                            <i class="bi bi-info-circle" style="color: #3b82f6; font-size: 24px;"></i>
+                        </div>
+                        <h4 style="margin: 0 0 8px 0; font-size: 14px; color: #374151;">Vista de Visitante</h4>
+                        <p style="margin: 0; font-size: 12px; line-height: 1.4;">
+                            Puedes ver horarios y detalles de rutas, pero necesitas registrarte para guardar favoritos y hacer reportes.
+                        </p>
+                        <a href="wheely_register.html" style="display: inline-block; margin-top: 10px; padding: 6px 12px; background: #10b981; color: white; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                            Registrarse Gratis
+                        </a>
+                    `;
+                    contenedor.appendChild(infoDiv);
+
+                    console.log(`✅ ${rutas.length} rutas cargadas para visitante`);
+                })
+                .catch(error => {
+                    console.error("Error cargando rutas:", error);
+                    
+                    // Mostrar rutas de fallback
+                    const contenedor = document.querySelector('#rutas-panel .panel-content');
+                    contenedor.innerHTML = `
+                        <div style="text-align: center; padding: 40px 20px; color: #666;">
+                            <i class="bi bi-wifi-off" style="font-size: 48px; margin-bottom: 15px; color: #f59e0b;"></i>
+                            <h4 style="margin-bottom: 10px;">Error de Conexión</h4>
+                            <p style="font-size: 14px; margin-bottom: 15px;">
+                                No se pudieron cargar las rutas del servidor.
+                            </p>
+                            <button onclick="cargarRutasDesdeBackend()" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                Reintentar
+                            </button>
+                        </div>
+                    `;
+                });
+        }
+
+        // Cargar tiempo específico de una ruta
+        async function cargarTiempoRuta(rutaId, rutaItem) {
+            try {
+                const response = await fetch(`http://localhost:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`);
+                if (!response.ok) throw new Error('Error al cargar tiempos');
+                
+                const tiemposData = await response.json();
+                let tiempoPromedio = 'N/A';
+                
+                if (Array.isArray(tiemposData.data) && tiemposData.data.length > 0) {
+                    const promedios = tiemposData.data.map(t => t.tiempoPromedio);
+                    const promedio = Math.round(promedios.reduce((a, b) => a + b) / promedios.length);
+                    tiempoPromedio = `${promedio} min`;
+                }
+                
+                rutaItem.querySelector('.ruta-tiempo span').textContent = `Espera: ${tiempoPromedio}`;
+            } catch (error) {
+                rutaItem.querySelector('.ruta-tiempo span').textContent = 'Espera: N/A';
+                console.warn(`Error cargando tiempo de ruta ${rutaId}:`, error);
+            }
+        }
+
+        // ===== DETALLE DE RUTA PARA VISITANTE =====
+        
+        // Variables para las capas del mapa
+        let capaIda = null;
+        let capaRegreso = null;
+
+        function cargarDetalleDeRutaVisitante(rutaId, origenRuta, destinoRuta, nombreRuta) {
+            window.rutaSeleccionada = rutaId;
+            
+            console.log(`[Visitante] Cargando detalle de ruta ${rutaId}...`);
+            
+            // URLs para los archivos GeoJSON
+            const urlIda = `rutas/ruta${rutaId}_ida.geojson`;
+            const urlRegreso = `rutas/ruta${rutaId}_vuelta.geojson`;
+            const tiemposURL = `http://localhost:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`;
+
+            // Cargar tiempos
+            fetch(tiemposURL)
+                .then(res => {
+                    if (!res.ok) throw new Error("No se pudieron obtener tiempos");
+                    return res.json();
+                })
+                .then(tiemposData => {
+                    const tiemposPorPeriodo = {
+                        manana: 'N/A',
+                        tarde: 'N/A', 
+                        noche: 'N/A'
+                    };
+
+                    if (Array.isArray(tiemposData.data)) {
+                        tiemposData.data.forEach(item => {
+                            if (item.idPeriodo === 1) tiemposPorPeriodo.manana = item.tiempoPromedio + ' min';
+                            if (item.idPeriodo === 2) tiemposPorPeriodo.tarde = item.tiempoPromedio + ' min';
+                            if (item.idPeriodo === 3) tiemposPorPeriodo.noche = item.tiempoPromedio + ' min';
+                        });
+                    }
+
+                    // Actualizar panel de detalle
+                    document.getElementById('detalle-ruta-nombre').textContent = nombreRuta || `Ruta ${rutaId}`;
+                    document.getElementById('detalle-direccion').textContent = `${origenRuta} → ${destinoRuta}`;
+                    document.getElementById('detalle-tiempo').textContent = `Información de horarios disponible`;
+                    document.getElementById('detalle-manana').textContent = `🌅 Mañana: ${tiemposPorPeriodo.manana}`;
+                    document.getElementById('detalle-tarde').textContent = `☀️ Tarde: ${tiemposPorPeriodo.tarde}`;
+                    document.getElementById('detalle-noche').textContent = `🌙 Noche: ${tiemposPorPeriodo.noche}`;
+
+                    // Mostrar panel de detalle
+                    document.getElementById('detalle-ruta-overlay').style.display = 'block';
+                    document.getElementById('detalle-ruta-panel').style.display = 'block';
+                })
+                .catch(error => {
+                    console.warn("Error cargando tiempos:", error);
+                    
+                    // Mostrar panel básico sin tiempos
+                    document.getElementById('detalle-ruta-nombre').textContent = nombreRuta || `Ruta ${rutaId}`;
+                    document.getElementById('detalle-direccion').textContent = `${origenRuta} → ${destinoRuta}`;
+                    document.getElementById('detalle-tiempo').textContent = `Información básica disponible`;
+                    document.getElementById('detalle-manana').textContent = `🌅 Mañana: Información no disponible`;
+                    document.getElementById('detalle-tarde').textContent = `☀️ Tarde: Información no disponible`;
+                    document.getElementById('detalle-noche').textContent = `🌙 Noche: Información no disponible`;
+
+                    document.getElementById('detalle-ruta-overlay').style.display = 'block';
+                    document.getElementById('detalle-ruta-panel').style.display = 'block';
+                });
+
+            // Cargar archivos GeoJSON para mostrar en el mapa
+            cargarGeoJsonRuta(urlIda, urlRegreso);
+        }
+
+        // Función para cargar y mostrar GeoJSON en el mapa
+        function cargarGeoJsonRuta(urlIda, urlRegreso) {
+            // Limpiar capas anteriores
+            if (capaIda) map.removeLayer(capaIda);
+            if (capaRegreso) map.removeLayer(capaRegreso);
+
+            Promise.all([
+                cargarGeoJsonSiExiste(urlIda),
+                cargarGeoJsonSiExiste(urlRegreso)
+            ]).then(([geoIda, geoRegreso]) => {
+                if (geoIda) {
+                    capaIda = L.geoJSON(geoIda, { 
+                        style: { color: '#FB6D10', weight: 4, opacity: 0.8 } 
+                    });
+                }
+
+                if (geoRegreso) {
+                    capaRegreso = L.geoJSON(geoRegreso, { 
+                        style: { color: '#1E90FF', weight: 4, opacity: 0.8 } 
+                    });
+                }
+
+                // Mostrar ambas direcciones por defecto
+                mostrarAmbasRutas();
+            });
+        }
+
+        function cargarGeoJsonSiExiste(url) {
+            return fetch(url)
+                .then(res => res.ok ? res.json() : null)
+                .catch(() => null);
+        }
+
+        // Funciones para los botones de dirección
+        function mostrarSoloIda() {
+            if (capaRegreso) map.removeLayer(capaRegreso);
+            if (capaIda && !map.hasLayer(capaIda)) {
+                capaIda.addTo(map);
+                map.fitBounds(capaIda.getBounds());
+            }
+        }
+
+        function mostrarSoloRegreso() {
+            if (capaIda) map.removeLayer(capaIda);
+            if (capaRegreso && !map.hasLayer(capaRegreso)) {
+                capaRegreso.addTo(map);
+                map.fitBounds(capaRegreso.getBounds());
+            }
+        }
+
+        function mostrarAmbasRutas() {
+            if (capaIda && !map.hasLayer(capaIda)) capaIda.addTo(map);
+            if (capaRegreso && !map.hasLayer(capaRegreso)) capaRegreso.addTo(map);
+
+            if (capaIda || capaRegreso) {
+                const group = new L.featureGroup([capaIda, capaRegreso].filter(capa => capa));
+                map.fitBounds(group.getBounds());
+            }
+        }
+
+        // Event listeners
+        sidebarToggleBtn.addEventListener('click', toggleSidebar);
+        
+        rutasTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            openRutas();
+        });
+        
+        closeRutas.addEventListener('click', closeRutasPanel);
+        rutasOverlay.addEventListener('click', closeRutasPanel);
+
+        // Event listeners para panel de detalle
+        document.getElementById('close-detalle-ruta').addEventListener('click', function() {
+            document.getElementById('detalle-ruta-overlay').style.display = 'none';
+            document.getElementById('detalle-ruta-panel').style.display = 'none';
+            
+            // Limpiar capas del mapa
+            if (capaIda) map.removeLayer(capaIda);
+            if (capaRegreso) map.removeLayer(capaRegreso);
+        });
+
+        document.getElementById('detalle-ruta-overlay').addEventListener('click', function() {
+            document.getElementById('detalle-ruta-overlay').style.display = 'none';
+            document.getElementById('detalle-ruta-panel').style.display = 'none';
+            
+            if (capaIda) map.removeLayer(capaIda);
+            if (capaRegreso) map.removeLayer(capaRegreso);
+        });
+
+        // Botones de dirección
+        document.getElementById('btn-toggle-direccion').addEventListener('click', function() {
+            if (capaIda && map.hasLayer(capaIda) && capaRegreso && map.hasLayer(capaRegreso)) {
+                mostrarSoloIda();
+                this.textContent = 'Ver regreso';
+            } else if (capaIda && map.hasLayer(capaIda)) {
+                mostrarSoloRegreso();
+                this.textContent = 'Ver ida';
+            } else {
+                mostrarSoloIda();
+                this.textContent = 'Ver regreso';
+            }
+        });
+
+        document.getElementById('btn-mostrar-ambas').addEventListener('click', function() {
+            mostrarAmbasRutas();
+            document.getElementById('btn-toggle-direccion').textContent = 'Cambiar dirección';
+        });
+
+        // Cerrar modal al hacer click fuera
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'register-modal') {
+                closeRegisterModal();
+            }
+        });
+
+        // Manejar cambios de tamaño de ventana
+        window.addEventListener('resize', () => {
+            if (!isMobile()) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            } else {
+                sidebar.classList.remove('collapsed');
+            }
+        });
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚌 Wheely - Vista de Visitante Cargada');
+            console.log('🗺️ Mapa inicializado en Tuxtla Gutiérrez');
+            
+            // Mostrar mensaje de bienvenida para visitante
+            setTimeout(() => {
+                if (!localStorage.getItem('visitor_welcomed')) {
+                    alert('👋 ¡Bienvenido a Wheely!\n\nComo visitante puedes:\n✅ Ver rutas y horarios reales\n✅ Buscar destinos en el mapa\n✅ Ver detalles de rutas\n✅ Ver noticias públicas\n\n🔒 Para desbloquear favoritos y reportes:\n¡Registrate gratis en solo 2 minutos!');
+                    localStorage.setItem('visitor_welcomed', 'true');
+                }
+            }, 2000);
+        });
+    </script>
+    
+    <script>
+        // ===== FUNCIONALIDAD DE BÚSQUEDA PARA VISITANTE =====
+        
+        // Funcionalidad de búsqueda limitada para visitante
+        const inputBusqueda = document.getElementById('input-busqueda');
+        let searchMarker = null;
+
+        inputBusqueda.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const query = this.value.trim();
+                if (query) {
+                    realizarBusquedaVisitante(query);
+                }
+            }
+        });
+
+        async function realizarBusquedaVisitante(query) {
+            console.log('🔍 Búsqueda de visitante:', query);
+
+            try {
+                // Mostrar indicador de búsqueda
+                inputBusqueda.style.background = '#f3f4f6';
+                inputBusqueda.placeholder = 'Buscando...';
+
+                // Realizar búsqueda con Nominatim
+                const url = `https://nominatim.openstreetmap.org/search?` +
+                    `format=json&q=${encodeURIComponent(query + ', Tuxtla Gutiérrez, Chiapas, México')}&` +
+                    `limit=1&addressdetails=1&countrycodes=mx`;
+
+                const response = await fetch(url, {
+                    headers: {
+                        'User-Agent': 'Wheely Maps Visitor'
+                    }
+                });
+
+                if (!response.ok) throw new Error('Error en la búsqueda');
+
+                const results = await response.json();
+
+                if (results && results.length > 0) {
+                    const result = results[0];
+                    const lat = parseFloat(result.lat);
+                    const lng = parseFloat(result.lon);
+
+                    // Limpiar marcador anterior
+                    if (searchMarker) {
+                        map.removeLayer(searchMarker);
+                    }
+
+                    // Crear nuevo marcador
+                    searchMarker = L.marker([lat, lng], {
+                        icon: L.divIcon({
+                            className: 'visitor-search-marker',
+                            html: `
+                                <div style="background: #10b981; color: white; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.3); position: relative;">
+                                    📍 ${result.display_name.split(',')[0]}
+                                    <div style="position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #10b981;"></div>
+                                </div>
+                            `,
+                            iconSize: [200, 40],
+                            iconAnchor: [100, 45]
+                        })
+                    }).addTo(map);
+
+                    // Centrar mapa en el resultado
+                    map.setView([lat, lng], 16);
+
+                    // Mostrar popup con información limitada para visitante
+                    searchMarker.bindPopup(`
+                        <div style="text-align: center; padding: 10px;">
+                            <h4 style="margin: 0 0 10px 0; color: #374151;">${result.display_name.split(',')[0]}</h4>
+                            <p style="margin: 0 0 15px 0; font-size: 12px; color: #6b7280;">${result.display_name}</p>
+                            <div style="padding: 10px; background: #fef3c7; border-radius: 6px; margin-bottom: 10px;">
+                                <div style="color: #92400e; font-size: 12px;">
+                                    <i class="bi bi-info-circle"></i> <strong>Visitante:</strong> Funcionalidad limitada
+                                </div>
+                            </div>
+                            <a href="wheely_register.html" style="display: inline-block; padding: 6px 12px; background: #10b981; color: white; text-decoration: none; border-radius: 4px; font-size: 12px;">
+                                Registrarse para más funciones
+                            </a>
+                        </div>
+                    `).openPopup();
+
+                    // Mostrar mensaje de éxito limitado
+                    mostrarNotificacionVisitante(`Ubicación encontrada: ${result.display_name.split(',')[0]}`, 'success');
+
+                } else {
+                    mostrarNotificacionVisitante('No se encontraron resultados para: ' + query, 'warning');
+                }
+
+            } catch (error) {
+                console.error('Error en búsqueda:', error);
+                mostrarNotificacionVisitante('Error en la búsqueda. Inténtalo de nuevo.', 'error');
+            } finally {
+                // Restaurar barra de búsqueda
+                inputBusqueda.style.background = '';
+                inputBusqueda.placeholder = '¿A donde deseas ir?';
+            }
+        }
+
+        function mostrarNotificacionVisitante(mensaje, tipo = 'info') {
+            // Crear toast personalizado para visitante
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                z-index: 10000;
+                padding: 12px 20px;
+                border-radius: 8px;
+                color: white;
+                font-size: 14px;
+                font-weight: 500;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+            `;
+
+            // Colores según tipo
+            const colores = {
+                success: '#10b981',
+                warning: '#f59e0b', 
+                error: '#ef4444',
+                info: '#3b82f6'
+            };
+
+            toast.style.background = colores[tipo] || colores.info;
+            toast.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="bi bi-${tipo === 'success' ? 'check-circle' : tipo === 'warning' ? 'exclamation-triangle' : tipo === 'error' ? 'x-circle' : 'info-circle'}"></i>
+                    <span>${mensaje}</span>
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+
+            // Animar entrada
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Quitar después de 4 segundos
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 4000);
+        }
+    </script>
+
+    <script src="js/wheely-search-simple.j.js"></script>
 </body>
 </html>
