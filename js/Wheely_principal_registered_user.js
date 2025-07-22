@@ -1,3 +1,4 @@
+const API_BASE_URL = 'http://localhost:7000';
 const sidebar = document.querySelector('.sidebar');
 const sidebarToggleBtn = document.querySelector('.sidebar-toggle');
 
@@ -304,7 +305,7 @@ function setupReportActions() {
 function cargarRutasDesdeBackend() {
   console.log("Intentando cargar rutas desde backend...");
 
-  fetch('http://44.220.12.138//rutas')
+  fetch('http://localhost:7000/rutas')
     .then(res => {
       if (!res.ok) throw new Error("No se pudieron cargar las rutas");
       return res.json();
@@ -358,7 +359,7 @@ rutaItem.addEventListener('click', () => {
 
 });
 
-fetch(`http://44.220.12.138:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`)
+fetch(`http://localhost:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`)
 
 
   .then(res => res.json())
@@ -531,8 +532,8 @@ async function renderizarRutasFavoritas() {
 
   try {
     const [rutasRes, favsRes] = await Promise.all([
-      fetch('http://44.220.12.138:7000/rutas').then(r => r.json()),
-      fetch(`http://44.220.12.138:7000/usuarios/${user.id}/rutas-favoritas`).then(r => r.json())
+      fetch('http://localhost:7000/rutas').then(r => r.json()),
+      fetch(`http://localhost:7000/usuarios/${user.id}/rutas-favoritas`).then(r => r.json())
     ]);
 
     const rutas = rutasRes.data;
@@ -567,7 +568,7 @@ async function renderizarRutasFavoritas() {
 
       // Cargar tiempos reales
       try {
-        const tiemposRes = await fetch(`http://44.220.12.138:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`);
+        const tiemposRes = await fetch(`http://localhost:7000/api/tiempos-ruta-periodo?idRuta=${ruta.idRuta}`);
         const tiemposData = await tiemposRes.json();
 
         const tiempos = tiemposData.data;
@@ -581,14 +582,8 @@ async function renderizarRutasFavoritas() {
       }
 
       rutaItem.addEventListener('click', () => {
-  cargarDetalleDeRuta(
-    ruta.idRuta,
-    ruta.origen,
-    ruta.destino,
-    ruta.nombreRuta
-  );
-});
-
+        cargarDetalleDeRuta(ruta.idRuta);
+      });
 
       panel.appendChild(rutaItem);
     });
@@ -638,36 +633,31 @@ function mostrarToast(mensaje, tipo = 'success') {
 
 function agregarRutaFavorita(rutaId, starIcon) {
   const user = JSON.parse(localStorage.getItem('wheelyUser'));
-  const API_BASE_URL = 'http://44.220.12.138:7000';
 
   fetch(`${API_BASE_URL}/usuarios/${user.id}/rutas-favoritas`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ rutaId })
+    body: JSON.stringify({ rutaId }) // ← correcto para el backend
   })
     .then(response => response.json())
-   .then(data => {
-  if (data && data.message && data.message.includes("agregada")) {
-    starIcon.classList.add("favorito");
-    starIcon.classList.remove("bi-star");
-    starIcon.classList.add("bi-star-fill");
-
-    mostrarToast("Ruta agregada a favoritos");
-    renderizarRutasFavoritas();
-  } else {
-    mostrarToast(data.message || "No se pudo agregar a favoritos", "error");
-  }
-})
-
+    .then(data => {
+      if (data.success) {
+        starIcon.classList.add("favorito");
+        mostrarToast("Ruta agregada a favoritos");
+        renderizarRutasFavoritas();
+      } else {
+        mostrarToast("No se pudo agregar a favoritos");
+      }
+    })
     .catch(err => {
       console.error("Error al agregar a favoritos:", err);
       mostrarToast("Error al agregar a favoritos");
     });
 }
 
+
 function eliminarRutaFavorita(rutaId, starIcon) {
   const user = JSON.parse(localStorage.getItem('wheelyUser'));
-  const API_BASE_URL = 'http://44.220.12.138:7000';
 
   fetch(`${API_BASE_URL}/usuarios/${user.id}/rutas-favoritas/${rutaId}`, {
     method: 'DELETE'
@@ -676,11 +666,8 @@ function eliminarRutaFavorita(rutaId, starIcon) {
     .then(data => {
       if (data.success) {
         starIcon.classList.remove("favorito");
-        starIcon.classList.remove("bi-star-fill");
-        starIcon.classList.add("bi-star");
-
         mostrarToast("Ruta eliminada de favoritos");
-        renderizarRutasFavoritas();
+        renderizarFavoritos();
       } else {
         mostrarToast("No se pudo eliminar de favoritos");
       }
@@ -707,16 +694,6 @@ function pintarRuta(geoIda, geoRegreso) {
 
   capaIda = L.geoJSON(geoIda, { style: { color: 'orange', weight: 4 } });
   capaRegreso = L.geoJSON(geoRegreso, { style: { color: 'dodgerblue', weight: 4 } });
-}
-function limpiarRutas() {
-  if (capaIda) {
-    map.removeLayer(capaIda);
-    capaIda = null;
-  }
-  if (capaRegreso) {
-    map.removeLayer(capaRegreso);
-    capaRegreso = null;
-  }
 }
 
 function mostrarSoloIda() {
@@ -753,7 +730,7 @@ function cargarDetalleDeRuta(rutaId, origenRuta, destinoRuta, nombreRuta) {
   window.rutaSeleccionada = rutaId;
 
  // Si lleva /api
-const tiemposURL = `http://44.220.12.138:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`;
+const tiemposURL = `http://localhost:7000/api/tiempos-ruta-periodo?idRuta=${rutaId}`;
 
   const urlIda = `rutas/ruta${rutaId}_ida.geojson`;
   const urlRegreso = `rutas/ruta${rutaId}_vuelta.geojson`;
@@ -1163,7 +1140,7 @@ if (!usuario || !usuario.id) {
 
   console.log("Enviando body:", body);
 
-  fetch('http://44.220.12.138:7000/reportes', {
+  fetch('http://localhost:7000/reportes', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -1235,7 +1212,7 @@ function cerrarPanel(overlay, panel) {
 }*/
 //Ver noticias reales de una ruta
 function cargarNoticiasDeRuta(idRuta) {
-  fetch("http://44.220.12.138:7000/reportes")
+  fetch("http://localhost:7000/reportes")
     .then(res => res.json())
     .then(data => {
       const lista = document.getElementById("lista-noticias");
@@ -1459,10 +1436,8 @@ function activarBotonMenu(id) {
 }
 const inicioTrigger = document.getElementById('inicio-trigger');
 
-
 inicioTrigger.addEventListener('click', (e) => {
   e.preventDefault();
-  closeAllPanels();  
-  limpiarRutas();      // Limpiar rutas del mapa
-  activarBotonMenu('inicio-trigger');
+  closeAllPanels();  // Cierra favoritos, rutas, etc.
+  activarBotonMenu('inicio-trigger');  // Asegura que se ilumine "Inicio"
 });
