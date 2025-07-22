@@ -2509,7 +2509,7 @@ body:has(.sidebar.collapsed) .panel-sin-rutas {
 
 /* Mejoras para el botón de centrar mapa */
 .right-buttons .btn#btn-centrar-mapa:hover {
-    background-color: #4CAF50 !important;
+    background-color: #fb6d10 !important;
     transform: scale(1.1);
 }
 

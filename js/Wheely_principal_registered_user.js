@@ -661,7 +661,7 @@ function agregarRutaFavorita(rutaId, starIcon) {
         mostrarToast("Ruta agregada a favoritos");
         renderizarRutasFavoritas();
       } else {
-        /*mostrarToast("No se pudo agregar a favoritos");*/
+        //mostrarToast("No se pudo agregar a favoritos");
       }
     })
     .catch(err => {
@@ -688,7 +688,7 @@ function eliminarRutaFavorita(rutaId, starIcon) {
         mostrarToast("Ruta eliminada de favoritos");
         renderizarRutasFavoritas();
       } else {
-        /*mostrarToast("No se pudo eliminar de favoritos");*/
+        //mostrarToast("No se pudo eliminar de favoritos");
       }
     })
     .catch(err => {
