@@ -1,6 +1,8 @@
 const API_BASE_URL = 'http://localhost:7000';
 const sidebar = document.querySelector('.sidebar');
 const sidebarToggleBtn = document.querySelector('.sidebar-toggle');
+const estadoParadas = {}; // Es para guardad si una ruta tiene paradas activas y abres otra vez eñ panel
+
 
 // Elementos del panel de favoritos
 const favoritosPanel = document.getElementById('favoritos-panel');
@@ -736,41 +738,36 @@ function mostrarAmbas() {
 }
 
 function mostrarParadasDeRuta(rutaId) {
-  // Elimina las paradas anteriores
-  if (capaParadas) {
-    map.removeLayer(capaParadas);
-    capaParadas = null;
-  }
+  const archivo = `rutas/Ruta_${rutaId}_Paradas.geojson`;
 
-  const url = `rutas/Ruta_${rutaId}_Paradas.geojson`;
-
-  fetch(url)
+  fetch(archivo)
     .then(res => {
-      if (!res.ok) throw new Error('GeoJSON de paradas no encontrado');
+      if (!res.ok) throw new Error("GeoJSON no encontrado");
       return res.json();
     })
-    .then(geojson => {
-      capaParadas = L.geoJSON(geojson, {
-        pointToLayer: (feature, latlng) => {
-          return L.marker(latlng, {
-            icon: L.icon({
-              iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-              iconSize: [25, 25]
-            })
-          });
-        },
+    .then(data => {
+      if (capaParadas) map.removeLayer(capaParadas);
+
+      capaParadas = L.geoJSON(data, {
+        pointToLayer: (feature, latlng) =>
+          L.circleMarker(latlng, {
+            radius: 6,
+            color: "#28a745",
+            fillColor: "#28a745",
+            fillOpacity: 0.8
+          }),
         onEachFeature: (feature, layer) => {
           if (feature.properties?.nombre) {
-            layer.bindPopup(`<strong>Parada:</strong> ${feature.properties.nombre}`);
+            layer.bindPopup(`<b>Parada:</b> ${feature.properties.nombre}`);
           }
         }
       }).addTo(map);
 
-      map.fitBounds(capaParadas.getBounds());
+      estadoParadas[rutaId] = true; // 🟢 ← Esto guarda el estado activo
     })
     .catch(err => {
-      console.warn('No se pudieron cargar las paradas:', err);
-      mostrarToast("Esta ruta aún no tiene paradas registradas", "info");
+      console.error("Error al cargar paradas:", err);
+      mostrarToast("No se pudieron cargar las paradas", "error");
     });
 }
 
@@ -785,6 +782,15 @@ function cargarGeoJsonSiExiste(url) {
 
 
 function cargarDetalleDeRuta(rutaId, origenRuta, destinoRuta, nombreRuta) {
+  document.getElementById('btn-mostrar-paradas').textContent = "Ver paradas";
+
+
+  // Limpiar paradas anteriores si hay
+  if (capaParadas) {
+  map.removeLayer(capaParadas);
+  capaParadas = null;
+}
+
 
   window.rutaSeleccionada = rutaId;
 
@@ -967,11 +973,23 @@ document.getElementById('btn-toggle-direccion').addEventListener('click', () => 
 });
 
 document.getElementById('btn-mostrar-ambas').addEventListener('click', mostrarAmbas);
-document.getElementById('btn-mostrar-paradas').addEventListener('click', () => {
-  if (window.rutaSeleccionada) {
-    mostrarParadasDeRuta(window.rutaSeleccionada);
-  } else {
+const btnParadas = document.getElementById('btn-mostrar-paradas');
+
+btnParadas.addEventListener('click', () => {
+  if (!window.rutaSeleccionada) {
     mostrarToast('No hay una ruta seleccionada', 'error');
+    return;
+  }
+
+  if (capaParadas) {
+    // Ocultar paradas
+    map.removeLayer(capaParadas);
+    capaParadas = null;
+    btnParadas.textContent = "Ver paradas";
+  } else {
+    // Mostrar paradas
+    mostrarParadasDeRuta(window.rutaSeleccionada);
+    btnParadas.textContent = "Ocultar paradas";
   }
 });
 
@@ -980,10 +998,6 @@ function cerrarDetalleRuta() {
   document.getElementById('detalle-ruta-overlay').classList.remove('active');
   document.getElementById('detalle-ruta-panel').classList.remove('active');
   document.body.style.overflow = '';
-  if (capaParadas) {
-  map.removeLayer(capaParadas);
-  capaParadas = null;
-}
 
 }
 
@@ -1523,6 +1537,10 @@ const inicioTrigger = document.getElementById('inicio-trigger');
 inicioTrigger.addEventListener('click', (e) => {
   e.preventDefault();
   closeAllPanels();  // Cierra paneles
+  if (capaParadas) {
+  map.removeLayer(capaParadas);
+  capaParadas = null;
+}
   limpiarRutasDelMapa(); // 👈 LIMPIAR RUTAS DEL MAPA
   activarBotonMenu('inicio-trigger');
 });
