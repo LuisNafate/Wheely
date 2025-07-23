@@ -2,6 +2,7 @@ const API_BASE_URL = 'http://localhost:7000';
 const sidebar = document.querySelector('.sidebar');
 const sidebarToggleBtn = document.querySelector('.sidebar-toggle');
 const estadoParadas = {}; // Es para guardad si una ruta tiene paradas activas y abres otra vez eñ panel
+const cacheTiemposRuta = {};
 
 
 // Elementos del panel de favoritos
@@ -780,34 +781,38 @@ if (capaParadasVuelta) {
   ))
     .then(datasets => {
   const generatedLayers = datasets
-    .filter(data => data)
-    .map((data, index) => {
-      const capa = L.geoJSON(data, {
-        pointToLayer: (feature, latlng) => {
-          return L.marker(latlng, {
-            icon: L.icon({
-              iconUrl: "img/icono.png",
-              iconSize: [32, 40],
-              iconAnchor: [16, 40],
-              popupAnchor: [0, -40]
-            })
-          });
-        },
-        onEachFeature: (feature, layer) => {
-          if (feature.properties?.name) {
-            layer.bindPopup(`<b>${feature.properties.name}</b>`);
-          }
+  .filter(data => data)
+  .map((data, index) => {
+    const capa = L.geoJSON(data, {
+      pointToLayer: (feature, latlng) => {
+        const iconoTipo = tipo === "ida" ? "bus-ida.png"
+                         : tipo === "vuelta" ? "bus-vuelta.png"
+                         : (index === 0 ? "bus-ida.png" : "bus-vuelta.png");
+
+        return L.marker(latlng, {
+          icon: L.icon({
+            iconUrl: `img/${iconoTipo}`,
+            iconSize: [32, 40],
+            iconAnchor: [16, 40],
+            popupAnchor: [0, -40]
+          })
+        });
+      },
+      onEachFeature: (feature, layer) => {
+        if (feature.properties?.name) {
+          layer.bindPopup(`<b>${feature.properties.name}</b>`);
         }
-      });
-
-      // Guarda por separado si son 2 capas
-      if (datasets.length === 2) {
-        if (index === 0) capaParadasIda = capa;
-        if (index === 1) capaParadasVuelta = capa;
       }
-
-      return capa;
     });
+
+    if (datasets.length === 2) {
+      if (index === 0) capaParadasIda = capa;
+      if (index === 1) capaParadasVuelta = capa;
+    }
+
+    return capa;
+  });
+
 
   if (generatedLayers.length > 0) {
     capaParadas = L.layerGroup(generatedLayers).addTo(map);
@@ -1014,7 +1019,13 @@ function toggleDireccion() {
   }
 
   mostrandoIda = !mostrandoIda;
+
+  // Si las paradas están visibles, recargarlas según nueva dirección
+  if (capaParadas) {
+    mostrarParadasDeRuta(window.rutaSeleccionada);
+  }
 }
+
 
 
 document.getElementById('btn-toggle-direccion').addEventListener('click', () => {
@@ -1580,6 +1591,8 @@ function activarBotonMenu(id) {
   }
 }
 const inicioTrigger = document.getElementById('inicio-trigger');
+
+
 
 inicioTrigger.addEventListener('click', (e) => {
   e.preventDefault();
