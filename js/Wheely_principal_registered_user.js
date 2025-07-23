@@ -711,6 +711,8 @@ function eliminarRutaFavorita(rutaId, starIcon) {
 let capaIda = null;
 let capaRegreso = null;
 let capaParadas = null;
+let capaParadasIda = null;       
+let capaParadasVuelta = null;    
 
 
 function pintarRuta(geoIda, geoRegreso) {
@@ -743,43 +745,81 @@ function mostrarAmbas() {
 }
 
 function mostrarParadasDeRuta(rutaId) {
-  const archivo = `rutas/Ruta_${rutaId}_Paradas.geojson`;
+  if (capaParadas) {
+  map.removeLayer(capaParadas);
+  capaParadas = null;
+}
+if (capaParadasIda) {
+  map.removeLayer(capaParadasIda);
+  capaParadasIda = null;
+}
+if (capaParadasVuelta) {
+  map.removeLayer(capaParadasVuelta);
+  capaParadasVuelta = null;
+}
 
-  fetch(archivo)
-    .then(res => {
-      if (!res.ok) throw new Error("GeoJSON no encontrado");
-      return res.json();
-    })
-    .then(data => {
-      if (capaParadas) map.removeLayer(capaParadas);
+  const tipo = mostrandoIda === true ? "ida" :
+               mostrandoIda === false ? "vuelta" : "ambas";
 
-      capaParadas = L.geoJSON(data, {
+  const archivos = {
+    ida: [`rutas/ruta${rutaId}_ida_Paradas.geojson`],
+    vuelta: [`rutas/ruta${rutaId}_vuelta_Paradas.geojson`],
+    ambas: [
+      `rutas/ruta${rutaId}_ida_Paradas.geojson`,
+      `rutas/ruta${rutaId}_vuelta_Paradas.geojson`
+    ]
+  };
+
+  const urls = archivos[tipo];
+  if (capaParadas) {
+    map.removeLayer(capaParadas);
+    capaParadas = null;
+  }
+
+  Promise.all(urls.map(url =>
+    fetch(url)
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null)
+  ))
+    .then(datasets => {
+  const generatedLayers = datasets
+    .filter(data => data)
+    .map((data, index) => {
+      const capa = L.geoJSON(data, {
         pointToLayer: (feature, latlng) => {
-          const estilo = feature.properties?._umap_options || {};
-          const iconUrl = estilo.iconUrl;
-
-          const iconoFinal = L.icon({
-            iconUrl: iconUrl?.startsWith("/") || !iconUrl
-              ? "img/icono.png"
-              : iconUrl,
-            iconSize: estilo.iconSize || [28, 28],
-            iconAnchor: estilo.iconAnchor || [14, 28],
-            popupAnchor: estilo.popupAnchor || [0, -28]
+          return L.marker(latlng, {
+            icon: L.icon({
+              iconUrl: "img/icono.png",
+              iconSize: [32, 40],
+              iconAnchor: [16, 40],
+              popupAnchor: [0, -40]
+            })
           });
-
-          return L.marker(latlng, { icon: iconoFinal });
         },
         onEachFeature: (feature, layer) => {
-         
+          if (feature.properties?.name) {
+            layer.bindPopup(`<b>${feature.properties.name}</b>`);
+          }
         }
-      }).addTo(map);
+      });
 
-      estadoParadas[rutaId] = true;
-    })
-    .catch(err => {
-      console.error("Error al cargar paradas:", err);
-      mostrarToast("No se pudieron cargar las paradas", "error");
+      // Guarda por separado si son 2 capas
+      if (datasets.length === 2) {
+        if (index === 0) capaParadasIda = capa;
+        if (index === 1) capaParadasVuelta = capa;
+      }
+
+      return capa;
     });
+
+  if (generatedLayers.length > 0) {
+    capaParadas = L.layerGroup(generatedLayers).addTo(map);
+    document.getElementById('btn-mostrar-paradas').textContent = "Ocultar paradas";
+  } else {
+    mostrarToast("No hay paradas disponibles para esta ruta", "info");
+  }
+});
+
 }
 
 
