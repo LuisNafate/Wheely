@@ -734,6 +734,26 @@
   color: #111827;
 }
 
+.leaflet-control-zoom {
+  border: none;
+  box-shadow: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  background-color: #021e46; /* gris oscuro */
+  color: #be5f16; /* texto claro */
+  font-weight: bold;
+  border: none;
+}
+
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  background-color:  #dde413; /* un poco más claro al hacer hover */
+}
+
 
 /* Responsive para visitante */
 @media (max-width: 768px) {
