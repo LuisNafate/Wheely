@@ -133,7 +133,7 @@ window.cargarNoticiasDeRuta = function(idRuta) {
                         <i class="bi bi-newspaper"></i>
                     </div>
                     <div>
-                        <h4 class="news-title">📰 Noticias Públicas de la Ruta</h4>
+                        <h4 class="news-title">Noticias Públicas de la Ruta</h4>
                         <p class="news-count">
                             Mostrando ${reportes.length} reporte${reportes.length > 1 ? 's' : ''} público${reportes.length > 1 ? 's' : ''}
                         </p>
@@ -160,16 +160,18 @@ window.cargarNoticiasDeRuta = function(idRuta) {
 
                 // Determinar ícono según tipo de reporte
                 const iconos = {
-                    'Incidencia': '⚠️',
-                    'Sugerencia': '💡',
-                    'Mantenimiento': '🔧',
-                    'Accidente': '🚨'
-                };
-                const icono = iconos[reporte.tipoReporte] || '📢';
+  'Incidencia': 'bi-exclamation-triangle-fill text-warning',
+  'Sugerencia': 'bi-lightbulb-fill text-success',
+  'Mantenimiento': 'bi-tools text-primary',
+  'Accidente': 'bi-shield-fill-exclamation text-danger'
+};
+const iconoClass = iconos[reporte.tipoReporte] || 'bi-megaphone-fill text-info';
+
 
                 item.innerHTML = `
                     <div class="news-item-content">
-                        <div class="news-emoji">${icono}</div>
+                        <div class="news-emoji"><i class="bi ${iconoClass}"></i></div>
+
                         <div class="news-text">
                             <div class="news-type-header">
                                 <h4 class="news-type">${reporte.tipoReporte || 'Reporte'}</h4>
@@ -179,7 +181,7 @@ window.cargarNoticiasDeRuta = function(idRuta) {
                             <p class="news-description">${reporte.descripcion}</p>
                             <div class="news-footer">
                                 <small class="news-meta">
-                                    📅 Reportado por la comunidad • Solo lectura para visitantes
+                                    Reportado por la comunidad • Solo lectura para visitantes
                                 </small>
                             </div>
                         </div>
@@ -201,7 +203,7 @@ window.cargarNoticiasDeRuta = function(idRuta) {
                     Ayuda a otros usuarios reportando incidencias, sugerencias o problemas en las rutas.
                 </p>
                 <a href="wheely_register.html" class="news-cta-button">
-                    📝 Registrarse para Reportar
+                     Registrarse para Reportar
                 </a>
             `;
             lista.appendChild(footerDiv);
@@ -312,14 +314,15 @@ document.getElementById('btn-ver-noticias')?.addEventListener('click', () => {
         const panelTitle = noticiasPanel.querySelector('.panel-header h2');
         if (panelTitle && window.rutaSeleccionada) {
             panelTitle.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <i class="bi bi-newspaper" style="color: #3b82f6;"></i>
-                    <span>📰 Noticias de la ruta ${window.rutaSeleccionada}</span>
-                    <span style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600;">
-                        SOLO LECTURA
-                    </span>
-                </div>
-            `;
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <i class="material-symbols-rounded icono-opcion" ">campaign</i>
+    <span> Noticias de la ruta ${rutaNombre}</span>
+    <span style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600;">
+      SOLO LECTURA
+    </span>
+  </div>
+`;
+
         }
 
         noticiasOverlay.classList.add('active');
@@ -489,7 +492,7 @@ if (originalBtnVerNoticias) {
                             <div class="no-news-visitor-content">
                                 <i class="bi bi-lightbulb"></i>
                                 <span>
-                                    <strong>Tip:</strong> Ve al panel de "Rutas" y haz clic en el ícono 📰 de cualquier ruta
+                                    <strong>Tip:</strong> Ve al panel de "Rutas" y haz clic en el ícono de cualquier ruta
                                 </span>
                             </div>
                         </div>
@@ -497,7 +500,7 @@ if (originalBtnVerNoticias) {
                 `;
             }
             
-            mostrarToast('📰 Panel de noticias abierto - Solo lectura para visitantes', 'info');
+            mostrarToast('Panel de noticias abierto - Solo lectura para visitantes', 'info');
         }
     });
 }
@@ -536,7 +539,7 @@ function cerrarPanel(overlay, panel) {
 
 // ===== EVENT LISTENERS PARA CERRAR PANELES =====
 
-// ✅ Cierre de paneles por botón o clic fuera
+// Cierre de paneles por botón o clic fuera
 
 
 

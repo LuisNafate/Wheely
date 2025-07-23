@@ -911,6 +911,27 @@ mostrarDetalleRuta({
       console.error("❌ Error real detectado:", err);
       mostrarToast("No se pudo cargar completamente la información de la ruta", "error");
     });
+    // Antes de pintar nueva capa, borrar anterior
+if (window.layerRutas && map.hasLayer(window.layerRutas)) {
+  map.removeLayer(window.layerRutas);
+}
+
+if (window.layerParadas && map.hasLayer(window.layerParadas)) {
+  map.removeLayer(window.layerParadas);
+}
+
+// Pintar capa de rutas y guardarla
+window.layerRutas = L.geoJSON(rutaGeoJSON).addTo(map);
+
+// Pintar capa de paradas y guardarla
+window.layerParadas = L.geoJSON(paradasGeoJSON, {
+  pointToLayer: function (feature, latlng) {
+    return L.marker(latlng, {
+      icon: feature.properties.direccion === 'ida' ? iconoIda : iconoRegreso
+    });
+  }
+}).addTo(map);
+
 }
 
 
