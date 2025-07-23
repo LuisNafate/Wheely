@@ -771,10 +771,7 @@ if (capaParadasVuelta) {
   };
 
   const urls = archivos[tipo];
-  if (capaParadas) {
-    map.removeLayer(capaParadas);
-    capaParadas = null;
-  }
+  
 
   Promise.all(urls.map(url =>
     fetch(url)
@@ -841,6 +838,7 @@ function cargarDetalleDeRuta(rutaId, origenRuta, destinoRuta, nombreRuta) {
   if (capaParadas) {
   map.removeLayer(capaParadas);
   capaParadas = null;
+  document.getElementById('btn-mostrar-paradas').textContent = "Ver paradas";
 }
 
 
@@ -1223,13 +1221,7 @@ const btnCerrarNoticias = document.getElementById('close-noticias');
 const btnVerNoticias = document.getElementById('btn-ver-noticias');
 const btnRealizarReporte = document.getElementById('btn-realizar-reporte');
 
-// Abrir el panel principal desde el ícono de reporte
-const botonesReportar = document.querySelectorAll('.report-icon');
-botonesReportar.forEach(btn => {
-  btn.addEventListener('click', () => {
-    abrirPanel(overlayReporte, panelReporte);
-  });
-});
+
 
 // Navegar a formulario
 btnRealizarReporte.addEventListener('click', () => {
