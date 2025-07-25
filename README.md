@@ -1,4 +1,4 @@
-# 🚍 Wheely - Plataforma de Transporte Urbano Inteligente
+# 🚍 Proyecto: Wheely - Plataforma de Transporte Urbano Inteligente
 
 **Frontend del proyecto "Wheely"**  
 Sistema desarrollado por el grupo **3B** para mejorar la experiencia de transporte público en **Tuxtla Gutiérrez, Chiapas**.
