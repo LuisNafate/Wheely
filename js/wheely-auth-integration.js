@@ -1,7 +1,7 @@
 // ========== GESTIÓN DE USUARIOS Y SESIONES ==========
 
-// Configuración de la API
-const API_BASE_URL = 'http://localhost:7000';
+// Obtener configuración de la API desde APIConfig
+const API_BASE_URL = window.APIConfig ? window.APIConfig.getBaseURL() : 'http://localhost:7000';
 
 // Función para obtener el usuario actual desde localStorage
 function obtenerUsuarioActual() {
@@ -18,7 +18,7 @@ function obtenerUsuarioActual() {
         const loginTime = user.loginTime;
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - loginTime;
-        const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 horas
+        const SESSION_DURATION = window.APIConfig ? window.APIConfig.getSessionDuration() : 24 * 60 * 60 * 1000; // 24 horas
         
         if (timeDiff > SESSION_DURATION) {
             console.warn('Sesión expirada');
