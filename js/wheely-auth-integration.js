@@ -1,7 +1,7 @@
 // ========== GESTIÓN DE USUARIOS Y SESIONES ==========
 
 // Configuración de la API
-const API_BASE_URL = 'http://localhost:7000';
+const API_BASE_URL = 'http://98.90.108.255:7000';
 
 // Función para obtener el usuario actual desde localStorage
 function obtenerUsuarioActual() {

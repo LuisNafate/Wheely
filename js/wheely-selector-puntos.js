@@ -21,7 +21,7 @@
     const CONFIG = {
         MAX_DISTANCE_KM: 10,
         MAX_MARKERS: 2,
-        BACKEND_URL: 'http://localhost:7000',
+        BACKEND_URL: 'http://98.90.108.255:7000',
         ENDPOINTS: {
             rutas: '/rutas',
             rutaDetalle: '/rutas',

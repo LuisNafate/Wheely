@@ -93,7 +93,7 @@ function renderizarRutasFavoritas() {
 // ===== FUNCIONES DE NOTICIAS MEJORADAS =====
 
 window.cargarNoticiasDeRuta = function(idRuta) {
-    fetch("http://localhost:7000/reportes")
+    fetch("http://98.90.108.255:7000/reportes")
         .then(res => res.json())
         .then(data => {
             const lista = document.getElementById("lista-noticias");
