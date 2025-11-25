@@ -97,7 +97,7 @@
     <script>
                 // Configuración de la API
         const API_CONFIG = {
-            baseURL: 'http://98.90.108.255:7000',
+            baseURL: window.APIConfig ? window.APIConfig.getBaseURL() : 'http://localhost:7000',
             endpoints: {
                 login: '/usuarios/login'
             }

@@ -3,24 +3,39 @@
 
 class APIConfig {
     constructor() {
-        // Cargar configuración desde variables de entorno o usar valores por defecto
-        this.baseURL = this.getEnvVar('API_BASE_URL', 'http://localhost:7000');
-        this.sessionDuration = parseInt(this.getEnvVar('SESSION_DURATION', '86400000')); // 24 horas por defecto
+        // Configuración base - PRODUCCIÓN
+        this.baseURL = 'http://98.90.108.255:7000';
+
+        // Otras configuraciones
+        this.sessionDuration = parseInt(this.getEnvVar('SESSION_DURATION', '86400000')); // 24 horas
         this.cacheTimeout = 5 * 60 * 1000; // 5 minutos
         this.autoRefreshInterval = 60000; // 1 minuto
+        this.requestTimeout = 30000; // 30 segundos
+
+        // Inicializar módulos de endpoints
+        this._initializeEndpoints();
+    }
+
+    // Inicializar todos los módulos de endpoints
+    _initializeEndpoints() {
+        // Cargar endpoints organizados por módulos
+        this.rutas = new (window.RutasEndpoints || class {})(this.baseURL);
+        this.usuarios = new (window.UsuariosEndpoints || class {})(this.baseURL);
+        this.reportes = new (window.ReportesEndpoints || class {})(this.baseURL);
+        this.sistema = new (window.SistemaEndpoints || class {})(this.baseURL);
     }
 
     // Método para obtener variables de entorno (simulado para frontend)
     getEnvVar(key, defaultValue) {
-        // En un entorno real, esto podría leer de process.env o de un archivo de configuración
-        // Para frontend, necesitarás un sistema de build que inyecte estas variables
+        // Verificar variables de entorno del navegador
         if (typeof window !== 'undefined' && window.ENV && window.ENV[key]) {
             return window.ENV[key];
         }
         return defaultValue;
     }
 
-    // Getters para acceder a la configuración
+    // ===== GETTERS PRINCIPALES =====
+
     getBaseURL() {
         return this.baseURL;
     }
@@ -37,39 +52,20 @@ class APIConfig {
         return this.autoRefreshInterval;
     }
 
-    // Método para construir URLs de endpoints
+    getRequestTimeout() {
+        return this.requestTimeout;
+    }
+
+    // ===== MÉTODOS HELPER PARA URLs =====
+
+    // Método para construir URLs de endpoints personalizados
     buildURL(endpoint) {
         const base = this.baseURL.endsWith('/') ? this.baseURL.slice(0, -1) : this.baseURL;
         const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
         return `${base}${path}`;
     }
 
-    // Endpoints específicos
-    endpoints() {
-        return {
-            // Rutas
-            rutas: this.buildURL('/rutas'),
-            rutaById: (id) => this.buildURL(`/rutas/${id}`),
-
-            // Usuarios
-            usuarios: this.buildURL('/usuarios'),
-            usuarioById: (id) => this.buildURL(`/usuarios/${id}`),
-
-            // Favoritos
-            rutasFavoritas: (usuarioId) => this.buildURL(`/usuarios/${usuarioId}/rutas-favoritas`),
-            agregarFavorita: (usuarioId) => this.buildURL(`/usuarios/${usuarioId}/rutas-favoritas`),
-            eliminarFavorita: (usuarioId, rutaId) => this.buildURL(`/usuarios/${usuarioId}/rutas-favoritas/${rutaId}`),
-
-            // Autenticación
-            login: this.buildURL('/auth/login'),
-            register: this.buildURL('/auth/register'),
-            logout: this.buildURL('/auth/logout'),
-
-            // Reportes
-            reportes: this.buildURL('/reportes'),
-            reporteById: (id) => this.buildURL(`/reportes/${id}`)
-        };
-    }
+    // ===== CONFIGURACIÓN DE HEADERS =====
 
     // Configuración de headers por defecto
     getDefaultHeaders() {
@@ -85,10 +81,25 @@ class APIConfig {
 
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            // Intentar obtener token del localStorage
+            const userData = localStorage.getItem('wheelyUser');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    if (user.token) {
+                        headers['Authorization'] = `Bearer ${user.token}`;
+                    }
+                } catch (error) {
+                    console.warn('Error al obtener token del usuario:', error);
+                }
+            }
         }
 
         return headers;
     }
+
+    // ===== CONFIGURACIÓN DE FETCH =====
 
     // Configuración de fetch por defecto
     getFetchConfig(method = 'GET', body = null, token = null) {
@@ -96,7 +107,8 @@ class APIConfig {
             method: method,
             headers: token ? this.getAuthHeaders(token) : this.getDefaultHeaders(),
             mode: 'cors',
-            cache: 'no-cache'
+            cache: 'no-cache',
+            credentials: 'omit'
         };
 
         if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
@@ -106,13 +118,16 @@ class APIConfig {
         return config;
     }
 
-    // Método helper para hacer peticiones a la API
+    // ===== MÉTODOS DE PETICIÓN HTTP =====
+
+    // Método helper para hacer peticiones a la API con manejo de errores
     async request(endpoint, options = {}) {
         const {
             method = 'GET',
             body = null,
             token = null,
-            customHeaders = {}
+            customHeaders = {},
+            timeout = this.requestTimeout
         } = options;
 
         try {
@@ -121,15 +136,32 @@ class APIConfig {
             // Merge custom headers
             config.headers = { ...config.headers, ...customHeaders };
 
+            // Implementar timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            config.signal = controller.signal;
+
             const response = await fetch(endpoint, config);
-            const data = await response.json();
+            clearTimeout(timeoutId);
+
+            // Intentar parsear JSON
+            let data;
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                data = await response.text();
+            }
 
             if (!response.ok) {
-                throw new Error(data.message || `HTTP error! status: ${response.status}`);
+                throw new Error(data.message || data || `HTTP error! status: ${response.status}`);
             }
 
             return data;
         } catch (error) {
+            if (error.name === 'AbortError') {
+                throw new Error('La petición excedió el tiempo límite');
+            }
             console.error('API Request Error:', error);
             throw error;
         }
@@ -148,14 +180,20 @@ class APIConfig {
         return this.request(endpoint, { method: 'PUT', body, token });
     }
 
+    async patch(endpoint, body, token = null) {
+        return this.request(endpoint, { method: 'PATCH', body, token });
+    }
+
     async delete(endpoint, token = null) {
         return this.request(endpoint, { method: 'DELETE', token });
     }
 
+    // ===== MÉTODOS DE UTILIDAD =====
+
     // Método para validar la conectividad con la API
     async checkConnection() {
         try {
-            const response = await fetch(this.buildURL('/health'), {
+            const response = await fetch(this.sistema.health(), {
                 method: 'GET',
                 timeout: 5000
             });
@@ -168,8 +206,11 @@ class APIConfig {
 
     // Método para actualizar la configuración en tiempo de ejecución
     updateConfig(newConfig) {
-        if (newConfig.baseURL) {
+        let needsReinitialization = false;
+
+        if (newConfig.baseURL && newConfig.baseURL !== this.baseURL) {
             this.baseURL = newConfig.baseURL;
+            needsReinitialization = true;
         }
         if (newConfig.sessionDuration) {
             this.sessionDuration = newConfig.sessionDuration;
@@ -180,6 +221,37 @@ class APIConfig {
         if (newConfig.autoRefreshInterval) {
             this.autoRefreshInterval = newConfig.autoRefreshInterval;
         }
+        if (newConfig.requestTimeout) {
+            this.requestTimeout = newConfig.requestTimeout;
+        }
+
+        // Re-inicializar endpoints si cambió la baseURL
+        if (needsReinitialization) {
+            this._initializeEndpoints();
+        }
+    }
+
+    // Método para cambiar entre producción y desarrollo
+    setEnvironment(env) {
+        if (env === 'production') {
+            this.baseURL = 'http://98.90.108.255:7000';
+        } else if (env === 'development') {
+            this.baseURL = 'http://localhost:7000';
+        }
+        this._initializeEndpoints();
+        console.log(`Entorno cambiado a: ${env} (${this.baseURL})`);
+    }
+
+    // Obtener información del entorno actual
+    getEnvironmentInfo() {
+        return {
+            baseURL: this.baseURL,
+            sessionDuration: this.sessionDuration,
+            cacheTimeout: this.cacheTimeout,
+            autoRefreshInterval: this.autoRefreshInterval,
+            requestTimeout: this.requestTimeout,
+            isProduction: this.baseURL.includes('98.90.108.255')
+        };
     }
 }
 
@@ -194,4 +266,10 @@ if (typeof module !== 'undefined' && module.exports) {
 // Para uso en navegadores
 if (typeof window !== 'undefined') {
     window.APIConfig = apiConfig;
+
+    // Mensaje de información en consola
+    console.log('%c🚌 Wheely API Config Cargado', 'color: #FB6D10; font-weight: bold; font-size: 14px;');
+    console.log('%cEntorno:', 'color: #3b82f6; font-weight: bold;', apiConfig.baseURL);
+    console.log('%cMódulos disponibles:', 'color: #3b82f6; font-weight: bold;', 'rutas, usuarios, reportes, sistema');
+    console.log('%cEjemplo de uso:', 'color: #10b981; font-weight: bold;', 'APIConfig.rutas.getAll()');
 }
