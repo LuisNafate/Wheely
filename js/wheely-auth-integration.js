@@ -1,7 +1,7 @@
 // ========== GESTIÓN DE USUARIOS Y SESIONES ==========
 
 // Obtener configuración de la API desde APIConfig
-const API_BASE_URL = window.APIConfig ? window.APIConfig.getBaseURL() : 'http://localhost:7000';
+const API_BASE_URL = window.APIConfig.getBaseURL();
 
 // Función para obtener el usuario actual desde localStorage
 function obtenerUsuarioActual() {

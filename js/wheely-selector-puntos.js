@@ -21,7 +21,7 @@
     const CONFIG = {
         MAX_DISTANCE_KM: 10,
         MAX_MARKERS: 2,
-        BACKEND_URL: window.APIConfig ? window.APIConfig.getBaseURL() : 'http://localhost:7000',
+        BACKEND_URL: window.APIConfig.getBaseURL(),
         ENDPOINTS: {
             rutas: '/rutas',
             rutaDetalle: '/rutas',

@@ -1,5 +1,5 @@
 // Obtener configuración de la API desde APIConfig
-const API_BASE_URL = window.APIConfig ? window.APIConfig.getBaseURL() : 'http://localhost:7000';
+const API_BASE_URL = window.APIConfig.getBaseURL();
 const sidebar = document.querySelector('.sidebar');
 const sidebarToggleBtn = document.querySelector('.sidebar-toggle');
 const estadoParadas = {}; // Es para guardad si una ruta tiene paradas activas y abres otra vez eñ panel

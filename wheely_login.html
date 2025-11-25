@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wheely - Iniciar Sesión</title>
     <link rel="stylesheet" href="css/wheely_login.css">
+    <!-- Configuración de la API -->
+    <script src="config/load-env.js"></script>
+    <script src="config/APIConfig.js"></script>
 </head>
 <body>
     <div class="black-stripe"></div>
@@ -97,7 +100,7 @@
     <script>
                 // Configuración de la API
         const API_CONFIG = {
-            baseURL: window.APIConfig ? window.APIConfig.getBaseURL() : 'http://localhost:7000',
+            baseURL: window.APIConfig.getBaseURL(),
             endpoints: {
                 login: '/usuarios/login'
             }

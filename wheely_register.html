@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wheely - Regístrate</title>
     <link rel="stylesheet" href="css/wheely_register.css">
+    <!-- Configuración de la API -->
+    <script src="config/APIConfig.js"></script>
 </head>
 <body>
     <div class="black-stripe"></div>
@@ -155,7 +157,7 @@
     <script>
         // Configuración de la API
         const API_CONFIG = {
-            baseURL: window.APIConfig ? window.APIConfig.getBaseURL() : 'http://localhost:7000',
+            baseURL: window.APIConfig.getBaseURL(),
             endpoints: {
                 register: '/usuarios/register'
             }

@@ -3,11 +3,11 @@
 
 class APIConfig {
     constructor() {
-        // Configuración base - PRODUCCIÓN
+        // ===== CONFIGURACIÓN BASE - CAMBIA AQUÍ LA URL DE TU API =====
         this.baseURL = 'http://98.90.108.255:7000';
 
         // Otras configuraciones
-        this.sessionDuration = parseInt(this.getEnvVar('SESSION_DURATION', '86400000')); // 24 horas
+        this.sessionDuration = 86400000; // 24 horas
         this.cacheTimeout = 5 * 60 * 1000; // 5 minutos
         this.autoRefreshInterval = 60000; // 1 minuto
         this.requestTimeout = 30000; // 30 segundos
@@ -25,14 +25,6 @@ class APIConfig {
         this.sistema = new (window.SistemaEndpoints || class {})(this.baseURL);
     }
 
-    // Método para obtener variables de entorno (simulado para frontend)
-    getEnvVar(key, defaultValue) {
-        // Verificar variables de entorno del navegador
-        if (typeof window !== 'undefined' && window.ENV && window.ENV[key]) {
-            return window.ENV[key];
-        }
-        return defaultValue;
-    }
 
     // ===== GETTERS PRINCIPALES =====
 

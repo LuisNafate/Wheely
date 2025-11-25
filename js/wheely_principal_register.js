@@ -93,7 +93,7 @@ function renderizarRutasFavoritas() {
 // ===== FUNCIONES DE NOTICIAS MEJORADAS =====
 
 window.cargarNoticiasDeRuta = function(idRuta) {
-    const API_BASE_URL = window.APIConfig ? window.APIConfig.getBaseURL() : 'http://localhost:7000';
+    const API_BASE_URL = window.APIConfig.getBaseURL();
     fetch(`${API_BASE_URL}/reportes`)
         .then(res => res.json())
         .then(data => {

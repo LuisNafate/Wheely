@@ -1,5 +1,5 @@
 // Obtener configuración de la API desde APIConfig
-const API_BASE_URL = window.APIConfig ? window.APIConfig.getBaseURL() : 'http://localhost:7000';
+const API_BASE_URL = window.APIConfig.getBaseURL();
 const USUARIO_ID = 1; // Aquí deberías obtener el ID del usuario actual desde el login/sesión
 
 // ========== FUNCIONES DE API ==========
