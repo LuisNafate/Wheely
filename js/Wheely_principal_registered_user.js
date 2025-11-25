@@ -1629,3 +1629,103 @@ inicioTrigger.addEventListener('click', (e) => {
   activarBotonMenu('inicio-trigger');
 });
 
+
+// ============================================
+//   FUNCIONALIDAD MÓVIL - RESPONSIVE 400px
+// ============================================
+function initMobileControls() {
+    const isMobileView = () => window.innerWidth <= 400;
+    
+    // Elementos móviles
+    const mobileNavbar = document.querySelector('.mobile-navbar');
+    const navbarItemRutas = document.querySelector('#mobile-rutas');
+    const navbarItemFavoritos = document.querySelector('#mobile-favoritos');
+    const navbarItemHome = document.querySelector('#mobile-inicio');
+    
+    // Triggers existentes del sidebar
+    const favoritosTrigger = document.getElementById('favoritos-trigger');
+    const rutasTrigger = document.getElementById('rutas-trigger');
+    const inicioTrigger = document.getElementById('inicio-trigger');
+    
+    // Función para mostrar/ocultar elementos móviles según el viewport
+    function toggleMobileElements() {
+        if (isMobileView()) {
+            // Mostrar elementos móviles
+            if (mobileNavbar) mobileNavbar.style.display = 'flex';
+            
+            // Ocultar sidebar
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.style.display = 'none';
+        } else {
+            // Ocultar elementos móviles
+            if (mobileNavbar) mobileNavbar.style.display = 'none';
+            
+            // Mostrar sidebar
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.style.display = 'flex';
+        }
+    }
+    
+    // Función para actualizar estado activo del navbar
+    function updateNavbarActive(activeItem) {
+        if (!isMobileView()) return;
+        
+        // Quitar clase active de todos
+        document.querySelectorAll('.navbar-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Agregar clase active al item actual
+        if (activeItem) {
+            activeItem.classList.add('active');
+        }
+    }
+    
+    // Event listeners del navbar móvil - Usar los triggers existentes
+    if (navbarItemRutas && rutasTrigger) {
+        navbarItemRutas.addEventListener('click', () => {
+            if (isMobileView()) {
+                rutasTrigger.click(); // Activar el trigger existente
+                updateNavbarActive(navbarItemRutas);
+            }
+        });
+    }
+    
+    if (navbarItemFavoritos && favoritosTrigger) {
+        navbarItemFavoritos.addEventListener('click', () => {
+            if (isMobileView()) {
+                favoritosTrigger.click(); // Activar el trigger existente
+                updateNavbarActive(navbarItemFavoritos);
+            }
+        });
+    }
+    
+    if (navbarItemHome && inicioTrigger) {
+        navbarItemHome.addEventListener('click', () => {
+            if (isMobileView()) {
+                inicioTrigger.click(); // Activar el trigger existente
+                updateNavbarActive(navbarItemHome);
+            }
+        });
+    }
+    
+    // Listener para cambios de tamaño de ventana
+    window.addEventListener('resize', toggleMobileElements);
+    
+    // Inicializar al cargar
+    toggleMobileElements();
+    
+    // Marcar Inicio como activo por defecto en móvil
+    if (isMobileView() && navbarItemHome) {
+        updateNavbarActive(navbarItemHome);
+    }
+}
+
+// Ejecutar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initMobileControls();
+    });
+} else {
+    initMobileControls();
+}
